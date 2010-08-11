@@ -1,0 +1,9 @@
+RGB = "RGB"
+RGBA = "RGBA"
+RAW = "raw"
+
+RGB_BYTES = 3
+RGBA_BYTES = 4
+
+PNG = "PNG"
+

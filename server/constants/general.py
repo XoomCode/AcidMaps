@@ -1,0 +1,6 @@
+APPLICATION_NAME = "Pycaso"
+VERSION = "0.10"
+CONFIGURATION_FILE = "/etc/pycaso/config.ini"
+HELP_FILE = "help"
+PID_FILE = "/var/run/pycaso.pid"
+CROSSDOMAIN_XML = "crossdomain.xml"
