@@ -1,5 +1,5 @@
 APPLICATION_NAME = "Pycasso"
-VERSION = "1.0.0"a
+VERSION = "1.0.0"
 CONFIGURATION_FILE = "config.ini"
 HELP_FILE = "help"
 PID_FILE = "pycasso.pid"

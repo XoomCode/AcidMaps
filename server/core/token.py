@@ -1,5 +1,5 @@
 from util.patterns import Singleton
-from util.gcdict import TimeDict
+from util.timedict import TimeDict
 
 from core.gc import GC 
 
