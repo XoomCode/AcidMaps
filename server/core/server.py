@@ -1,5 +1,5 @@
 from SocketServer import ThreadingTCPServer
-from request.handler.pycaso import PycasoRequestHandler
+from request.handler.pycasso import PycassoRequestHandler
 from logger import Logger
 
 class TileServer():
@@ -17,7 +17,7 @@ class TileServer():
 		"""Start cache and administration services"""
 		server_address = (self.host, self.port)
 		Logger().info("Starting server on %s:%s" % server_address)
-		self.server_instance = ThreadingTCPServer(server_address, PycasoRequestHandler)
+		self.server_instance = ThreadingTCPServer(server_address, PycassoRequestHandler)
 		self.server_instance.serve_forever()
 	
 	def stop(self):

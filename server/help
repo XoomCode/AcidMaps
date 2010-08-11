@@ -1,4 +1,4 @@
-Usage: python pycaso.py [options]
+Usage: python pycasso.py [options]
 	-c Config file
 	-h This help
 	-v Version

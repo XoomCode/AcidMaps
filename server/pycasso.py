@@ -7,7 +7,7 @@ from core.token import TokenManager
 from util.daemon import Daemon
 from util.pid import write_pid
 
-class Pycaso(Daemon):
+class Pycasso(Daemon):
 	"""
 	Application main class
 	It has the responsibility to instantiate, initialize, and configure all
@@ -62,6 +62,6 @@ if __name__ == '__main__':
 			print VERSION
 			sys.exit()
 	
-	pycaso = Pycaso()
-	pycaso.configure(cfgfile)
-	pycaso.start()
+	pycasso = Pycasso()
+	pycasso.configure(cfgfile)
+	pycasso.start()

@@ -18,7 +18,7 @@ from request.handler.token import TokenHandler
 from request.handler.tile import TileHandler
 from request.handler.response import ResponseHandler
 
-class PycasoRequestHandler(BaseHTTPRequestHandler):
+class PycassoRequestHandler(BaseHTTPRequestHandler):
 	
 	# This should be configured in the config.ini
 	MAX_TILE_SIZE = 1024
