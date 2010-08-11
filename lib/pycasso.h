@@ -1,5 +1,5 @@
-#ifndef GISLIB_H
-#define GISLIB_H
+#ifndef __PYCASSO_H__
+#define __PYCASSO_H__
 
 /**
  * A simple value with desired alpha

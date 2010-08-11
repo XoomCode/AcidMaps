@@ -7,7 +7,7 @@
 #include <stdint.h> 
 #include <limits.h>
 
-#include "gislib.h"
+#include "pycasso.h"
 
 // #define DEBUG 1
 #define MAX(a, b) (a > b ? a : b) 
