@@ -1,0 +1,31 @@
+Pycasso
+
+SYNOPSIS
+
+  Pycasso it's a web server that generates interpolated
+  images from a set of valued points.
+
+
+AUTHOR
+ 
+  Pycasso is currently being developed by:
+    Fabio Renzo Panettieri (fpanettieri@xoomcode.com)
+
+
+DEPENDECIES
+
+  System
+    python (Recomended >= 2.6.0)
+    psyco  (Recomended >= 1.6.0)
+
+
+LICENSE
+
+  Pycasso is released under LGPL.
+  Copyright © 2010, XoomCode. All rights reserved.
+
+
+BUGS
+  If you find a bug, please report it at 
+  http://github.com/XoomCode/Pycasso/issues
+
