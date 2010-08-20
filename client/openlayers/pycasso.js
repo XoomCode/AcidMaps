@@ -14,8 +14,7 @@ OpenLayers.Layer.Pycasso = OpenLayers.Class(OpenLayers.Layer.Grid, {
      */
     DEFAULT_PARAMS: {
       type: 'ISOLINE',
-      diameter: 64,
-      cells: 64
+      diameter: 64
     },
     
     /**
@@ -31,6 +30,16 @@ OpenLayers.Layer.Pycasso = OpenLayers.Class(OpenLayers.Layer.Grid, {
      *          It's updated when the changes the set of points
      */
     token: '',
+    
+    /**
+     * APIProperty: provider
+     * {PycassoProvider} The data-source that will be used by this layer
+     *                   to generate the maps.
+     *                   This object it's constructed on the creation of the 
+     *                   layer if you pass a wfs/data parameter.
+     *                   It can be changed on runtime without trobules.
+     */
+    provider: null,
     
     /**
      * Constructor: OpenLayers.Layer.Pycasso
@@ -49,11 +58,12 @@ OpenLayers.Layer.Pycasso = OpenLayers.Class(OpenLayers.Layer.Grid, {
      *                (e.g. http://pycasso.xoomcode.com/)
      * params - {Object} An object with key/value pairs representing the
      *                   GetMap query string parameters and parameter values.
-     * options - {Ojbect} Hashtable of extra options to tag onto the layer
+     * options - {Object} Hashtable of extra options to tag onto the layer
      */
     initialize: function(name, url, params, options) {
         var newArguments = [];
-        //uppercase params
+        
+        // Uppercase params
         params = OpenLayers.Util.upperCaseObject(params);
         newArguments.push(name, url, params, options);
         OpenLayers.Layer.Grid.prototype.initialize.apply(this, newArguments);
@@ -61,15 +71,30 @@ OpenLayers.Layer.Pycasso = OpenLayers.Class(OpenLayers.Layer.Grid, {
           OpenLayers.Util.upperCaseObject(this.DEFAULT_PARAMS)
         );
     },
+    
+    /**
+     *
+     */
+    configure: function(options) {
+      if(options && options.wfs){
+        if(typeof(options.attribute) == "undefined"){
+          alert("Pycasso Layer error\n\rWFS attribute not specified");
+          return;
+        }
+        provider = new OpenLayers.Layer.Pycasso.Provider.WFS(this, options);
+        
+      } else if (options && options.points) {
+        provider = new OpenLayers.Layer.Pycasso.Provider.Array(this, options);
+      }
+    },
 
     /**
      * Method: destroy
      * Destroy this layer
      */
     destroy: function() {
-        // Send DELETE token to the server
-    
-        OpenLayers.Layer.Grid.prototype.destroy.apply(this, arguments);  
+      // Send DELETE token to the server
+      OpenLayers.Layer.Grid.prototype.destroy.apply(this, arguments);  
     },
 
     
@@ -82,19 +107,19 @@ OpenLayers.Layer.Pycasso = OpenLayers.Class(OpenLayers.Layer.Grid, {
      */
     clone: function (obj) {
         
-        if (obj == null) {
-            obj = new OpenLayers.Layer.Pycasso(this.name,
-              this.url,
-              this.params,
-              this.getOptions());
-        }
+      if (obj == null) {
+          obj = new OpenLayers.Layer.Pycasso(this.name,
+            this.url,
+            this.params,
+            this.getOptions());
+      }
 
-        //get all additions from superclasses
-        obj = OpenLayers.Layer.Grid.prototype.clone.apply(this, [obj]);
+      //get all additions from superclasses
+      obj = OpenLayers.Layer.Grid.prototype.clone.apply(this, [obj]);
 
-        // copy/set any non-init, non-simple values here
+      // copy/set any non-init, non-simple values here
 
-        return obj;
+      return obj;
     },    
     
     /**
@@ -143,25 +168,112 @@ OpenLayers.Layer.Pycasso = OpenLayers.Class(OpenLayers.Layer.Grid, {
     
     /**
      * Method: pointToPixel
-     * transform the given coordinate
+     * Transform the given coordinate into a distance in pixels from the top
+     * left corner of the map.
      * 
      * Parameters:
      * x - {Number} horizontal position of the point
      * y - {Number} vertical position of the point
      *
      * Returns:
-     * {Object} An object with distance to the top left corner in pixels.
+     * {Object} The measured distance to the top left corner in pixels.
      */
-    
     pointToPixel: function(x, y) {
       var extent = this.map.maxExtent;
-      var dx = x - extent.left;
-      var dy = extent.top - y;
-      return {x: dx / this.map.resolution, y: dy / this.map.resolution};
+      var dx = (x - extent.left) / this.map.resolution;
+      var dy = (extent.top - y) / this.map.resolution;
+      return {x: parseInt(dx) , y: parseInt(dy)};
     },
-
+    
+     
     // On token update
     // OpenLayers.Layer.Grid.prototype.mergeNewParams.apply(this, newArguments);
     
     CLASS_NAME: "OpenLayers.Layer.Pycasso"
 });
+
+/**
+ * Pycasso Data providers
+ */
+OpenLayers.Layer.Pycasso.Provider = {};
+
+/**
+ *
+ */
+OpenLayers.Layer.Pycasso.Provider.WFS = OpenLayers.Class({
+  initialize: function(layer, source, attribute) {
+    alert("wfs provider constructor called");
+  }
+});
+
+/**
+ *
+ */
+OpenLayers.Layer.Pycasso.Provider.Array = OpenLayers.Class({
+
+  /**
+   * Set of points stored in array format [x,y,v]
+   */
+  points: [],
+  
+  projectedPoints: [],
+
+  intervals: [],
+
+  initialize: function(layer, options) {
+    this.layer = layer;
+    this.points = options.points;
+    
+    var min = Math.pow(2, 31) - 1;
+    var max = -Math.pow(2, 31);
+    for each(point in options.points){
+      if(point[2] > max){max = point[2]}
+      if(point[2] < min){min = point[2]}
+    }
+    
+    this.intervals = options.intervals || this.generateIntervals(min, max);
+    this.cells = options.cells || 64;
+    this.layer.map.events.register("zoomend", this, this.update);
+  },
+  
+  update: function() {
+    var projectedPoints = [];
+    var projectedPoint;
+    for each(point in this.points){
+      projectedPoint = this.layer.pointToPixel(point[0], point[1]);
+      this.projectedPoints.push([projectedPoint.x, projectedPoint.y, point[2]]);
+    }
+  
+    OpenLayers.Request.issue({
+      method: 'POST',
+      url: this.layer.url,
+      headers: {
+        "Content-Type": "text/plain"
+      },
+      data: OpenLayers.Util.getParameterString({
+        INTERVALS: this.intervals.join(';'), 
+        POINTS: this.projectedPoints.join(';'), 
+        CELLS: this.cells
+      }),
+      callback: this.handler
+    });
+  },
+  
+  generateIntervals: function(min, max){
+    var intervals = [];
+    increment = parseInt((max - min) / 5);
+    intervals.push([min, 0, 0, 0]);
+    intervals.push([min + increment * 1, 212, 37, 103]);
+    intervals.push([min + increment * 2, 255, 173, 67]);
+    intervals.push([min + increment * 3, 224, 240, 123]);
+    intervals.push([min + increment * 4, 153, 209, 94]);
+    intervals.push([max, 47, 171, 165]);
+    return intervals;
+  },
+  
+  handler: function(request){
+    console.log(request.responseXML);
+    console.log(request.responseText);
+  }
+});
+
