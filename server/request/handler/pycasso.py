@@ -1,4 +1,5 @@
 from BaseHTTPServer import BaseHTTPRequestHandler
+from urllib import unquote
 
 from constants.http.params import *
 from constants.http.head import CONTENT_LENGTH
@@ -37,6 +38,8 @@ class PycassoRequestHandler(BaseHTTPRequestHandler):
 		# Get post data
 		content_length = int(self.headers[CONTENT_LENGTH])
 		post = self.rfile.read(content_length)
+		post = unquote(post)
+		print post
 		
 		# Parse the parameter
 		params = ParamsDict()
@@ -64,6 +67,8 @@ class PycassoRequestHandler(BaseHTTPRequestHandler):
 		self.send_response(200)
 		self.end_headers()
 		
+		#self.wfile.write('<?xml version="1.0" encoding="UTF-8"?>')
+		#self.wfile.write("<token>%s</token>" % token)
 		self.wfile.write(token)
 	
 	def do_DELETE(self):
@@ -75,6 +80,7 @@ class PycassoRequestHandler(BaseHTTPRequestHandler):
 			# Parse the parameter
 			params = ParamsDict()
 			params.parse(post)
+			post = unquote(post)
 			
 			# Generate token
 			token = params.hash()

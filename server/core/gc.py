@@ -9,6 +9,7 @@ class GC(Thread):
 		Thread.__init__(self)
 		self.collectables = []
 		self.frequency = frequency
+		self.running = True
 	
 	def add(self, collectable):
 		"""
@@ -21,9 +22,12 @@ class GC(Thread):
 		Removes the collectable from the collection
 		"""
 		self.collectables.remove(collectable)
+	
+	def stop(self):
+		self.running = False
 			
 	def run(self):
-		while True:
+		while self.running:
 			sleep(self.frequency)
 			for collectable in self.collectables:
 				collectable.clean()

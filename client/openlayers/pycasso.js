@@ -219,7 +219,7 @@ OpenLayers.Layer.Pycasso.Provider.Array = OpenLayers.Class({
   projectedPoints: [],
 
   intervals: [],
-
+  
   initialize: function(layer, options) {
     this.layer = layer;
     this.points = options.points;
@@ -237,26 +237,26 @@ OpenLayers.Layer.Pycasso.Provider.Array = OpenLayers.Class({
   },
   
   update: function() {
-    var projectedPoints = [];
+    this.projectedPoints = [];
+    
     var projectedPoint;
     for each(point in this.points){
       projectedPoint = this.layer.pointToPixel(point[0], point[1]);
       this.projectedPoints.push([projectedPoint.x, projectedPoint.y, point[2]]);
     }
-  
-    OpenLayers.Request.issue({
-      method: 'POST',
+    
+    var request = OpenLayers.Request.POST({
       url: this.layer.url,
-      headers: {
-        "Content-Type": "text/plain"
-      },
       data: OpenLayers.Util.getParameterString({
         INTERVALS: this.intervals.join(';'), 
         POINTS: this.projectedPoints.join(';'), 
         CELLS: this.cells
       }),
+      headers: {
+        "Content-Type": "text/plain",
+      },
       callback: this.handler
-    });
+    })
   },
   
   generateIntervals: function(min, max){
@@ -272,8 +272,20 @@ OpenLayers.Layer.Pycasso.Provider.Array = OpenLayers.Class({
   },
   
   handler: function(request){
-    console.log(request.responseXML);
-    console.log(request.responseText);
+   
+     // the server could report an error
+    if(request.status == 500) {
+        // do something to calm the user
+    }
+    // the server could say you sent too much stuff
+    if(request.status == 413) {
+        // tell the user to trim their request a bit
+    }
+    // the browser's parser may have failed
+    if(!request.responseXML) {
+      // get ready for parsing by hand
+      console.log(request.responseText);
+    }
   }
 });
 

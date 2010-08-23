@@ -34,6 +34,7 @@ class Pycasso(Daemon):
 		self.server.start()
 			
 	def stop(self):
+		TokenManager.gc.stop()
 		self.server.stop()
 		
 if __name__ == '__main__':
@@ -64,4 +65,8 @@ if __name__ == '__main__':
 	
 	pycasso = Pycasso()
 	pycasso.configure(cfgfile)
-	pycasso.start()
+	try:
+		pycasso.start()
+	except:
+		pycasso.stop()
+
