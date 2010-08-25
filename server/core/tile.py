@@ -31,8 +31,8 @@ class TileRenderer():
 			return self.drawHeatmap()
 		elif type == ISOLINE:
 			return self.drawIsoline()
-		elif type == NEAREST_NEIGH:
-			return self.drawNearestNeigh()
+		elif type == VORONOI:
+			return self.drawVoronoi()
    
 	def buildConfig(self, resumed):
 		config = c_config() 
@@ -90,7 +90,7 @@ class TileRenderer():
 				
 		return pnm2png(RGBA, (width, height), buffer)
 	
-	def drawNearestNeigh(self):
+	def drawVoronoi(self):
 		width = int(self.params[RIGHT]) - int(self.params[LEFT])
 		height = int(self.params[BOTTOM]) - int(self.params[TOP])
 		

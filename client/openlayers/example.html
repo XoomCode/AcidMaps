@@ -8,22 +8,51 @@
 
 <body onload="init()">
 
-<div style="width:100%; height:100%" id="map"></div>
+<div style="position: absolute; top: 0px; left: 10px; bottom: 10px; right: 10px;" id="map"></div>
+<div style="position: absolute; top: 0px; right: 10px;">
+	<input type="button" value="Isoline" onClick="isoline()" />
+	<input type="button" value="Voronoi" onClick="voronoi()" />
+	<input type="button" value="Heatmap" onClick="heatmap()" />
+</div>
 
 <script type="text/javascript">
 
+var pycasso;
 function init(){
   var map = new OpenLayers.Map('map');
 
   var wms = new OpenLayers.Layer.WMS("OpenLayers WMS", 
   	"http://labs.metacarta.com/wms/vmap0", {layers: 'basic'} );
   	
-  var pycasso = new OpenLayers.Layer.Pycasso("Isoline", 
-    "http://radon.gisworking.com/pycasso", {ALPHA: 200});
+  pycasso = new OpenLayers.Layer.Pycasso("Isoline", 
+    "http://radon.gisworking.com/pycasso", {ALPHA: 200}, {transitionEffect: 'resize'});
   map.addLayers([wms, pycasso]);
   
-  pycasso.configure({points: [[-30,-30,10], [-30,30,55], [30,30,20]]});
+  // Add random points
+  var total = parseInt(Math.random() * 50);
+  
+  var points = [];
+  for(var i = 0; i < total; i++) {
+  	points.push([
+  		Math.random() * 360 - 180, 
+  		Math.random() * 180 - 90, 
+  		parseInt(Math.random() * 100)]);
+  }
+  
+  pycasso.configure({points: points});
   map.zoomToMaxExtent();
+}
+
+function isoline() {
+	pycasso.mergeNewParams({TYPE: 'ISOLINE'});
+}
+
+function voronoi() {
+	pycasso.mergeNewParams({TYPE: 'VORONOI'});
+}
+
+function heatmap() {
+	pycasso.mergeNewParams({TYPE: 'HEATMAP'});
 }
 
 </script>

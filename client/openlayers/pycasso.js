@@ -13,8 +13,8 @@ OpenLayers.Layer.Pycasso = OpenLayers.Class(OpenLayers.Layer.Grid, {
      * {Object} Hashtable of default parameter key/value pairs 
      */
     DEFAULT_PARAMS: {
-      type: 'ISOLINE',
-      diameter: 64
+      TYPE: 'ISOLINE',
+      DIAMETER: 64
     },
     
     /**
@@ -284,10 +284,10 @@ Pycasso.Provider.Array = OpenLayers.Class({
 		var intervals = [];
 		increment = parseInt((max - min) / 5);
 		intervals.push([min, 0, 0, 0]);
-		intervals.push([min + increment * 1, 212, 37, 103]);
-		intervals.push([min + increment * 2, 255, 173, 67]);
-		intervals.push([min + increment * 3, 224, 240, 123]);
-		intervals.push([min + increment * 4, 153, 209, 94]);
+		intervals.push([parseInt(min + increment * 1), 212, 37, 103]);
+		intervals.push([parseInt(min + increment * 2), 255, 173, 67]);
+		intervals.push([parseInt(min + increment * 3), 224, 240, 123]);
+		intervals.push([parseInt(min + increment * 4), 153, 209, 94]);
 		intervals.push([max, 47, 171, 165]);
 		return intervals;
 	},
