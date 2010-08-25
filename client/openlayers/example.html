@@ -34,13 +34,13 @@ function init(){
   var points = [];
   for(var i = 0; i < total; i++) {
   	points.push([
-  		Math.random() * 360 - 180, 
-  		Math.random() * 180 - 90, 
+  		Math.random() - 69.33, 
+  		Math.random() - 33.39, 
   		parseInt(Math.random() * 100)]);
   }
   
   pycasso.configure({points: points});
-  map.zoomToMaxExtent();
+  map.setCenter(new OpenLayers.LonLat(-68.83, -32.89), 9);
 }
 
 </script>
