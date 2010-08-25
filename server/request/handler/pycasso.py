@@ -38,8 +38,6 @@ class PycassoRequestHandler(BaseHTTPRequestHandler):
 		# Get post data
 		content_length = int(self.headers[CONTENT_LENGTH])
 		post = self.rfile.read(content_length)
-		post = unquote(post)
-		print post
 		
 		# Parse the parameter
 		params = ParamsDict()
@@ -80,7 +78,6 @@ class PycassoRequestHandler(BaseHTTPRequestHandler):
 			# Parse the parameter
 			params = ParamsDict()
 			params.parse(post)
-			post = unquote(post)
 			
 			# Generate token
 			token = params.hash()

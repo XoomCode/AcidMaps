@@ -81,10 +81,10 @@ OpenLayers.Layer.Pycasso = OpenLayers.Class(OpenLayers.Layer.Grid, {
           alert("Pycasso Layer error\n\rWFS attribute not specified");
           return;
         }
-        provider = new OpenLayers.Layer.Pycasso.Provider.WFS(this, options);
+        provider = new Pycasso.Provider.WFS(this, options);
         
       } else if (options && options.points) {
-        provider = new OpenLayers.Layer.Pycasso.Provider.Array(this, options);
+        provider = new Pycasso.Provider.Array(this, options);
       }
     },
 
@@ -140,11 +140,10 @@ OpenLayers.Layer.Pycasso = OpenLayers.Class(OpenLayers.Layer.Grid, {
         var bottomLeft = this.pointToPixel(bounds.left, bounds.bottom);
         var topRight = this.pointToPixel(bounds.right, bounds.top);
         var newParams = {
-          left: bottomLeft.x,
-          bottom: bottomLeft.y, 
-          right: topRight.x,
-          top: topRight.y,
-          token: this.token
+          LEFT: bottomLeft.x,
+          BOTTOM: bottomLeft.y, 
+          RIGHT: topRight.x,
+          TOP: topRight.y
         };
          
         return this.getFullRequestString(newParams);
@@ -193,14 +192,19 @@ OpenLayers.Layer.Pycasso = OpenLayers.Class(OpenLayers.Layer.Grid, {
 });
 
 /**
+ * Pycasso namespace
+ */
+Pycasso = {};
+
+/**
  * Pycasso Data providers
  */
-OpenLayers.Layer.Pycasso.Provider = {};
+Pycasso.Provider = {};
 
 /**
  *
  */
-OpenLayers.Layer.Pycasso.Provider.WFS = OpenLayers.Class({
+Pycasso.Provider.WFS = OpenLayers.Class({
   initialize: function(layer, source, attribute) {
     alert("wfs provider constructor called");
   }
@@ -209,7 +213,7 @@ OpenLayers.Layer.Pycasso.Provider.WFS = OpenLayers.Class({
 /**
  *
  */
-OpenLayers.Layer.Pycasso.Provider.Array = OpenLayers.Class({
+Pycasso.Provider.Array = OpenLayers.Class({
 
   /**
    * Set of points stored in array format [x,y,v]
@@ -220,72 +224,79 @@ OpenLayers.Layer.Pycasso.Provider.Array = OpenLayers.Class({
 
   intervals: [],
   
+  cells: 64,
+  
+  opacity: 1,
+  
   initialize: function(layer, options) {
     this.layer = layer;
-    this.points = options.points;
+    this.layer.map.events.register("zoomend", this, this.update);
+    this.configure(options);
+  },
+  
+  configure: function(options) {
+  	this.points = options.points;
     
     var min = Math.pow(2, 31) - 1;
     var max = -Math.pow(2, 31);
-    for each(point in options.points){
+    
+    var point;
+    for(var i = 0; i < this.points.length; i++){
+    	point = this.points[i];
       if(point[2] > max){max = point[2]}
       if(point[2] < min){min = point[2]}
     }
     
     this.intervals = options.intervals || this.generateIntervals(min, max);
-    this.cells = options.cells || 64;
-    this.layer.map.events.register("zoomend", this, this.update);
+    this.cells = options.cells || this.cells;
   },
   
   update: function() {
+    this.layer.setOpacity(0);
     this.projectedPoints = [];
     
     var projectedPoint;
-    for each(point in this.points){
+    var point;
+    for(var i = 0; i < this.points.length; i++){
+    	point = this.points[i];
       projectedPoint = this.layer.pointToPixel(point[0], point[1]);
-      this.projectedPoints.push([projectedPoint.x, projectedPoint.y, point[2]]);
+      this.projectedPoints.push(projectedPoint.x + "," + projectedPoint.y + "," + point[2]);
     }
     
     var request = OpenLayers.Request.POST({
       url: this.layer.url,
-      data: OpenLayers.Util.getParameterString({
-        INTERVALS: this.intervals.join(';'), 
-        POINTS: this.projectedPoints.join(';'), 
-        CELLS: this.cells
-      }),
+      data: this.getParameters(),
       headers: {
-        "Content-Type": "text/plain",
+        "Content-Type": "text/plain"
       },
+      scope: this,
       callback: this.handler
     })
   },
   
-  generateIntervals: function(min, max){
-    var intervals = [];
-    increment = parseInt((max - min) / 5);
-    intervals.push([min, 0, 0, 0]);
-    intervals.push([min + increment * 1, 212, 37, 103]);
-    intervals.push([min + increment * 2, 255, 173, 67]);
-    intervals.push([min + increment * 3, 224, 240, 123]);
-    intervals.push([min + increment * 4, 153, 209, 94]);
-    intervals.push([max, 47, 171, 165]);
-    return intervals;
-  },
+	getParameters: function(){
+		return "INTERVALS=" + this.intervals.join(';') + "&" +
+			"POINTS=" + this.projectedPoints.join(';') + "&" + 
+			"CELLS=" + this.cells;
+	},
+  
+	generateIntervals: function(min, max){
+		var intervals = [];
+		increment = parseInt((max - min) / 5);
+		intervals.push([min, 0, 0, 0]);
+		intervals.push([min + increment * 1, 212, 37, 103]);
+		intervals.push([min + increment * 2, 255, 173, 67]);
+		intervals.push([min + increment * 3, 224, 240, 123]);
+		intervals.push([min + increment * 4, 153, 209, 94]);
+		intervals.push([max, 47, 171, 165]);
+		return intervals;
+	},
   
   handler: function(request){
-   
-     // the server could report an error
-    if(request.status == 500) {
-        // do something to calm the user
-    }
-    // the server could say you sent too much stuff
-    if(request.status == 413) {
-        // tell the user to trim their request a bit
-    }
-    // the browser's parser may have failed
-    if(!request.responseXML) {
-      // get ready for parsing by hand
-      console.log(request.responseText);
-    }
+		this.layer.mergeNewParams({TOKEN: request.responseText});
+		
+		// TODO: Restore old opacity
+	  this.layer.setOpacity(1);
   }
 });
 

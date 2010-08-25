@@ -14,13 +14,15 @@
 
 function init(){
   var map = new OpenLayers.Map('map');
+
   var wms = new OpenLayers.Layer.WMS("OpenLayers WMS", 
   	"http://labs.metacarta.com/wms/vmap0", {layers: 'basic'} );
+  	
   var pycasso = new OpenLayers.Layer.Pycasso("Isoline", 
-    "http://localhost:7011/");
+    "http://radon.gisworking.com/pycasso", {ALPHA: 200});
   map.addLayers([wms, pycasso]);
   
-  pycasso.configure({points: [[-30,-30,10], [-30,-30,20]]});
+  pycasso.configure({points: [[-30,-30,10], [-30,30,55], [30,30,20]]});
   map.zoomToMaxExtent();
 }
 
