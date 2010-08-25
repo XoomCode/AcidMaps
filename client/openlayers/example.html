@@ -10,9 +10,9 @@
 
 <div style="position: absolute; top: 0px; left: 10px; bottom: 10px; right: 10px;" id="map"></div>
 <div style="position: absolute; top: 0px; right: 10px;">
-	<input type="button" value="Isoline" onClick="isoline()" />
-	<input type="button" value="Voronoi" onClick="voronoi()" />
-	<input type="button" value="Heatmap" onClick="heatmap()" />
+	<input type="button" value="Isoline" onClick="pycasso.mergeNewParams({TYPE: 'ISOLINE'})" />
+	<input type="button" value="Voronoi" onClick="pycasso.mergeNewParams({TYPE: 'VORONOI'})" />
+	<input type="button" value="Heatmap" onClick="pycasso.mergeNewParams({TYPE: 'HEATMAP'})" />
 </div>
 
 <script type="text/javascript">
@@ -29,7 +29,7 @@ function init(){
   map.addLayers([wms, pycasso]);
   
   // Add random points
-  var total = parseInt(Math.random() * 50);
+  var total = parseInt(Math.random() * 100);
   
   var points = [];
   for(var i = 0; i < total; i++) {
@@ -41,18 +41,6 @@ function init(){
   
   pycasso.configure({points: points});
   map.zoomToMaxExtent();
-}
-
-function isoline() {
-	pycasso.mergeNewParams({TYPE: 'ISOLINE'});
-}
-
-function voronoi() {
-	pycasso.mergeNewParams({TYPE: 'VORONOI'});
-}
-
-function heatmap() {
-	pycasso.mergeNewParams({TYPE: 'HEATMAP'});
 }
 
 </script>
