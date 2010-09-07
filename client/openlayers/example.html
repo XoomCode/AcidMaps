@@ -1,32 +1,32 @@
 <html>
 
 <head>
-  <title>Pycasso OpenLayers Example</title>
+  <title>Acid Maps OpenLayers Example</title>
   <script src="http://openlayers.org/api/OpenLayers.js"></script>
-  <script src="pycasso.js"></script>
+  <script src="acidmaps.js"></script>
 </head>
 
 <body onload="init()">
 
 <div style="position: absolute; top: 0px; left: 10px; bottom: 10px; right: 10px;" id="map"></div>
 <div style="position: absolute; top: 0px; right: 10px;">
-	<input type="button" value="Isoline" onClick="pycasso.mergeNewParams({TYPE: 'ISOLINE'})" />
-	<input type="button" value="Voronoi" onClick="pycasso.mergeNewParams({TYPE: 'VORONOI'})" />
-	<input type="button" value="Heatmap" onClick="pycasso.mergeNewParams({TYPE: 'HEATMAP'})" />
+	<input type="button" value="Isoline" onClick="acid.mergeNewParams({TYPE: 'ISOLINE'})" />
+	<input type="button" value="Voronoi" onClick="acid.mergeNewParams({TYPE: 'VORONOI'})" />
+	<input type="button" value="Heatmap" onClick="acid.mergeNewParams({TYPE: 'HEATMAP'})" />
 </div>
 
 <script type="text/javascript">
 
-var pycasso;
+var acid;
 function init(){
   var map = new OpenLayers.Map('map');
 
   var wms = new OpenLayers.Layer.WMS("OpenLayers WMS", 
   	"http://labs.metacarta.com/wms/vmap0", {layers: 'basic'} );
   	
-  pycasso = new OpenLayers.Layer.Pycasso("Isoline", 
-    "http://radon.gisworking.com/pycasso", {ALPHA: 200}, {transitionEffect: 'resize'});
-  map.addLayers([wms, pycasso]);
+  acid = new OpenLayers.Layer.Acid("Isoline", 
+    "http://localhost/acid", {ALPHA: 200}, {transitionEffect: 'resize'});
+  map.addLayers([wms, acid]);
   
   // Add random points
   var total = parseInt(Math.random() * 100);
@@ -39,7 +39,7 @@ function init(){
   		parseInt(Math.random() * 100)]);
   }
   
-  pycasso.configure({points: points});
+  acid.configure({points: points});
   map.zoomToMaxExtent();
 }
 
