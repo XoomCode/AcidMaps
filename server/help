@@ -1,4 +1,4 @@
-Usage: python pycasso.py [options]
+Usage: python acid.py [options]
 	-c Config file
 	-h This help
 	-v Version

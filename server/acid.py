@@ -7,7 +7,7 @@ from core.token import TokenManager
 from util.daemon import Daemon
 from util.pid import write_pid
 
-class Pycasso(Daemon):
+class Acid(Daemon):
 	"""
 	Application main class
 	It has the responsibility to instantiate, initialize, and configure all
@@ -63,10 +63,10 @@ if __name__ == '__main__':
 			print VERSION
 			sys.exit()
 	
-	pycasso = Pycasso()
-	pycasso.configure(cfgfile)
+	acid = Acid()
+	acid.configure(cfgfile)
 	try:
-		pycasso.start()
+		acid.start()
 	except:
-		pycasso.stop()
+		acid.stop()
 

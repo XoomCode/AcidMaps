@@ -7,7 +7,7 @@
 #include <stdint.h> 
 #include <limits.h>
 
-#include "pycasso.h"
+#include "acid.h"
 
 // #define DEBUG 1
 #define MAX(a, b) (a > b ? a : b) 
@@ -486,7 +486,7 @@ static void offset_data(coord coords[], int size, int offset_x, int offset_y) {
  * Renders a heamap in the output buffer using the given configuration
  * 
  * Params:
- * config: stored configuration sent in the first POST request to pycasso
+ * config: stored configuration sent in the first POST request to acid maps
  * out: output buffer
  * diameter: heatmap peaks diameter on y = 0
  * max_value: used to determine the max value that any point can have
@@ -512,7 +512,7 @@ void heatmap(config conf, uint32_t* out, int diameter, int max_value) {
  * Renders an interpolated image in the output buffer using the given configuration
  *
  * Params:
- * config: stored configuration sent in the first POST request to pycasso
+ * config: stored configuration sent in the first POST request to acid server
  * out: output buffer
  * interv: intervals array
  * interv_size: intervals array length

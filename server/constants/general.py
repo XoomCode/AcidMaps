@@ -1,6 +1,6 @@
-APPLICATION_NAME = "Pycasso"
+APPLICATION_NAME = "AcidMaps"
 VERSION = "1.0.0"
 CONFIGURATION_FILE = "config.ini"
 HELP_FILE = "help"
-PID_FILE = "pycasso.pid"
+PID_FILE = "acid.pid"
 CROSSDOMAIN_XML = "crossdomain.xml"

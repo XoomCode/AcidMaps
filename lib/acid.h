@@ -1,5 +1,5 @@
-#ifndef __PYCASSO_H__
-#define __PYCASSO_H__
+#ifndef __ACID_H__
+#define __ACID_H__
 
 /**
  * A simple value with desired alpha
@@ -24,7 +24,7 @@ typedef struct coord {
 } coord;
 
 /**
- * This structure represents a Pycaso interval.
+ * This structure represents an Acid Maps interval.
  * Its composed of a limit value (up_to), and 3 separated color components.
  * Each pixel, after receiving a value will be matched against an array of
  * intervals and get its corresponding color.
@@ -47,7 +47,7 @@ typedef struct box {
 } box;
 
 /**
- * Configuration sent to Pycaso in the first POST request
+ * Configuration sent to Acid Maps server in the first POST request
  * It contains a set of points, the size of the array and its bounding box.
  */
 typedef struct config {
