@@ -22,10 +22,10 @@ function init(){
   var map = new OpenLayers.Map('map');
 
   var wms = new OpenLayers.Layer.WMS("OpenLayers WMS", 
-  	"http://labs.metacarta.com/wms/vmap0", {layers: 'basic'} );
+  	"http://vmap0.tiles.osgeo.org/wms/vmap0", {layers: 'basic'} );
   	
   acid = new OpenLayers.Layer.Acid("Isoline", 
-    "http://localhost/acid", {ALPHA: 200}, {transitionEffect: 'resize'});
+    "http://localhost/acid", {ALPHA: 160}, {transitionEffect: 'resize'});
   map.addLayers([wms, acid]);
   
   // Add random points
