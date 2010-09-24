@@ -161,12 +161,6 @@ static float calculate_voronoi(coord coords[], int size, coord c, int diameter) 
       min_index = n;      
     }        
   }
-
-  int margin = diameter; 
-
-  if (min_dist > margin)
-    return -100.0f; // any value less than 0
-
   return (coords + min_index)->most_freq;
 }
 
