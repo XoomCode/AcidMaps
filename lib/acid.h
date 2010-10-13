@@ -2,14 +2,6 @@
 #define __ACID_H__
 
 /**
- * A simple value with desired alpha
- */
-typedef struct val {
-	int value;
-	int alpha;
-} val;
-
-/**
  * Coords are points with a value they 
  *
  */

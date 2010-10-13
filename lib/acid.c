@@ -34,7 +34,7 @@ static unsigned int gradient_colors[] = {0,167772415UL,335544575UL,503316726UL,6
  * height: Image height
  * max_value: Used to determine the max value that any point can have
  */               
-static void save_in_memory_as_gradient(uint32_t *out, val *vals, int width, int height, int max_value) {
+static void save_in_memory_as_gradient(uint32_t* out, int* vals, int width, int height, int max_value) {
 
   // Allocate space needed
   memset(out, 0, width * height * sizeof(uint32_t));
@@ -45,25 +45,20 @@ static void save_in_memory_as_gradient(uint32_t *out, val *vals, int width, int 
     for (x = 0; x < width; x++) {
 
       // The normalized value its between 0 and max_value
-      val *v = (vals + x*width + y);
-      int normalized_value = v->value * (LIMIT_VALUE/(float)max_value);
+      int v = *(vals + x*width + y);
+      
+      int normalized_value = v * (LIMIT_VALUE/(float)max_value);
       if (normalized_value > LIMIT_VALUE) {
         normalized_value = LIMIT_VALUE;
       }
-
       unsigned char c = (unsigned char)normalized_value;
-      int alpha;
-      if (c == 0){
-        alpha = 0;
-      } else {
-        alpha = MIN(v->alpha, MAX_ALPHA);
-      }
 
+      int a = (gradient_colors[c] >> 24) & 0x000000ff;
       int r = (gradient_colors[c] >> 16) & 0x000000ff;
       int g = (gradient_colors[c] >> 8) & 0x000000ff;
       int b = (gradient_colors[c]) & 0x000000ff;
 
-      *(out + (height - y - 1)*height + x) = (alpha << 24) | (b << 16) | (g << 8) | r;
+      *(out + (height - y - 1)*height + x) = (a << 24) | (b << 16) | (g << 8) | r;
     }
   } 
 }
@@ -79,23 +74,19 @@ static void save_in_memory_as_gradient(uint32_t *out, val *vals, int width, int 
  * height: Image height
  * alphaV: Image desired alpha
  */
-static void save_in_memory(uint32_t *out, int *vals, int width, int height, int alphaV) {
+static void save_in_memory(uint32_t* out, int* vals, int width, int height, int alphaV) {
   int x, y;
   memset(out, 0, width * height * sizeof(uint32_t));
   for (y = 0; y < height; y++) {
     for (x = 0; x < width; x++) { 
       int color = *(vals + x*width + y);
-      int alpha;
-      if (color == 0) 
-        alpha = 0;
-      else
-        alpha = alphaV;
 
+      int a = color == 0 ? 0 : alphaV;
       int r = (color >> 16) & 0x000000ff;
       int g = (color >> 8) & 0x000000ff;
       int b = (color) & 0x000000ff;
 
-      *(out + (height - y - 1)*height + x) = (alpha << 24) | (b << 16) | (g << 8) | r;
+      *(out + (height - y - 1)*height + x) = (a << 24) | (b << 16) | (g << 8) | r;
     }
   } 
 }
@@ -214,56 +205,55 @@ static int same(int val1, int val2, int val3, int val4, int val5) {
  * diameter: (DEPRECATED) diameter used to cut the interpolation
  * function: the function used to interpolate each point
  */
-static int predict_region(coord mutable_coords[], int size, int *vals, int x, int y, int width, int height, interv intervs[], int interv_size, int step, int diameter, 
+static int predict_region(coord mutable_coords[], int size, int* vals, int x, int y, int width, int height, interv intervs[], int interv_size, int step, int diameter, 
     float (*calc_inv_dist)(coord coords[], int size, coord c, int diameter)) {
   int sx, sy;
-  int *val_addr, *val_addr1, *val_addr2, *val_addr3, *val_addr4 = 0;
 
-  val_addr = (vals + x*width + y);
-  val_addr1 = (vals + x*width + y + step);
-  val_addr2 = (vals + (x + step)*width + y + step);
-  val_addr3 = (vals + (x + step)*width + y);
-  val_addr4 = (vals + (x + step/2)*width + y + step/2);
+  int* top_left = vals + x*width + y;
+  int* top_right = vals + x*width + y + step;
+  int* bottom_right = vals + (x + step)*width + y + step;
+  int* bottom_left = vals + (x + step)*width + y;
+  int* center = vals + (x + step/2)*width + y + step/2;
 
   coord ref_c;
   ref_c.x = x;
 
-  if (*val_addr == 0) {
+  if (*top_left == 0) {
     ref_c.y = y;
-    *val_addr = calc_rgb(intervs, interv_size, calc_inv_dist(mutable_coords, size, ref_c, diameter));
+    *top_left = calc_rgb(intervs, interv_size, calc_inv_dist(mutable_coords, size, ref_c, diameter));
   }
 
   if (y + step < height && x + step < width) { // if it's not the last step
-    if (*val_addr1 == 0) {
+    if (*top_right == 0) {
       ref_c.y = y + step;
-      *val_addr1 = calc_rgb(intervs, interv_size, calc_inv_dist(mutable_coords, size, ref_c, diameter));
+      *top_right = calc_rgb(intervs, interv_size, calc_inv_dist(mutable_coords, size, ref_c, diameter));
     }
 
-    if (*val_addr2 == 0) {
+    if (*bottom_right == 0) {
       ref_c.y = y + step;
       ref_c.x = x + step;
-      *val_addr2 = calc_rgb(intervs, interv_size, calc_inv_dist(mutable_coords, size, ref_c, diameter));
+      *bottom_right = calc_rgb(intervs, interv_size, calc_inv_dist(mutable_coords, size, ref_c, diameter));
     }
 
-    if (*val_addr3 == 0) {
+    if (*bottom_left == 0) {
       ref_c.y = y;
       ref_c.x = x + step;
-      *val_addr3 = calc_rgb(intervs, interv_size, calc_inv_dist(mutable_coords, size, ref_c, diameter));
+      *bottom_left = calc_rgb(intervs, interv_size, calc_inv_dist(mutable_coords, size, ref_c, diameter));
     }
 
-    if (*val_addr4 == 0) {
+    if (*center == 0) {
       ref_c.y = y + step/2;
       ref_c.x = x + step/2;
-      *val_addr4 = calc_rgb(intervs, interv_size, calc_inv_dist(mutable_coords, size, ref_c, diameter));
+      *center = calc_rgb(intervs, interv_size, calc_inv_dist(mutable_coords, size, ref_c, diameter));
     }
   }
 
   // If the value its the same in the corners
   // the full region its filled with that value
-  if (y + step < height && x + step < width && same(*val_addr, *val_addr1, *val_addr2, *val_addr3, *val_addr4)) {
+  if (y + step < height && x + step < width && same(*top_left, *top_right, *bottom_right, *bottom_left, *center)) {
     for (sx = 0; sx < step; sx++) {
       for (sy = 0; sy < step; sy++) {
-        *(val_addr + sx*width + sy) = *val_addr;
+        *(top_left + sx*width + sy) = *top_left;
       }
     }
     return 1;
@@ -293,12 +283,10 @@ static int predict_region(coord mutable_coords[], int size, int *vals, int x, in
  * diameter: (DEPRECATED) diameter used to cut the interpolation
  * function: the function used to interpolate each point
  */
-static void calc_region(coord mutable_coords[], int size, int *vals, int x, int y, int width, int height, interv intervs[], int interv_size, int step, int diameter,
+static void calc_region(coord mutable_coords[], int size, int* vals, int x, int y, int width, int height, interv intervs[], int interv_size, int step, int diameter,
     float (*calc_inv_dist)(coord coords[], int size, coord c, int diameter)) {
   int sx, sy; 
-  int *val_addr;
-
-  val_addr = (vals + x*width + y);
+  int* val_addr = (vals + x*width + y);
 
   coord ref_c;  
   for (sx = 0; sx < step; sx++) {
@@ -393,13 +381,12 @@ static int* _do_inverse_distance(coord coords[], int size, int width, int height
  */
 static float calc_heatmap_value(int dx, int dy, int diameter) {
   float dn = sqrt(dx*dx + dy*dy);
+  float d = (float)diameter;
 
-  if (dn <= diameter) {
-    float w = pow(((diameter - dn)/(float)diameter), 2);
-    return w * 100; // 100 is a reference value, could be another one                            
-  } else {
-    return 0.0f;
-  }
+  if (dn <= d) {
+    return 100 * (d - dn) / d; // 100 is a reference value, could be another one                            
+  } 
+  return 0.0f;
 }
 
 /**
@@ -414,47 +401,22 @@ static float calc_heatmap_value(int dx, int dy, int diameter) {
  * height: tile height
  * diameter: diameter used to cut the interpolation img
  */
-static val *_do_heatmap(coord coords[], int size, int width, int height, int diameter) {
-  int i, j, x, y;
-  val *vals = malloc(sizeof(val) * width * height);
-  memset(vals, 0, sizeof(val) * width * height); 
-
-  for (i = 0; i < size; i++) {
-    coord c = coords[i];
-
-    for (x = c.x-diameter/2; x < c.x+diameter/2; x++) {
-      if (x < 0 || x > width-1)
-        continue;
-
-      for (y = c.y-diameter/2; y < c.y+diameter/2; y++) {
-        if (y < 0 || y > height-1)
-          continue;
-
-        float dx = x - c.x;
-        float dy = y - c.y;
-        float d = dx*dx + dy*dy;
-        float not_sqrt_radio = (diameter/2.0) * (diameter/2.0); 
-        if (d >= not_sqrt_radio)
-          continue;
-
-        val *val_addr= vals + x*width + y;
-
-        int cand_alpha = MAX_ALPHA * ((not_sqrt_radio - d)/not_sqrt_radio);
-        val_addr->alpha += cand_alpha;
-
-        if (val_addr->value != 0)
-          continue;
-
-        float accum_v = 0.0;
-
-        for (j = 0; j < size; j++) {
-          accum_v += calc_heatmap_value(x - coords[j].x, y - coords[j].y, diameter);
-        }
-        val_addr->value = accum_v;
-      }                            
+static int* _do_heatmap(coord coords[], int size, int width, int height, int diameter) {
+  int i, x, y;
+  int* vals = malloc(sizeof(int) * width * height);
+  memset(vals, 0, sizeof(int) * width * height);
+  
+  for (x = 0; x < width; x++) {
+    for (y = 0; y < height; y++) {
+    
+    	float accum_v = 0.0;
+    	for (i = 0; i < size; i++) {
+    		accum_v += calc_heatmap_value(x - coords[i].x, y - coords[i].y, diameter);
+    	}
+    	
+			*(vals + x*width + y) = accum_v;
     }
   }
-
   return vals;
 }
 
@@ -486,6 +448,7 @@ static void offset_data(coord coords[], int size, int offset_x, int offset_y) {
  * max_value: used to determine the max value that any point can have
  */
 void heatmap(config conf, uint32_t* out, int diameter, int max_value) {
+  
   int width = conf.bbox.right - conf.bbox.left;
   int height = conf.bbox.bottom - conf.bbox.top;
 
@@ -494,7 +457,7 @@ void heatmap(config conf, uint32_t* out, int diameter, int max_value) {
 
   offset_data(mutable_coords, conf.size, conf.bbox.left, conf.bbox.top);
 
-  val *vals = _do_heatmap(mutable_coords, conf.size, width, height, diameter);
+  int* vals = _do_heatmap(mutable_coords, conf.size, width, height, diameter);
 
   save_in_memory_as_gradient(out, vals, width, height, max_value);
 
@@ -522,7 +485,7 @@ void heatmap(config conf, uint32_t* out, int diameter, int max_value) {
  * function: the function used to interpolate each point
  */
 static void interpolate(config conf, uint32_t *out, interv *intervs, int interv_size, int diameter,
-    float (*calculate)(coord coords[], int size, coord c, int diameter), int alpha) {
+  float (*calculate)(coord coords[], int size, coord c, int diameter), int alpha) {
   int width = conf.bbox.right - conf.bbox.left;
   int height = conf.bbox.bottom - conf.bbox.top;
 
