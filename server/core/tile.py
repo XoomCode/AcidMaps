@@ -68,7 +68,11 @@ class TileRenderer():
 		OptimizedBuffer = c_char * bufferLength
 		buffer = OptimizedBuffer()
 		
-		gislib.heatmap(self.buildConfig(False), buffer, diameter, max_value)
+		alpha = self.MAX_ALPHA
+		if (self.params.has_key(ALPHA)):
+			alpha = int(self.params[ALPHA])
+		
+		gislib.heatmap(self.buildConfig(False), buffer, diameter, max_value, alpha)
 		return pnm2png(RGBA, (width, height), buffer) 
 	
 	def drawIsoline(self):

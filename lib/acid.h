@@ -83,6 +83,6 @@ void inverse_distance(config conf, uint32_t *out, interv *intervs, int interv_si
  * diameter: heatmap peaks diameter on y = 0
  * max_value: maximum value that any acummulated point can have
  */
-void heatmap(config conf, uint32_t *out, int diameter, int max_value);
+void heatmap(config conf, uint32_t *out, int diameter, int max_value, int alpha);
 
 #endif

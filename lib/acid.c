@@ -34,7 +34,7 @@ static unsigned int gradient_colors[] = {0,167772415UL,335544575UL,503316726UL,6
  * height: Image height
  * max_value: Used to determine the max value that any point can have
  */               
-static void save_in_memory_as_gradient(uint32_t* out, int* vals, int width, int height, int max_value) {
+static void save_in_memory_as_gradient(uint32_t* out, int* vals, int width, int height, int max_value, int alpha) {
 
   // Allocate space needed
   memset(out, 0, width * height * sizeof(uint32_t));
@@ -54,6 +54,8 @@ static void save_in_memory_as_gradient(uint32_t* out, int* vals, int width, int 
       unsigned char c = (unsigned char)normalized_value;
 
       int a = (gradient_colors[c] >> 24) & 0x000000ff;
+      if (a > alpha) a = alpha;
+
       int r = (gradient_colors[c] >> 16) & 0x000000ff;
       int g = (gradient_colors[c] >> 8) & 0x000000ff;
       int b = (gradient_colors[c]) & 0x000000ff;
@@ -380,7 +382,7 @@ static int* _do_inverse_distance(coord coords[], int size, int width, int height
  * diameter: diameter of each heatmap peak in y = 0
  */
 static float calc_heatmap_value(int dx, int dy, int diameter) {
-  float dn = sqrt(dx*dx + dy*dy);
+  float dn = sqrt(pow(dx, 2) + pow(dy, 2));
   float d = (float)diameter;
 
   if (dn <= d) {
@@ -406,17 +408,26 @@ static int* _do_heatmap(coord coords[], int size, int width, int height, int dia
   int* vals = malloc(sizeof(int) * width * height);
   memset(vals, 0, sizeof(int) * width * height);
   
+  int dx, dy = 0;
+	float accum_v = 0.0;
+  
   for (x = 0; x < width; x++) {
     for (y = 0; y < height; y++) {
     
-    	float accum_v = 0.0;
+    	accum_v = 0.0;
     	for (i = 0; i < size; i++) {
-    		accum_v += calc_heatmap_value(x - coords[i].x, y - coords[i].y, diameter);
+    		dx = coords[i].x - x;
+    		dy = coords[i].y - y;
+    		
+				if (sqrt(pow(dx, 2) + pow(dy, 2)) > diameter) continue;
+				
+    		accum_v += calc_heatmap_value(dx, dy, diameter);
     	}
     	
 			*(vals + x*width + y) = accum_v;
     }
   }
+  
   return vals;
 }
 
@@ -447,7 +458,7 @@ static void offset_data(coord coords[], int size, int offset_x, int offset_y) {
  * diameter: heatmap peaks diameter on y = 0
  * max_value: used to determine the max value that any point can have
  */
-void heatmap(config conf, uint32_t* out, int diameter, int max_value) {
+void heatmap(config conf, uint32_t* out, int diameter, int max_value, int alpha) {
   
   int width = conf.bbox.right - conf.bbox.left;
   int height = conf.bbox.bottom - conf.bbox.top;
@@ -459,7 +470,7 @@ void heatmap(config conf, uint32_t* out, int diameter, int max_value) {
 
   int* vals = _do_heatmap(mutable_coords, conf.size, width, height, diameter);
 
-  save_in_memory_as_gradient(out, vals, width, height, max_value);
+  save_in_memory_as_gradient(out, vals, width, height, max_value, alpha);
 
   free(vals);
   free(mutable_coords);
