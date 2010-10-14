@@ -24,6 +24,7 @@ class AcidRequestHandler(BaseHTTPRequestHandler):
 	# This should be configured in the config.ini
 	MAX_TILE_SIZE = 1024
 	HEATMAP_FACTOR = 100
+	DEFAULT_MAX_POINTS = 20
 	
 	def do_GET(self):
 		handler = CrossdomainHandler()
@@ -108,7 +109,7 @@ class AcidRequestHandler(BaseHTTPRequestHandler):
 			cell_with_more_points = points.parseAndResume(pointsAsStr)
 
 		if not params.has_key(MAX_VALUE):
-			params[MAX_VALUE] = len(cell_with_more_points) * self.HEATMAP_FACTOR * 0.95
+			params[MAX_VALUE] = self.DEFAULT_MAX_POINTS * self.HEATMAP_FACTOR * 0.95
 		params[POINTS_RESUMED] = points.array
 		
 		TokenManager().set(token, params)
