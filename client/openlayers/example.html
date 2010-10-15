@@ -24,12 +24,12 @@ function init(){
   var wms = new OpenLayers.Layer.WMS("OpenLayers WMS", 
   	"http://vmap0.tiles.osgeo.org/wms/vmap0", {layers: 'basic'} );
   	
-  acid = new OpenLayers.Layer.Acid("Isoline", 
-    "http://localhost/acid", {ALPHA: 160}, {transitionEffect: 'resize'});
+  acid = new OpenLayers.Layer.Acid("Acid Maps", 
+    "http://0.0.0.0:7011/acid", {ALPHA: 160, TYPE: 'HEATMAP'}, {transitionEffect: 'resize'});
   map.addLayers([wms, acid]);
   
   // Add random points
-  var total = parseInt(Math.random() * 100);
+  var total = parseInt(Math.random() * 1000);
   
   var points = [];
   for(var i = 0; i < total; i++) {
