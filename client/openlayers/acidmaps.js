@@ -13,7 +13,7 @@ OpenLayers.Layer.Acid = OpenLayers.Class(OpenLayers.Layer.Grid, {
      * {Object} Hashtable of default parameter key/value pairs 
      */
     DEFAULT_PARAMS: {
-      TYPE: 'ISOLINE',
+      TYPE: 'HEATMAP',
       DIAMETER: 64
     },
     
