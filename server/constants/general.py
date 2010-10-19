@@ -1,5 +1,5 @@
 APPLICATION_NAME = "AcidMaps"
-VERSION = "1.0.0"
+VERSION = "1.1.0"
 CONFIGURATION_FILE = "config.ini"
 HELP_FILE = "help"
 PID_FILE = "acid.pid"
