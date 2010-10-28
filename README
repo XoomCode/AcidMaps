@@ -2,15 +2,8 @@ Acid Maps
 
 SYNOPSIS
 
-  Acid Maps it's a web server that generates interpolated
-  images from a set of valued points.
-
 
 DEPENDENCIES
-
-  System
-    python (Recomended >= 2.6.0)
-    psyco  (Recomended >= 1.6.0)
 
 
 LICENSE
