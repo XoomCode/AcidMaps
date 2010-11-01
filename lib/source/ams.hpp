@@ -8,7 +8,7 @@ namespace AcidMaps {
 	/**
 	 * Generates an interpolated image with the given configuration
 	 */
-	void interpolate(configuration cfg, uint32_t* out);
+	void interpolate(Configuration cfg, char* out);
 
 };
 

@@ -5,7 +5,7 @@ namespace AcidMaps {
 	
 	class Configuration{
 		public:
-			int output_size;
+			int output_length;		/// Output buffer length
 	};
 
 };
