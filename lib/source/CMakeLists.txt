@@ -1,1 +1,1 @@
-add_library (ams ams.cpp)
+add_library (ams SHARED ams.cpp)
