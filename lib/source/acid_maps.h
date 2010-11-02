@@ -13,20 +13,22 @@
  * @todo Brief and description
  * 
  */
-
 namespace acid_maps {
 
+/**
+ * Configuration forward declaration
+ */ 
 struct Configuration;
 
-  /**
-   * @brief Generates an interpolated raster with the given configuration
-   *
-   * @param configuration Configuration
-   * @param output_buffer char*
-   * 
-   * @todo More documentation
-   */
-  void interpolate(Configuration configuration, char* output_buffer);
+/**
+ * @brief Generates an interpolated raster with the given configuration
+ *
+ * @param configuration Configuration
+ * @param output_buffer char*
+ * 
+ * @todo More documentation
+ */
+void interpolate(Configuration configuration, char* output_buffer);
 
 };  // namespace acid_maps
 
