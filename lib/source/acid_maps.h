@@ -5,7 +5,7 @@
  * @mainpage Acid Maps core library
  * 
  * @file acid_maps.h
- * @brief la
+ * @brief
  *
  * @date 2010-11-02
  * @authors Fabio R. Panettieri
