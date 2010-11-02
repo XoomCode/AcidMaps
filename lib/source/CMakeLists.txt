@@ -1,1 +1,1 @@
-add_library (ams SHARED ams.cpp)
+add_library (acid-maps SHARED acid_maps.cc)
