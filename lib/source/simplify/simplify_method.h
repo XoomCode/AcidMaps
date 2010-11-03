@@ -1,12 +1,11 @@
+#ifndef LIB_SOURCE_SIMPLIFY_SIMPLIFY_METHOD_H_
+#define LIB_SOURCE_SIMPLIFY_SIMPLIFY_METHOD_H_
 /**
  * @file simplify_method.h
  * 
  * @date 2010-11-03
  * @authors Fabio R. Panettieri
  */
-
-#ifndef LIB_SOURCE_SIMPLIFY_SIMPLIFY_METHOD_H_
-#define LIB_SOURCE_SIMPLIFY_SIMPLIFY_METHOD_H_
 
 namespace acid_maps {
 

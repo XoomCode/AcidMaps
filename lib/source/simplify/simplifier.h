@@ -1,3 +1,5 @@
+#ifndef LIB_SOURCE_SIMPLIFY_SIMPLIFIER_H_
+#define LIB_SOURCE_SIMPLIFY_SIMPLIFIER_H_
 /**
  * @file simplifier.h
  * @brief Simplifiers base class
@@ -8,15 +10,12 @@
  * @authors Fabio R. Panettieri
  */
 
-#ifndef LIB_SOURCE_SIMPLIFY_SIMPLIFIER_H_
-#define LIB_SOURCE_SIMPLIFY_SIMPLIFIER_H_
-
 namespace acid_maps {
 
 /**
- * Forward declaration avoids unnecessary includes
+ * Forward declaration
  */
-class Configuration;
+struct Configuration;
 
 /**
  * @brief Simplifier's base class
@@ -34,7 +33,7 @@ class Simplifier {
     /**
      * @brief Reduce the number of valued points
      */
-    virtual void simplify(Configuration configuration) = 0;
+    virtual void simplify(Configuration& configuration) = 0;
 };
 
 };  // namespace acid_maps

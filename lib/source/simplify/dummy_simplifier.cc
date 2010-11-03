@@ -6,12 +6,14 @@
  * @authors Fabio R. Panettieri
  */
 
-#include "../configuration.h"
+#include "../core/configuration.h"
 #include "./dummy_simplifier.h"
 
 namespace acid_maps {
 
-void DummySimplifier::simplify(Configuration configuration) {}
+void DummySimplifier::simplify(Configuration& configuration) {
+  configuration.simplify_size = configuration.dataset_size;
+}
 
 };  // namespace acid_maps
 

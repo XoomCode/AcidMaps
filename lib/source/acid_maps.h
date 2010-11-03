@@ -1,3 +1,5 @@
+#ifndef LIB_SOURCE_ACID_MAPS_H_
+#define LIB_SOURCE_ACID_MAPS_H_
 /** 
  * @mainpage Acid Maps core library
  * 
@@ -26,9 +28,6 @@
  * @date 2010-11-02
  * @authors Fabio R. Panettieri
  */
-
-#ifndef LIB_SOURCE_ACID_MAPS_H_
-#define LIB_SOURCE_ACID_MAPS_H_
 
 namespace acid_maps {
 

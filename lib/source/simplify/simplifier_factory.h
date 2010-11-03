@@ -1,3 +1,5 @@
+#ifndef LIB_SOURCE_SIMPLIFY_SIMPLIFIER_FACTORY_H_
+#define LIB_SOURCE_SIMPLIFY_SIMPLIFIER_FACTORY_H_
 /**
  * @file simplifier_factory.h
  * @brief Simplifier factory declaration
@@ -5,9 +7,6 @@
  * @date 2010-11-03
  * @authors Fabio R. Panettieri
  */
-
-#ifndef LIB_SOURCE_SIMPLIFY_SIMPLIFIER_FACTORY_H_
-#define LIB_SOURCE_SIMPLIFY_SIMPLIFIER_FACTORY_H_
 
 namespace acid_maps {
 
