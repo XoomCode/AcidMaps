@@ -10,9 +10,6 @@
 
 namespace acid_maps {
 
-/**
- * @brief Converts projected coordinates into  
- */
 class Transformer {
   public:
     /**

@@ -4,8 +4,6 @@
  * @file dummy_interpolation.h
  * @brief Dummy simplifier implementation
  *
- * Keeps the dataset untouched
- *
  * @date 2010-11-03
  * @authors Fabio R. Panettieri
  */

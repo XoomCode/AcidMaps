@@ -12,7 +12,12 @@
 namespace acid_maps {
 
 void DummyInterpolation::interpolate(Configuration* configuration) {
-  configuration->interpolated_bitmap = new int[configuration->width * configuration->height];
+  int bitmap_size = configuration->width * configuration->height;
+  configuration->interpolated_bitmap = new int[bitmap_size];
+  
+  for (int i = 0; i < bitmap_size; i++) {
+    configuration->interpolated_bitmap[i] = 0;
+  }
 }
 
 };  // namespace acid_maps

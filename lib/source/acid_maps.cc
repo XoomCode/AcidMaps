@@ -15,23 +15,27 @@
 #include "transform/transformer.h"
 #include "interpolate/interpolation.h"
 #include "interpolate/interpolation_factory.h"
-#include "interpolate/interpolation_strategy.h"
+#include "render/renderer.h"
+#include "render/renderer_factory.h"
 
 namespace acid_maps {
 
 void generate(Configuration* configuration) {
   Simplifier* simplifier = SimplifierFactory::get(configuration->simplify_method);
   simplifier->simplify(configuration);
+  delete simplifier;
   
   Transformer* transformer = new Transformer();
   transformer->transform(configuration);
+  delete transformer;
   
   Interpolation* interpolation = InterpolationFactory::get(configuration->interpolation_strategy);
   interpolation->interpolate(configuration);
-  
   delete interpolation;
-  delete transformer;
-  delete simplifier;
+  
+  Renderer* renderer = RendererFactory::get(configuration->color_depth);
+  renderer->render(configuration);
+  delete renderer;
 }
 
 };  // namespace acid_maps
