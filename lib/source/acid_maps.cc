@@ -13,10 +13,8 @@
 
 namespace acid_maps {
 
-void interpolate(Configuration configuration, char* output_buffer) {
-  for (int i = 0; i < configuration.output_buffer_length; i++) {
-    output_buffer[i] = '6';
-  }
+void generate(Configuration configuration, char* output_buffer) {
+
 }
 
 };  // namespace acid_maps

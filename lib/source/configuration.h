@@ -19,7 +19,10 @@ namespace acid_maps {
  * @todo Brief and description
  */
 struct Configuration {
-  int output_buffer_length;
+  int width;
+  int height;
+  int color_depth;
+  int simplify_method;
 };
 
 };  // namespace acid_maps
