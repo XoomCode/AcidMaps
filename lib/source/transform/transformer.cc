@@ -11,7 +11,7 @@
 
 namespace acid_maps {
 
-void Transformer::transform(Configuration& configuration) {
+void Transformer::transform(Configuration* configuration) {
 }
 
 };  // namespace acid_maps

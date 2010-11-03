@@ -6,7 +6,6 @@
  * @authors Fabio R. Panettieri
  * 
  * @todo Brief and description
- * 
  */
 
 #include "./acid_maps.h"
@@ -20,12 +19,15 @@ namespace acid_maps {
 /// Number of values per point
 static const int XYV = 3;
 
-void generate(Configuration configuration, char* output_buffer) {
-  Simplifier* simplifier = SimplifierFactory::get(configuration.simplify_method);
+void generate(Configuration* configuration, char* output_buffer) {
+  Simplifier* simplifier = SimplifierFactory::get(configuration->simplify_method);
   simplifier->simplify(configuration);
   
   Transformer* transformer = new Transformer();
   transformer->transform(configuration);
+  
+  /*InterpolationStrategy* interpolation = 
+  interpolation->interpolate(configuration);*/
   
   delete transformer;
   delete simplifier;

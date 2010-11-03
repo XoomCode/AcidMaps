@@ -18,6 +18,9 @@ namespace acid_maps {
  * before using the bounds for anything.
  */
 struct Bounds {
+  Bounds();
+  Bounds(int left, int bottom, int right, int top);
+  
   float left;
   float bottom;
   float right;

@@ -33,7 +33,7 @@ class Simplifier {
     /**
      * @brief Reduce the number of valued points
      */
-    virtual void simplify(Configuration& configuration) = 0;
+    virtual void simplify(Configuration* configuration) = 0;
 };
 
 };  // namespace acid_maps

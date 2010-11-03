@@ -21,6 +21,16 @@ namespace acid_maps {
  * @todo Brief and description
  */
 struct Configuration {
+  /**
+   * Proper initialize all members
+   */
+  Configuration();
+  
+  /**
+   * Ensure correct destruction and memory release
+   */
+  ~Configuration();
+  
   /// Set of valued points, stored 3 floats per point. X, Y, Value
   float* dataset;
 
@@ -35,10 +45,10 @@ struct Configuration {
   int simplify_size;
   
   /// Requested tile bounds
-  Bounds tile_bounds;
+  Bounds* tile_bounds;
   
   /// Map bounds
-  Bounds map_bounds;
+  Bounds* map_bounds;
 
   /// Output image width
   int width;

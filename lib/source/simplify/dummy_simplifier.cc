@@ -11,8 +11,8 @@
 
 namespace acid_maps {
 
-void DummySimplifier::simplify(Configuration& configuration) {
-  configuration.simplify_size = configuration.dataset_size;
+void DummySimplifier::simplify(Configuration* configuration) {
+  configuration->simplify_size = configuration->dataset_size;
 }
 
 };  // namespace acid_maps

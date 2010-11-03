@@ -19,7 +19,7 @@ class Transformer {
      * @brief Transform each point geographic coordinates
      * in the dataset to pixel coordinates from the top-left corner of the image.
      */
-    void transform(Configuration& configuration);
+    void transform(Configuration* configuration);
 };
 
 };  // namespace acid_maps
