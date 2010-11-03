@@ -1,6 +1,3 @@
-#ifndef LIB_SOURCE_ACID_MAPS_H_
-#define LIB_SOURCE_ACID_MAPS_H_
-
 /** 
  * @mainpage Acid Maps core library
  * 
@@ -12,8 +9,8 @@
  * Simplify -> Transform -> Interpolate -> Render
  * 
  * Simplify: Acid Maps can interpolate very large datasets.
- * In order to keep the proccess stable and run times low, its very important to 
- * simplify them to a reasonable size.
+ * In order to keep the proccess stable and fast execution times, its very important to 
+ * simplify them to smaller sizes.
  * This proccess generates simplified datasets.
  * 
  * Transform: Datasets contains projected information.
@@ -28,10 +25,11 @@
  *
  * @date 2010-11-02
  * @authors Fabio R. Panettieri
- * 
- * @todo Brief and description
- * 
  */
+
+#ifndef LIB_SOURCE_ACID_MAPS_H_
+#define LIB_SOURCE_ACID_MAPS_H_
+
 namespace acid_maps {
 
 /**
@@ -47,7 +45,6 @@ struct Configuration;
  *
  * @param configuration Configuration 
  * @param output_buffer char* a 32bits raw image will stored here
- * 
  */
 void generate(Configuration configuration, char* output_buffer);
 
