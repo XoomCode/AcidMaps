@@ -4,7 +4,6 @@
  *
  * @date 2010-11-03
  * @authors Fabio R. Panettieri
- * 
  */
 #include "./simplifier.h"
 #include "./simplify_method.h"
@@ -15,7 +14,7 @@ namespace acid_maps {
 
 Simplifier* SimplifierFactory::get(int method) {
   switch (method) {
-    case DEFAULT:
+    case DUMMY:
       return new DummySimplifier();
   }
 }

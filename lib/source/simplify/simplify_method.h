@@ -13,7 +13,7 @@ namespace acid_maps {
  * @brief List of available simplification methods
  */
 enum SimplifyMethod {
-  DEFAULT = 0,         /// No simplification
+  DUMMY = 0,           /// No simplification
   GRID = 1,            /// Uniform distributed grid
   SAMPLING = 2,        /// Random samples
   EXTREME_VALUES = 3   /// Highest and lowest values

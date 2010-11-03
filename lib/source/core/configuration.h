@@ -31,6 +31,10 @@ struct Configuration {
    */
   ~Configuration();
   
+  /// Allocated output buffer
+  /// @note size should be = width * height * color_depth
+  char* output_buffer;
+  
   /// Set of valued points, stored 3 floats per point. X, Y, Value
   float* dataset;
 
@@ -49,7 +53,13 @@ struct Configuration {
   
   /// Map bounds
   Bounds* map_bounds;
-
+  
+  /// Strategy used to interpolate missing values
+  int interpolation_strategy;
+  
+  /// Interpolated values will be stored here
+  int* interpolated_bitmap;
+  
   /// Output image width
   int width;
 

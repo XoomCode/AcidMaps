@@ -13,22 +13,23 @@
 #include "simplify/simplifier.h"
 #include "simplify/simplifier_factory.h"
 #include "transform/transformer.h"
+#include "interpolate/interpolation.h"
+#include "interpolate/interpolation_factory.h"
+#include "interpolate/interpolation_strategy.h"
 
 namespace acid_maps {
 
-/// Number of values per point
-static const int XYV = 3;
-
-void generate(Configuration* configuration, char* output_buffer) {
+void generate(Configuration* configuration) {
   Simplifier* simplifier = SimplifierFactory::get(configuration->simplify_method);
   simplifier->simplify(configuration);
   
   Transformer* transformer = new Transformer();
   transformer->transform(configuration);
   
-  /*InterpolationStrategy* interpolation = 
-  interpolation->interpolate(configuration);*/
+  Interpolation* interpolation = InterpolationFactory::get(configuration->interpolation_strategy);
+  interpolation->interpolate(configuration);
   
+  delete interpolation;
   delete transformer;
   delete simplifier;
 }

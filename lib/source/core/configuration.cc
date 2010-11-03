@@ -8,10 +8,12 @@
 
 #include "./configuration.h"
 
+#define NULL 0
+
 namespace acid_maps {
 
 Configuration::Configuration() {
-  dataset = 0;
+  dataset = NULL;
   dataset_size = 0;
   simplify_method = 0;
   simplify_size = 0;
@@ -20,9 +22,11 @@ Configuration::Configuration() {
   width = 0;
   height = 0;
   color_depth = 0;
+  interpolated_bitmap = NULL;
 }
 
 Configuration::~Configuration() {
+  delete [] interpolated_bitmap;
   delete map_bounds;
   delete tile_bounds;
   delete [] dataset;

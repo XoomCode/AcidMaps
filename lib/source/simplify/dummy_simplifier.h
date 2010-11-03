@@ -20,7 +20,6 @@ namespace acid_maps {
 class DummySimplifier : public Simplifier {
   /**
    * @brief It does nothing with the dataset
-   * @note Inlined because it's empty
    */
   void simplify(Configuration* configuration);
 };

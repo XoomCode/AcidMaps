@@ -1,6 +1,6 @@
 /**
- * @file configuration.cc
- * @brief Configuration implementation
+ * @file bounds.cc
+ * @brief Bounds implementation
  *
  * @date 2010-11-03
  * @authors Fabio R. Panettieri
