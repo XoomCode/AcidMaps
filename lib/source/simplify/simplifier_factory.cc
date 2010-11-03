@@ -13,9 +13,9 @@
 
 namespace acid_maps {
 
-static Simplifier* get(int method); {
+Simplifier* SimplifierFactory::get(int method) {
   switch (method) {
-    case SimplifyMethod.DEFAULT:
+    case DEFAULT:
       return new DummySimplifier();
   }
 }

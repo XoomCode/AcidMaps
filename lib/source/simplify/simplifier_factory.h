@@ -12,22 +12,18 @@
 namespace acid_maps {
 
 /**
- * Enum forward declaration
- */
-enum SimplifyMethod;
-
-/**
  * @brief Class responsible of creating new simplifiers
  * Based on the Factory Method Pattern
  */
 class SimplifierFactory {
-  /**
-   * @brief Creates the requested Simplifier
-   *
-   * @param method SimplifyMethod Desired simplify method
-   * @returns Simplifier*
-   */
-  static Simplifier* get(int method);
+  public:
+    /**
+     * @brief Creates the requested Simplifier
+     *
+     * @param method SimplifyMethod Desired simplify method
+     * @returns Simplifier*
+     */
+    static Simplifier* get(int method);
 };
 
 };  // namespace acid_maps

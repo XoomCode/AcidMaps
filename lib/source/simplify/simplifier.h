@@ -14,21 +14,27 @@
 namespace acid_maps {
 
 /**
+ * Forward declaration avoids unnecessary includes
+ */
+class Configuration;
+
+/**
  * @brief Simplifier's base class
  * 
  * You should not use this class directly.
  * Use SimplifierFactory if you want an instance of any subclass
  */
 class Simplifier {
-  /**
-   * @brief Virtual destructor allows proper destructor calls
-   */
-  virtual ~Simplifier();
+  public:
+    /**
+     * @brief Virtual destructor allows proper destructor calls
+     */
+    virtual ~Simplifier();
 
-  /**
-   * @brief Reduce the number of valued points
-   */
-  virtual void simplify(Configuration configuration) = 0;
+    /**
+     * @brief Reduce the number of valued points
+     */
+    virtual void simplify(Configuration configuration) = 0;
 };
 
 };  // namespace acid_maps
