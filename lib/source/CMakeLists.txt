@@ -1,3 +1,3 @@
-file(GLOB_RECURSE sources *.cc)
-add_library (acid-maps SHARED ${sources})
+FILE(GLOB_RECURSE sources *.cc)
+ADD_LIBRARY (acid-maps SHARED ${sources})
 

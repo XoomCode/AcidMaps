@@ -28,7 +28,7 @@ class Interpolation {
     /**
      * @brief Virtual destructor allows proper destructor calls
      */
-    virtual ~Interpolation();
+    virtual ~Interpolation(){};
 
     /**
      * @brief Generates an interpolated int bitmap

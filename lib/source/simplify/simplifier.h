@@ -28,7 +28,7 @@ class Simplifier {
     /**
      * @brief Virtual destructor allows proper destructor calls
      */
-    virtual ~Simplifier();
+    virtual ~Simplifier(){};
 
     /**
      * @brief Reduce the number of valued points

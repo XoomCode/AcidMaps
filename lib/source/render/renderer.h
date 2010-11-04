@@ -23,7 +23,7 @@ class Renderer {
      /**
      * @brief Virtual destructor allows proper destructor calls
      */
-    virtual ~Renderer();
+    virtual ~Renderer(){};
 
     /**
      * @brief After the interpolated bitmap has been generated, the renderer generates

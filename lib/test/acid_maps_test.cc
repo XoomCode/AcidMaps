@@ -7,4 +7,4 @@ class AcidMapsTest : public CppUnit::TestFixture {
 public:
   void testEmpty () { int i = 5; CPPUNIT_ASSERT( i == 5 ); }
 };
-CPPUNIT_TEST_SUITE_NAMED_REGISTRATION( SampleTest, SampleTest );
+CPPUNIT_TEST_SUITE_NAMED_REGISTRATION( AcidMapsTest, AcidMapsTest );
