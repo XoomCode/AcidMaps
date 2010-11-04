@@ -1,7 +1,6 @@
 geoserver/plugin/.classpath
 geoserver/plugin/.project
 geoserver/plugin/.settings
-lib/bin
-lib/build
 geoserver/plugin/target
 **/*.class
+**/*build
