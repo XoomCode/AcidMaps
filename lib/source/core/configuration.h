@@ -33,7 +33,7 @@ struct Configuration {
   
   /// Allocated output buffer
   /// @note size should be = width * height * color_depth
-  char* output_buffer;
+  unsigned char* output_buffer;
   
   /// Set of valued points, stored 3 floats per point. X, Y, Value
   float* dataset;
@@ -49,16 +49,13 @@ struct Configuration {
   int simplify_size;
   
   /// Requested tile bounds
-  Bounds* tile_bounds;
-  
-  /// Map bounds
-  Bounds* map_bounds;
+  Bounds* bounds;
   
   /// Strategy used to interpolate missing values
   int interpolation_strategy;
   
   /// Interpolated values will be stored here
-  int* interpolated_bitmap;
+  unsigned int* interpolated_bitmap;
   
   /// Output image width
   int width;

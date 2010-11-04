@@ -17,8 +17,7 @@ Configuration::Configuration() {
   dataset_size = 0;
   simplify_method = 0;
   simplify_size = 0;
-  tile_bounds = new Bounds();
-  map_bounds = new Bounds();
+  bounds = NULL;
   width = 0;
   height = 0;
   color_depth = 0;
@@ -26,10 +25,9 @@ Configuration::Configuration() {
 }
 
 Configuration::~Configuration() {
-  delete [] interpolated_bitmap;
-  delete map_bounds;
-  delete tile_bounds;
-  delete [] dataset;
+  if (interpolated_bitmap) delete [] interpolated_bitmap;
+  if (bounds) delete bounds;
+  if (dataset) delete [] dataset;
 }
 
 };  // namespace acid_maps
