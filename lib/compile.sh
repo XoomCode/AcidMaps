@@ -1,4 +1,5 @@
+mkdir build
 cd build
-cmake ./
-cd ../bin
+cmake ../source
 make
+

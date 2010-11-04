@@ -6,6 +6,8 @@
 
 #include <math.h>     /* Include math.h for the prototype of function y0 */
 
+#include "../../lib/source/core/configuration.h"
+
 /* Our C definition of the function bessely0 declared in Bessel.java */
 
 void interpolate(char* out, int* size){
@@ -24,11 +26,11 @@ JNIEXPORT void JNICALL Java_com_xoomcode_acidmaps_adapter_JCAdapter_interpolateC
  	jbyte *outpt;
  	jboolean isCopy;
  	
-	jclass cls = (*env)->FindClass(env, "com/xoomcode/acidmaps/Configuration");
- 	jfieldID ageId = (*env)->GetFieldID(env, cls, "age", "I");
- 	int intFieldVal = (*env)->GetIntField(env, configuration, ageId);
+	jclass cls = env->FindClass("com/xoomcode/acidmaps/Configuration");
+ 	jfieldID ageId = env->GetFieldID(cls, "age", "I");
+ 	int intFieldVal = env->GetIntField(configuration, ageId);
 
- 	outpt = (*env)->GetByteArrayElements(env, out, &isCopy);
+ 	outpt = env->GetByteArrayElements(out, &isCopy);
  		
  	outpt[0] = 'c';
  	outpt[1] = 'a';
@@ -36,7 +38,7 @@ JNIEXPORT void JNICALL Java_com_xoomcode_acidmaps_adapter_JCAdapter_interpolateC
  	outpt[3] = 'a';
 	//outpt[4] = intFieldVal;
 	
-	(*env)->ReleaseByteArrayElements(env, out, outpt, 0);
+	env->ReleaseByteArrayElements(out, outpt, 0);
 	
 }
 
