@@ -1,3 +1,5 @@
+#ifndef LIB_SOURCE_SIMPLIFY_DUMMY_SIMPLIFIER_H_
+#define LIB_SOURCE_SIMPLIFY_DUMMY_SIMPLIFIER_H_
 /**
  * @file dummy_simplifier.h
  * @brief Dummy simplifier implementation
@@ -7,9 +9,6 @@
  * @date 2010-11-03
  * @authors Fabio R. Panettieri
  */
-
-#ifndef LIB_SOURCE_SIMPLIFY_DUMMY_SIMPLIFIER_H_
-#define LIB_SOURCE_SIMPLIFY_DUMMY_SIMPLIFIER_H_
 
 #include "./simplifier.h"
 
@@ -21,9 +20,8 @@ namespace acid_maps {
 class DummySimplifier : public Simplifier {
   /**
    * @brief It does nothing with the dataset
-   * @note Inlined because it's empty
    */
-  void simplify(Configuration configuration);
+  void simplify(Configuration* configuration);
 };
 
 };  // namespace acid_maps
