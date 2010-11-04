@@ -1,6 +1,6 @@
 package com.xoomcode.acidmaps.adapter;
 
-import com.xoomcode.acidmaps.Configuration;
+import com.xoomcode.acidmaps.core.Configuration;
 
 public class JCAdapter {
 	
