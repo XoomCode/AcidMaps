@@ -25,9 +25,9 @@ Configuration::Configuration() {
 }
 
 Configuration::~Configuration() {
-  // if (interpolated_bitmap) delete [] interpolated_bitmap;
-  // if (bounds) delete bounds;
-  // if (dataset) delete [] dataset;
+  if (interpolated_bitmap) delete [] interpolated_bitmap;
+  if (bounds) delete bounds;
+  if (dataset) delete [] dataset;
 }
 
 };  // namespace acid_maps
