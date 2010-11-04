@@ -1,1 +1,11 @@
-JNI interface
+DON'T EVER DO THIS.
+cd geoserver/jni # DON'T
+cmake .          # DO
+make             # THIS
+
+INSTEAD
+cd geoserver/jni/build # YOU SHOULD
+cmake ../              # DO
+make                   # THIS
+
+Or you will fill your source dir with intermediate files generated with cmake.

@@ -1,9 +1,9 @@
 CMAKE_MINIMUM_REQUIRED (VERSION 2.8) 
-PROJECT (ACID_MAPS_ADAPTER) 
+PROJECT (ACID_MAPS_JNI) 
 
 FIND_PACKAGE(JNI REQUIRED)
 INCLUDE_DIRECTORIES(${JNI_INCLUDE_DIRS})
 
 FILE(GLOB_RECURSE sources ../../lib/source/*.cc)
-ADD_LIBRARY (acid-maps-adapter SHARED JCAdapterImpl.cc ${sources})
+ADD_LIBRARY (acid-maps-jni SHARED JCAdapterImpl.cc ${sources})
 
