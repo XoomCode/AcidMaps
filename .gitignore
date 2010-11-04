@@ -3,4 +3,3 @@ geoserver/plugin/.project
 geoserver/plugin/.settings
 geoserver/plugin/target
 **/*.class
-**/*build
