@@ -1,12 +1,9 @@
 package com.xoomcode.acidmaps;
 
-import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -15,10 +12,6 @@ import javax.imageio.ImageIO;
 import javax.media.jai.JAI;
 import javax.servlet.ServletException;
 
-import org.apache.fop.image.PNGImage;
-import org.geotools.factory.CommonFactoryFinder;
-import org.geotools.factory.GeoTools;
-import org.geotools.feature.FeatureIterator;
 import org.geoserver.platform.ServiceException;
 import org.geoserver.wms.GetMapRequest;
 import org.geoserver.wms.MapLayerInfo;
@@ -26,10 +19,10 @@ import org.geoserver.wms.WMSMapContext;
 import org.geoserver.wms.WebMap;
 import org.geoserver.wms.map.RenderedImageMap;
 import org.geotools.data.FeatureSource;
-import org.geotools.data.Query;
+import org.geotools.factory.CommonFactoryFinder;
+import org.geotools.factory.GeoTools;
 import org.geotools.feature.FeatureCollection;
-import org.geotools.map.FeatureSourceMapLayer;
-import org.geotools.map.MapLayer;
+import org.geotools.feature.FeatureIterator;
 import org.geotools.styling.FeatureTypeConstraint;
 import org.geotools.styling.Style;
 import org.opengis.feature.Feature;
@@ -39,10 +32,15 @@ import org.opengis.filter.Filter;
 import org.opengis.filter.FilterFactory;
 
 import com.vividsolutions.jts.geom.Envelope;
+import com.xoomcode.acidmaps.adapter.JCAdapter;
+import com.xoomcode.acidmaps.core.Bounds;
+import com.xoomcode.acidmaps.core.Configuration;
 
 public class AcidMapService {
 	
 	private FilterFactory filterFac;
+	
+	public static final int RGBA_SIZE = 4;
 
 	public AcidMapService() {
 		this.filterFac = CommonFactoryFinder.getFilterFactory(GeoTools.getDefaultHints());
@@ -96,8 +94,26 @@ public class AcidMapService {
 			Object y = f.getAttribute("y");
 			points.add(new Object[] { x, y });
 		}
+		//TODO: Asignar puntos
 		
-        RenderedImage renderedImage = JAI.create("fileload", "/home/cfarina/wk/geoserver/acidmaps/src/main/java/com/xoomcode/acidmaps/landscape.jpg");
+		Configuration configuration = new Configuration();
+		configuration.width = request.getWidth();
+		configuration.height = request.getHeight();
+		Bounds tileBounds = new Bounds();
+		
+		//TODO: Revisar si esto esta bien
+		tileBounds.bottom = (float)request.getBbox().getMinY();
+		tileBounds.top = (float)request.getBbox().getMaxY();
+		tileBounds.right = (float)request.getBbox().getMinX();
+		tileBounds.left = (float)request.getBbox().getMaxX();
+		configuration.tileBounds = tileBounds;
+		
+		byte[] out = new byte[configuration.width * configuration.height * RGBA_SIZE];
+		JCAdapter jCAdapter = new JCAdapter();
+		jCAdapter.interpolate(new Configuration(), out);
+		
+		BufferedImage image=ImageIO.read(new ByteArrayInputStream(out));
+		RenderedImage renderedImage = JAI.create("fileload", image);
         final String outputFormat = request.getFormat();
         RenderedImageMap result = new RenderedImageMap(mapContext, renderedImage, outputFormat);
         return result;

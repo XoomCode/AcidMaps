@@ -20,10 +20,10 @@ public class Configuration {
 	public int simplifySize;
 
 	/** Requested tile bounds */
-	public Bounds[] tileBounds;
+	public Bounds tileBounds;
 
 	/** Map bounds */
-	public Bounds[] mapBounds;
+	public Bounds mapBounds;
 
 	/** Strategy used to interpolate missing values */
 	public int interpolationStrategy;
