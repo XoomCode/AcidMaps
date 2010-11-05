@@ -46,6 +46,15 @@ struct Configuration {
   
   /// Output image size
   Size* tile_size;
+  
+  /// Intervals array
+  int* intervals;
+  
+  /// Intervals array
+  int* interval_colors;
+  
+  /// Size of the itervals array
+  int intervals_size;
 };
 
 };  // namespace acid_maps
