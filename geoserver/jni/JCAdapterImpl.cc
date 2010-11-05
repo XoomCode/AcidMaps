@@ -41,10 +41,10 @@ acid_maps::Bounds* getBoundField(JNIEnv* env, jclass configurationClass, jobject
 
 	if(jbounds){
 		acid_maps::Bounds* bound= new acid_maps::Bounds();
-		bound->bottom = getFloatField(env, boundClass, jbounds, "bottom");
-		bound->left = getFloatField(env, boundClass, jbounds, "left");
-		bound->right = getFloatField(env, boundClass, jbounds, "right");
-		bound->top = getFloatField(env, boundClass, jbounds, "top");
+		bound->min_x = getFloatField(env, boundClass, jbounds, "minY");
+		bound->max_y = getFloatField(env, boundClass, jbounds, "maxY");
+		bound->min_y = getFloatField(env, boundClass, jbounds, "minY");
+		bound->max_x = getFloatField(env, boundClass, jbounds, "maxX");
 		return bound;
 	} else {
 		return NULL;
@@ -56,8 +56,7 @@ acid_maps::Configuration* buildConfiguration(JNIEnv* env, jobject jconfiguration
 
 	jclass configurationClass = env->FindClass("com/xoomcode/acidmaps/core/Configuration");
 
-	configuration->tile_bounds = getBoundField(env, configurationClass, jconfiguration, "tileBounds");
-	configuration->map_bounds = getBoundField(env, configurationClass, jconfiguration, "mapBounds");
+	configuration->bounds = getBoundField(env, configurationClass, jconfiguration, "bounds");
  	configuration->dataset = getFloatArrayField(env, configurationClass, jconfiguration, "dataset");
 	configuration->simplify_method = getIntField(env, configurationClass, jconfiguration, "simplifyMethod");
  	configuration->dataset_size = getIntField(env, configurationClass, jconfiguration, "datasetSize");

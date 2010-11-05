@@ -99,14 +99,14 @@ public class AcidMapService {
 		Configuration configuration = new Configuration();
 		configuration.width = request.getWidth();
 		configuration.height = request.getHeight();
-		Bounds tileBounds = new Bounds();
+		Bounds bounds = new Bounds();
 		
 		//TODO: Revisar si esto esta bien
-		tileBounds.bottom = (float)request.getBbox().getMinY();
-		tileBounds.top = (float)request.getBbox().getMaxY();
-		tileBounds.right = (float)request.getBbox().getMinX();
-		tileBounds.left = (float)request.getBbox().getMaxX();
-		configuration.tileBounds = tileBounds;
+		bounds.minY = (float)request.getBbox().getMinY();
+		bounds.maxY = (float)request.getBbox().getMaxY();
+		bounds.minY = (float)request.getBbox().getMinX();
+		bounds.maxX = (float)request.getBbox().getMaxX();
+		configuration.bounds = bounds;
 		
 		byte[] out = new byte[configuration.width * configuration.height * RGBA_SIZE];
 		JCAdapter jCAdapter = new JCAdapter();

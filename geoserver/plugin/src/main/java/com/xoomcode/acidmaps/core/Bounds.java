@@ -8,8 +8,8 @@ package com.xoomcode.acidmaps.core;
  */
 public class Bounds {
 
-	public float left;
-	public float bottom;
-	public float right;
-	public float top;
+	public float minX;
+	public float minY;
+	public float maxX;
+	public float maxY;
 }
