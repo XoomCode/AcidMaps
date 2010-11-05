@@ -16,11 +16,10 @@
 #include "interpolate/interpolation.h"
 #include "interpolate/interpolation_factory.h"
 #include "render/renderer.h"
-#include "render/renderer_factory.h"
 
 namespace acid_maps {
 
-void generate(Configuration* configuration) {
+void generate(Configuration* configuration, unsigned char* output_buffer) {
   Simplifier* simplifier = SimplifierFactory::get(configuration->simplify_method);
   simplifier->simplify(configuration);
   delete simplifier;
@@ -33,8 +32,8 @@ void generate(Configuration* configuration) {
   interpolation->interpolate(configuration);
   delete interpolation;
   
-  Renderer* renderer = RendererFactory::get(configuration->color_depth);
-  renderer->render(configuration);
+  Renderer* renderer = new Renderer();
+  renderer->render(configuration, output_buffer);
   delete renderer;
 }
 

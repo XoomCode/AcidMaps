@@ -31,10 +31,6 @@ struct Configuration {
    */
   ~Configuration();
   
-  /// Allocated output buffer
-  /// @note size should be = width * height * color_depth
-  unsigned char* output_buffer;
-  
   /// Set of valued points, stored 3 floats per point. X, Y, Value
   float* dataset;
 
@@ -54,17 +50,14 @@ struct Configuration {
   /// Strategy used to interpolate missing values
   int interpolation_strategy;
   
-  /// Interpolated values will be stored here
-  unsigned int* interpolated_bitmap;
+  /// Strategy used to interpolate missing values
+  int interpolation_parameter;
   
   /// Output image width
   int width;
 
   /// Output image height
   int height;
-
-  /// Bits per pixel. Allowed values are 24(RGB) or 32(RGBA)
-  int color_depth;
 };
 
 };  // namespace acid_maps

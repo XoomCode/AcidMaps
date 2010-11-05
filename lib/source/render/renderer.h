@@ -20,16 +20,11 @@ struct Configuration;
  */
 class Renderer {
   public:
-     /**
-     * @brief Virtual destructor allows proper destructor calls
-     */
-    virtual ~Renderer(){};
-
     /**
      * @brief After the interpolated bitmap has been generated, the renderer generates
      * an image that represents that bitmap
      */
-    virtual void render(Configuration* configuration) = 0;
+    void render(Configuration* configuration, unsigned char* output_buffer);
 };
 
 };  // namespace acid_maps

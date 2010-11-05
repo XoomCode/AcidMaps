@@ -7,15 +7,17 @@
  */
 
 #include "../core/configuration.h"
-#include "./dummy_renderer.h"
+#include "./renderer.h"
+
+#define RGBA 4
 
 namespace acid_maps {
 
-void DummyRenderer::render(Configuration* configuration) {
-  int output_buffer_size = configuration->width * configuration->height * configuration->color_depth;
+void Renderer::render(Configuration* configuration, unsigned char* output_buffer) {
+  int output_buffer_size = configuration->width * configuration->height * RGBA;
   
   for (int i = 0; i < output_buffer_size; i++) {
-    configuration->output_buffer[i] = 0;
+    output_buffer[i] = 0;
   }
 }
 
