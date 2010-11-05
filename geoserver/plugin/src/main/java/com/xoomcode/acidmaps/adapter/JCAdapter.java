@@ -1,6 +1,6 @@
 package com.xoomcode.acidmaps.adapter;
 
-import com.xoomcode.acidmaps.Configuration;
+import com.xoomcode.acidmaps.core.Configuration;
 
 public class JCAdapter {
 	
@@ -9,10 +9,10 @@ public class JCAdapter {
 	static {
 		// The runtime system executes a class's static
 		// initializer when it loads the class.
-		System.loadLibrary("AcidMapsJCAdapter");
+		System.loadLibrary("acid-maps-jni");
 	}
 	
-	public void interpolate(byte[] out){
-		interpolateC(new Configuration(), out);
+	public void interpolate(Configuration configuration, byte[] out){
+		interpolateC(configuration, out);
 	}
 }
