@@ -18,14 +18,13 @@ Configuration::Configuration() {
   simplify_method = 0;
   simplify_size = 0;
   bounds = NULL;
+  interpolation_strategy = 0;
+  interpolation_parameter = 0;
   width = 0;
   height = 0;
-  color_depth = 0;
-  interpolated_bitmap = NULL;
 }
 
 Configuration::~Configuration() {
-  if (interpolated_bitmap) delete [] interpolated_bitmap;
   if (bounds) delete bounds;
   if (dataset) delete [] dataset;
 }
