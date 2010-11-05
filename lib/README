@@ -4,8 +4,8 @@ cmake . # DO
 make    # THIS
 
 INSTEAD
-cd lib/build # YOU SHOULD
-cmake ../    # DO
-make         # THIS
+cd lib/build     # YOU SHOULD
+cmake ../source  # DO
+make             # THIS
 
 Or you will fill your source dir with intermediate files generated with cmake.

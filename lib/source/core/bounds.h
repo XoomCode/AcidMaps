@@ -19,12 +19,12 @@ namespace acid_maps {
  */
 struct Bounds {
   Bounds();
-  Bounds(int left, int bottom, int right, int top);
+  Bounds(int min_x, int min_y, int max_x, int max_y);
   
-  float left;
-  float bottom;
-  float right;
-  float top;
+  float min_x;
+  float min_y;
+  float max_x;
+  float max_y;
 };
 
 };  // namespace acid_maps

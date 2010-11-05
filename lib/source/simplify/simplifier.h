@@ -25,7 +25,6 @@ struct Configuration;
  */
 class Simplifier {
   public:
-	Simplifier();
     /**
      * @brief Virtual destructor allows proper destructor calls
      */

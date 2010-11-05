@@ -11,17 +11,17 @@
 namespace acid_maps {
 
 Bounds::Bounds() {
-  left = 0;
-  bottom = 0;
-  right = 0;
-  top = 0;
+  min_x = 0;
+  min_y = 0;
+  max_x = 0;
+  max_y = 0;
 }
 
-Bounds::Bounds(int left, int bottom, int right, int top) {
-  this->left = left;
-  this->bottom = bottom;
-  this->right = right;
-  this->top = top;      
+Bounds::Bounds(int min_x, int min_y, int max_x, int max_y) {
+  this->min_x = min_x;
+  this->min_y = min_y;
+  this->max_x = max_x;
+  this->max_y = max_y;
 }
 
 };  // namespace acid_maps
