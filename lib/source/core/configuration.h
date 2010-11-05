@@ -34,7 +34,7 @@ struct Configuration {
   /// Allocated output buffer
   /// @note size should be = width * height * color_depth
   unsigned char* output_buffer;
-  
+
   /// Set of valued points, stored 3 floats per point. X, Y, Value
   float* dataset;
 

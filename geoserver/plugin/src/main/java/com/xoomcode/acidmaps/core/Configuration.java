@@ -2,10 +2,6 @@ package com.xoomcode.acidmaps.core;
 
 public class Configuration {
 
-	/** Allocated output buffer */
-	/** @note size should be = width * height * color_depth */
-	public byte[] outputBuffer;
-
 	/** Set of valued points, stored 3 floats per point. X, Y, Value */
 	public float[] dataset;
 
@@ -20,10 +16,7 @@ public class Configuration {
 	public int simplifySize;
 
 	/** Requested tile bounds */
-	public Bounds tileBounds;
-
-	/** Map bounds */
-	public Bounds mapBounds;
+	public Bounds bounds;
 
 	/** Strategy used to interpolate missing values */
 	public int interpolationStrategy;
