@@ -11,7 +11,7 @@
 
 namespace acid_maps {
 
-void DummyInterpolation::interpolate(Configuration* configuration) {
+void DummyInterpolation::interpolate(Configuration* configuration, int* dataset, int* interpolated_bitmap) {
 }
 
 };  // namespace acid_maps

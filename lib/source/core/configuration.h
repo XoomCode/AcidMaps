@@ -12,6 +12,7 @@
  */
 
 #include "./bounds.h"
+#include "./size.h"
 
 namespace acid_maps {
 
@@ -21,23 +22,13 @@ namespace acid_maps {
  * @todo Brief and description
  */
 struct Configuration {
-  /**
-   * Proper initialize all members
-   */
-  Configuration();
-  
-  /**
-   * Ensure correct destruction and memory release
-   */
-  ~Configuration();
-  
   /// Set of valued points, stored 3 floats per point. X, Y, Value
   float* dataset;
 
   /// Number of points in the dataset
   /// @note Each point is composed of 3 floats, X, Y, Value
   int dataset_size;
-
+  
   /// Desired simplify method
   int simplify_method;
 
@@ -53,11 +44,8 @@ struct Configuration {
   /// Strategy used to interpolate missing values
   int interpolation_parameter;
   
-  /// Output image width
-  int width;
-
-  /// Output image height
-  int height;
+  /// Output image size
+  Size* tile_size;
 };
 
 };  // namespace acid_maps

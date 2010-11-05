@@ -2,7 +2,7 @@
 #define LIB_SOURCE_CORE_BOUNDS_H_
 /**
  * @file bounds.h
- * @brief Bounds structure implementation
+ * @brief Bounds structure definition
  * 
  * @date 2010-11-03
  * @authors Fabio R. Panettieri
@@ -13,7 +13,7 @@ namespace acid_maps {
 /**
  * @brief Bounding Box representation
  * Instances of this class represent bounding boxes.
- * Data stored as left, bottom, right, top floats.
+ * Data stored as min_x, min_y, max_x, max_y floats.
  * All values are initialized to 0, however, you should make sure you set them
  * before using the bounds for anything.
  */

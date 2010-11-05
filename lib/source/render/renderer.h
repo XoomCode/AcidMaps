@@ -24,7 +24,7 @@ class Renderer {
      * @brief After the interpolated bitmap has been generated, the renderer generates
      * an image that represents that bitmap
      */
-    void render(Configuration* configuration, unsigned char* output_buffer);
+    void render(Size* tile_size, int* bitmap, unsigned char* output_buffer);
 };
 
 };  // namespace acid_maps

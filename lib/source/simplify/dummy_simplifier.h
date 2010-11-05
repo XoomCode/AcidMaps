@@ -21,7 +21,7 @@ class DummySimplifier : public Simplifier {
   /**
    * @brief It does nothing with the dataset
    */
-  void simplify(Configuration* configuration);
+  void simplify(float* dataset, int dataset_size, int simplify_size, float* simplified_dataset);
 };
 
 };  // namespace acid_maps

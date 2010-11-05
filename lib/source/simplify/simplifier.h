@@ -32,8 +32,10 @@ class Simplifier {
 
     /**
      * @brief Reduce the number of valued points
+     *
+     * @param simplified_dataset float* Output buffer
      */
-    virtual void simplify(Configuration* configuration) = 0;
+    virtual void simplify(float* dataset, int dataset_size, int simplify_size, float* simplified_dataset) = 0;
 };
 
 };  // namespace acid_maps
