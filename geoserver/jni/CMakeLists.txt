@@ -7,3 +7,5 @@ INCLUDE_DIRECTORIES(${JNI_INCLUDE_DIRS})
 FILE(GLOB_RECURSE sources ../../lib/source/*.cc)
 ADD_LIBRARY (acid-maps-jni SHARED JCAdapterImpl.cc ${sources})
 
+SET(CMAKE_BUILD_TYPE Release)
+
