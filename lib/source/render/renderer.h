@@ -13,7 +13,7 @@ namespace acid_maps {
 /**
  * Forward declaration
  */
-struct Configuration;
+struct Size;
 
 /**
  * @brief Renders the raw image
@@ -21,10 +21,17 @@ struct Configuration;
 class Renderer {
   public:
     /**
+     * @brief Virtual destructor allows proper destructor calls
+     */
+    virtual ~Renderer(){};
+    /**
      * @brief After the interpolated bitmap has been generated, the renderer generates
      * an image that represents that bitmap
      */
-    void render(Size* tile_size, int* bitmap, unsigned char* output_buffer);
+  virtual void render(Size* tile_size, int interpolated_bitmap[], int intervals[],
+    int intervals_size, unsigned char intervals_colors[], unsigned char output_buffer[]) = 0;
+  
+  virtual int find_interval(int value, int intervals[], int intervals_size) = 0;
 };
 
 };  // namespace acid_maps

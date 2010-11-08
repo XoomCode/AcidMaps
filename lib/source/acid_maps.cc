@@ -17,11 +17,12 @@
 #include "interpolate/interpolation.h"
 #include "interpolate/interpolation_factory.h"
 #include "render/renderer.h"
+#include "render/renderer_factory.h"
 
 namespace acid_maps {
 
-void generate(Configuration* configuration, unsigned char* output_buffer) {
-  float* simplified_dataset = new float[configuration->simplify_size * VPP];
+void generate(Configuration* configuration, unsigned char output_buffer[]) {
+  float* simplified_dataset = new float[configuration->simplify_size * VPP ];
   Simplifier* simplifier = SimplifierFactory::get(configuration->simplify_method);
 
   simplifier->simplify(configuration->dataset, configuration->dataset_size,
@@ -47,8 +48,9 @@ void generate(Configuration* configuration, unsigned char* output_buffer) {
   delete interpolation;
   delete[] transformed_dataset;
   
-  Renderer* renderer = new Renderer();
-  renderer->render(configuration->tile_size, interpolated_bitmap, output_buffer);
+  Renderer* renderer = RendererFactory::get(configuration->intervals_type);
+  renderer->render(configuration->tile_size, interpolated_bitmap, configuration->intervals, 
+    configuration->intervals_size, configuration->interval_colors, output_buffer);
   delete renderer;
   delete[] interpolated_bitmap;
 }

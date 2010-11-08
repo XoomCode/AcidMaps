@@ -36,7 +36,7 @@ class Transformer {
      *   |------------|        |-----------|
      *                              TILE
      */
-    void transform(Bounds* bounds, Size* tile_size, float* dataset, int dataset_size, int* transformed_dataset);
+    void transform(Bounds* bounds, Size* tile_size, float dataset[], int dataset_size, int transformed_dataset[]);
 };
 
 };  // namespace acid_maps

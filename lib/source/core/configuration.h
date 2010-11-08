@@ -23,7 +23,7 @@ namespace acid_maps {
  */
 struct Configuration {
   /// Set of valued points, stored 3 floats per point. X, Y, Value
-  float* dataset;
+  float dataset[];
 
   /// Number of points in the dataset
   /// @note Each point is composed of 3 floats, X, Y, Value
@@ -48,13 +48,16 @@ struct Configuration {
   Size* tile_size;
   
   /// Intervals array
-  int* intervals;
+  int intervals[];
   
   /// Intervals array
-  int* interval_colors;
+  unsigned char interval_colors[];
   
   /// Size of the itervals array
   int intervals_size;
+  
+  /// Determines how intervals are going to be accessed in the rendering step
+  int intervals_type;
 };
 
 };  // namespace acid_maps

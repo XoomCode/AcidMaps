@@ -33,7 +33,7 @@ class Interpolation {
     /**
      * @brief Generates an interpolated int bitmap
      */
-    virtual void interpolate(Size* tile_size, int* dataset, int dataset_size, int* interpolated_bitmap) = 0;
+    virtual void interpolate(Size* tile_size, int dataset[], int dataset_size, int interpolated_bitmap[]) = 0;
 };
 
 };  // namespace acid_maps

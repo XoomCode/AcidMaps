@@ -16,8 +16,8 @@ namespace acid_maps {
 /**
  * @ todo Store pixel positions in int*
  */
-void Transformer::transform(Bounds* bounds, Size* tile_size, float* dataset, 
-  int dataset_size, int* transformed_dataset) {
+void Transformer::transform(Bounds* bounds, Size* tile_size, float dataset[],
+  int dataset_size, int transformed_dataset[]) {
 
   float bounds_width = bounds->max_x - bounds->min_x;
   float bounds_height = bounds->max_y - bounds->min_y;
