@@ -37,7 +37,6 @@ public:
     configuration->dataset_size = 1;
     configuration->dataset = dataset;
     
-    /// Transform dataset
     int* transformed_dataset = create_transformed_dataset(1);
     transformer->transform(configuration->bounds, configuration->tile_size, dataset, 1, transformed_dataset);
     
@@ -50,7 +49,6 @@ public:
   }
   
   void multiPointDataset () {
-    /// Create a single point dataset
     float* dataset = create_dataset(4);
     
     dataset[0] = 90.0;
@@ -72,7 +70,6 @@ public:
     configuration->dataset_size = 4;
     configuration->dataset = dataset;
     
-    /// Transform dataset
     int* transformed_dataset = create_transformed_dataset(4);
     transformer->transform(configuration->bounds, configuration->tile_size, dataset, 4, transformed_dataset);
     
@@ -98,7 +95,6 @@ public:
     configuration->dataset_size = 0;
     configuration->dataset = dataset;
     
-    /// Transform dataset
     int* transformed_dataset = create_transformed_dataset(0);
     transformer->transform(configuration->bounds, configuration->tile_size, dataset, 0, transformed_dataset);
     
