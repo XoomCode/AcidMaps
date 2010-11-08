@@ -1,5 +1,6 @@
 package com.xoomcode.acidmaps.core;
 
+// TODO: Auto-generated Javadoc
 /**
  * Bounding Box representation Instances of this class represent bounding
  * boxes. Data stored as left, bottom, right, top floats. All values are
@@ -8,8 +9,15 @@ package com.xoomcode.acidmaps.core;
  */
 public class Bounds {
 
+	/** The min x. */
 	public float minX;
+	
+	/** The min y. */
 	public float minY;
+	
+	/** The max x. */
 	public float maxX;
+	
+	/** The max y. */
 	public float maxY;
 }

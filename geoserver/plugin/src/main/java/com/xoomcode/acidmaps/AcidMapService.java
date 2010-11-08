@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package com.xoomcode.acidmaps;
 
 import java.awt.image.BufferedImage;
@@ -26,30 +29,56 @@ import org.geotools.feature.FeatureIterator;
 import org.geotools.styling.FeatureTypeConstraint;
 import org.geotools.styling.Style;
 import org.opengis.feature.Feature;
+import org.opengis.feature.Property;
 import org.opengis.feature.simple.SimpleFeature;
+import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.FeatureType;
+import org.opengis.feature.type.GeometryDescriptor;
 import org.opengis.filter.Filter;
 import org.opengis.filter.FilterFactory;
 
 import com.vividsolutions.jts.geom.Envelope;
+import com.vividsolutions.jts.geom.Point;
 import com.xoomcode.acidmaps.adapter.JCAdapter;
 import com.xoomcode.acidmaps.core.Bounds;
 import com.xoomcode.acidmaps.core.Configuration;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class AcidMapService.
+ */
 public class AcidMapService {
 	
+	/** The filter fac. */
 	private FilterFactory filterFac;
 	
+	/** The Constant RGBA_SIZE. */
 	public static final int RGBA_SIZE = 4;
 
+	/**
+	 * Instantiates a new acid map service.
+	 */
 	public AcidMapService() {
 		this.filterFac = CommonFactoryFinder.getFilterFactory(GeoTools.getDefaultHints());
 	}
 	
+	/**
+	 * Sets the filter factory.
+	 *
+	 * @param filterFactory the new filter factory
+	 */
 	public void setFilterFactory(final FilterFactory filterFactory) {
         this.filterFac = filterFactory;
     }
 
+	/**
+	 * Gets the map.
+	 *
+	 * @param request the request
+	 * @return the web map
+	 * @throws ServletException the servlet exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public WebMap GetMap(GetMapRequest request) throws ServletException,
 			IOException {
 		WMSMapContext mapContext = new WMSMapContext(request);
@@ -70,6 +99,15 @@ public class AcidMapService {
 		}
 	}
 
+	/**
+	 * Run.
+	 *
+	 * @param request the request
+	 * @param mapContext the map context
+	 * @return the web map
+	 * @throws ServiceException the service exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public WebMap run(final GetMapRequest request, WMSMapContext mapContext)
 			throws ServiceException, IOException {
 		final Envelope envelope = request.getBbox();
@@ -82,21 +120,36 @@ public class AcidMapService {
 		Style layerStyle = request.getStyles().toArray(new Style[] {})[0];
 		
 		FeatureSource<? extends FeatureType, ? extends Feature> source = layer.getFeatureSource(true);
+		FeatureType schema = source.getSchema();
+		final GeometryDescriptor geometryAttribute = schema.getGeometryDescriptor();
+		
+        //sourceCrs = geometryAttribute.getType().getCoordinateReferenceSystem();
+        
 		FeatureType type = source.getSchema();
 		String geometry = type.getGeometryDescriptor().getName().getLocalPart();
 
         ArrayList<Object> points = new ArrayList<Object>();
 		FeatureCollection<? extends FeatureType, ? extends Feature> features = source.getFeatures(layerFilter);
 		FeatureIterator<? extends Feature> featureIterator = features.features();
+		
+		float[] dataset = new float[features.size() * 3];
+		int i = 0;
 		while (featureIterator.hasNext()) {
 			SimpleFeature f = (SimpleFeature) featureIterator.next();
-			Object x = f.getAttribute("x");
-			Object y = f.getAttribute("y");
-			points.add(new Object[] { x, y });
+			Property theGeom = f.getProperty(geometryAttribute.getName());
+			Point point = (Point)theGeom.getValue();
+			dataset[i++] = (float)point.getX();
+			dataset[i++] = (float)point.getY();
+			
+			Property value = f.getProperty("value");
+			if(value != null){
+				dataset[i] = new Float((Double)value.getValue());
+			}
+			i++;
 		}
-		//TODO: Asignar puntos
 		
 		Configuration configuration = new Configuration();
+		configuration.dataset = dataset;
 		configuration.width = request.getWidth();
 		configuration.height = request.getHeight();
 		Bounds bounds = new Bounds();
@@ -111,9 +164,10 @@ public class AcidMapService {
 		byte[] out = new byte[configuration.width * configuration.height * RGBA_SIZE];
 		JCAdapter jCAdapter = new JCAdapter();
 		jCAdapter.interpolate(new Configuration(), out);
-		
 		BufferedImage image=ImageIO.read(new ByteArrayInputStream(out));
 		RenderedImage renderedImage = JAI.create("fileload", image);
+		//RenderedImage renderedImage = JAI.create("fileload", "/home/cfarina/wk/geoserver/acidmaps/src/main/java/com/xoomcode/acidmaps/landscape.jpg");
+        
         final String outputFormat = request.getFormat();
         RenderedImageMap result = new RenderedImageMap(mapContext, renderedImage, outputFormat);
         return result;
