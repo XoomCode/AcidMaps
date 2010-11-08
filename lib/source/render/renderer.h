@@ -31,7 +31,7 @@ class Renderer {
   virtual void render(Size* tile_size, int interpolated_bitmap[], int intervals[],
     int intervals_size, unsigned char intervals_colors[], unsigned char output_buffer[]) = 0;
   
-  virtual int find_interval(int value, int intervals[], int intervals_size) = 0;
+  virtual int interval(int value, int intervals[], int intervals_size) = 0;
 };
 
 };  // namespace acid_maps

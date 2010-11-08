@@ -1,8 +1,8 @@
 #include <cppunit/extensions/HelperMacros.h>
-#include "../../../lib/source/core/configuration.h"
-#include "../../../lib/source/core/bounds.h"
-#include "../../../lib/source/core/size.h"
-#include "../../../lib/source/transform/transformer.h"
+#include "../../source/core/configuration.h"
+#include "../../source/core/bounds.h"
+#include "../../source/core/size.h"
+#include "../../source/transform/transformer.h"
 
 class TransformerTest : public CppUnit::TestFixture {
   CPPUNIT_TEST_SUITE(TransformerTest);
@@ -40,9 +40,9 @@ public:
     int* transformed_dataset = create_transformed_dataset(1);
     transformer->transform(configuration->bounds, configuration->tile_size, dataset, 1, transformed_dataset);
     
-    CPPUNIT_ASSERT(transformed_dataset[0] == configuration->tile_size->width / 4 * 3);
-    CPPUNIT_ASSERT(transformed_dataset[1] == configuration->tile_size->height / 4);
-    CPPUNIT_ASSERT(transformed_dataset[2] == (int)dataset[2]);
+    CPPUNIT_ASSERT_EQUAL(transformed_dataset[0], configuration->tile_size->width / 4 * 3);
+    CPPUNIT_ASSERT_EQUAL(transformed_dataset[1], configuration->tile_size->height / 4);
+    CPPUNIT_ASSERT_EQUAL(transformed_dataset[2], (int)dataset[2]);
     
     delete[] transformed_dataset;
     delete[] dataset; 
@@ -73,17 +73,17 @@ public:
     int* transformed_dataset = create_transformed_dataset(4);
     transformer->transform(configuration->bounds, configuration->tile_size, dataset, 4, transformed_dataset);
     
-    CPPUNIT_ASSERT(transformed_dataset[0] == configuration->tile_size->width / 4 * 3);
-    CPPUNIT_ASSERT(transformed_dataset[1] == configuration->tile_size->height / 4);
+    CPPUNIT_ASSERT_EQUAL(transformed_dataset[0], configuration->tile_size->width / 4 * 3);
+    CPPUNIT_ASSERT_EQUAL(transformed_dataset[1], configuration->tile_size->height / 4);
     
-    CPPUNIT_ASSERT(transformed_dataset[3] == configuration->tile_size->width / 4);
-    CPPUNIT_ASSERT(transformed_dataset[4] == configuration->tile_size->height / 4);
+    CPPUNIT_ASSERT_EQUAL(transformed_dataset[3], configuration->tile_size->width / 4);
+    CPPUNIT_ASSERT_EQUAL(transformed_dataset[4], configuration->tile_size->height / 4);
     
-    CPPUNIT_ASSERT(transformed_dataset[6] == configuration->tile_size->width / 4 * 3);
-    CPPUNIT_ASSERT(transformed_dataset[7] == configuration->tile_size->height / 4 * 3);
+    CPPUNIT_ASSERT_EQUAL(transformed_dataset[6], configuration->tile_size->width / 4 * 3);
+    CPPUNIT_ASSERT_EQUAL(transformed_dataset[7], configuration->tile_size->height / 4 * 3);
     
-    CPPUNIT_ASSERT(transformed_dataset[9] == configuration->tile_size->width / 4);
-    CPPUNIT_ASSERT(transformed_dataset[10] == configuration->tile_size->height / 4 * 3);
+    CPPUNIT_ASSERT_EQUAL(transformed_dataset[9], configuration->tile_size->width / 4);
+    CPPUNIT_ASSERT_EQUAL(transformed_dataset[10], configuration->tile_size->height / 4 * 3);
     
     delete[] transformed_dataset;
     delete[] dataset; 

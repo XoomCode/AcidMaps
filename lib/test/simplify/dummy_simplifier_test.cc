@@ -1,7 +1,7 @@
 #include <cppunit/extensions/HelperMacros.h>
-#include "../../../lib/source/constants/constants.h"
-#include "../../../lib/source/simplify/simplifier.h"
-#include "../../../lib/source/simplify/dummy_simplifier.h"
+#include "../../source/constants/constants.h"
+#include "../../source/simplify/simplifier.h"
+#include "../../source/simplify/dummy_simplifier.h"
 
 class DummySimplifierTest : public CppUnit::TestFixture {
   CPPUNIT_TEST_SUITE(DummySimplifierTest);
@@ -25,10 +25,10 @@ public:
   void singlePointDataset () {
     float* simplified_dataset = new float[acid_maps::VPP];
     simplifier->simplify(dataset, dataset_size, 1, simplified_dataset);
-    
-    CPPUNIT_ASSERT(dataset[0] == simplified_dataset[0]);
-    CPPUNIT_ASSERT(dataset[1] == simplified_dataset[1]);
-    CPPUNIT_ASSERT(dataset[2] == simplified_dataset[2]);
+
+    CPPUNIT_ASSERT_EQUAL(dataset[0], simplified_dataset[0]);
+    CPPUNIT_ASSERT_EQUAL(dataset[1], simplified_dataset[1]);
+    CPPUNIT_ASSERT_EQUAL(dataset[2], simplified_dataset[2]);
     
     delete[] simplified_dataset;
   }
@@ -37,13 +37,13 @@ public:
     float* simplified_dataset = new float[2 * acid_maps::VPP];
     simplifier->simplify(dataset, dataset_size, 2, simplified_dataset);
     
-    CPPUNIT_ASSERT(dataset[0] == simplified_dataset[0]);
-    CPPUNIT_ASSERT(dataset[1] == simplified_dataset[1]);
-    CPPUNIT_ASSERT(dataset[2] == simplified_dataset[2]);
+    CPPUNIT_ASSERT_EQUAL(dataset[0], simplified_dataset[0]);
+    CPPUNIT_ASSERT_EQUAL(dataset[1], simplified_dataset[1]);
+    CPPUNIT_ASSERT_EQUAL(dataset[2], simplified_dataset[2]);
     
-    CPPUNIT_ASSERT(dataset[3] == simplified_dataset[3]);
-    CPPUNIT_ASSERT(dataset[4] == simplified_dataset[4]);
-    CPPUNIT_ASSERT(dataset[5] == simplified_dataset[5]);
+    CPPUNIT_ASSERT_EQUAL(dataset[3], simplified_dataset[3]);
+    CPPUNIT_ASSERT_EQUAL(dataset[4], simplified_dataset[4]);
+    CPPUNIT_ASSERT_EQUAL(dataset[5], simplified_dataset[5]);
     
     delete[] simplified_dataset;
   }

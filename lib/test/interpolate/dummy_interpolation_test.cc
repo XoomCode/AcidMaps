@@ -1,8 +1,8 @@
 #include <cppunit/extensions/HelperMacros.h>
-#include "../../../lib/source/constants/constants.h"
-#include "../../../lib/source/core/size.h"
-#include "../../../lib/source/interpolate/interpolation.h"
-#include "../../../lib/source/interpolate/dummy_interpolation.h"
+#include "../../source/constants/constants.h"
+#include "../../source/core/size.h"
+#include "../../source/interpolate/interpolation.h"
+#include "../../source/interpolate/dummy_interpolation.h"
 
 class DummyInterpolationTest : public CppUnit::TestFixture {
   CPPUNIT_TEST_SUITE(DummyInterpolationTest);
@@ -32,7 +32,7 @@ public:
     
     interpolation->interpolate(size, dataset, 1, interpolated_bitmap);
     
-    CPPUNIT_ASSERT(interpolated_bitmap[5130] == 200);
+    CPPUNIT_ASSERT_EQUAL(interpolated_bitmap[5130], 200);
     
     delete[] dataset;
   }
@@ -57,10 +57,10 @@ public:
     
     interpolation->interpolate(size, dataset, 4, interpolated_bitmap);
     
-    CPPUNIT_ASSERT(interpolated_bitmap[8832] == 200);
-    CPPUNIT_ASSERT(interpolated_bitmap[5131] == 100);
-    CPPUNIT_ASSERT(interpolated_bitmap[262143] == 50);
-    CPPUNIT_ASSERT(interpolated_bitmap[10560] == 260);
+    CPPUNIT_ASSERT_EQUAL(interpolated_bitmap[8832], 200);
+    CPPUNIT_ASSERT_EQUAL(interpolated_bitmap[5131], 100);
+    CPPUNIT_ASSERT_EQUAL(interpolated_bitmap[262143], 50);
+    CPPUNIT_ASSERT_EQUAL(interpolated_bitmap[10560], 260);
     
     delete[] dataset;
   }

@@ -22,7 +22,7 @@ class SparseRenderer : public Renderer {
   void render(Size* tile_size, int interpolated_bitmap[], int intervals[],
     int intervals_size, unsigned char intervals_colors[], unsigned char output_buffer[]);
   
-  int find_interval(int value, int intervals[], int intervals_size);
+  int interval(int value, int intervals[], int intervals_size);
 };
 
 };  // namespace acid_maps
