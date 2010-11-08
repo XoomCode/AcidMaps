@@ -3,8 +3,6 @@
 #include <cstdlib>
 #include <ctime>
 
-#include <stdio.h>
-
 class SparseRendererIntervalsTest : public CppUnit::TestFixture {
   CPPUNIT_TEST_SUITE(SparseRendererIntervalsTest);
   CPPUNIT_TEST( firstInterval );

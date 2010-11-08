@@ -29,14 +29,34 @@ void SparseRenderer::render(Size* tile_size, int interpolated_bitmap[], int inte
 }
 
 int SparseRenderer::interval(int value, int intervals[], int intervals_size) {
-  int index;
-  for (index = 0; index < intervals_size - 1; index++) {
-    if (value <= intervals[index] ) {
-      break;
+  int first = 0;
+  int last = intervals_size - 1;
+  int mid;
+  
+  if (value >= intervals[last]) {
+    return last;
+  } else if (value < intervals[first]) {
+    return first;
+  }
+  
+  while (first <= last) {
+    mid = (first + last) / 2;
+    if (value > intervals[mid]) {  
+      first = mid + 1;
+    } else if (value < intervals[mid]) {
+      if (mid >= 1 && value > intervals[mid - 1]) {
+        return mid;
+      } else {
+        last = mid - 1;
+      }
+    } else {
+      return mid;
     }
   }
-  return index;
+  
+  return -1;
 }
+
 
 };  // namespace acid_maps
 
