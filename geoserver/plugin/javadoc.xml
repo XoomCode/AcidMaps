@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="javadoc">
+    <target name="javadoc">
+        <javadoc access="public" 
+        	author="true" 
+        	destdir="doc" 
+        	doctitle="acidmaps" 
+        	nodeprecated="false" 
+        	nodeprecatedlist="false" 
+        	noindex="false" 
+        	nonavbar="false" 
+        	notree="false" 
+        	packagenames="com.xoomcode.acidmaps.adapter,com.xoomcode.acidmaps.core,com.xoomcode.acidmaps" 
+        	source="1.5" 
+        	sourcepath="src/main/java" 
+        	splitindex="true" 
+        	use="true" 
+        	version="true"/>
+    </target>
+</project>
