@@ -7,23 +7,24 @@
 #include <math.h>     /* Include math.h for the prototype of function y0 */
 
 #include "../../lib/source/core/configuration.h"
+#include "../../lib/source/core/size.h"
 #include "../../lib/source/acid_maps.h"
 
 /* Our C definition of the function bessely0 declared in Bessel.java */
 
-int getIntField(JNIEnv* env, jclass configurationClass, jobject jconfiguration, char* id) {
+int getIntField(JNIEnv* env, jclass configurationClass, jobject jconfiguration, const char* id) {
 	jfieldID fieldId = env->GetFieldID(configurationClass, id, "I");
 	int value = env->GetIntField(jconfiguration, fieldId);
 	return value;
 }
 
-float getFloatField(JNIEnv* env, jclass configurationClass, jobject jconfiguration, char* id) {
+float getFloatField(JNIEnv* env, jclass configurationClass, jobject jconfiguration, const char* id) {
 	jfieldID fieldId = env->GetFieldID(configurationClass, id, "F");
 	float value = env->GetFloatField(jconfiguration, fieldId);
 	return value;
 }
 
-float* getFloatArrayField(JNIEnv* env, jclass configurationClass, jobject jconfiguration, char* id) {
+float* getFloatArrayField(JNIEnv* env, jclass configurationClass, jobject jconfiguration, const char* id) {
 	jfieldID fieldId = env->GetFieldID(configurationClass, id, "[F");
 	jfloatArray value = (jfloatArray)env->GetObjectField(jconfiguration, fieldId);
 	if(value){
@@ -33,7 +34,7 @@ float* getFloatArrayField(JNIEnv* env, jclass configurationClass, jobject jconfi
 	}
 }
 
-acid_maps::Bounds* getBoundField(JNIEnv* env, jclass configurationClass, jobject jconfiguration, char* id) {
+acid_maps::Bounds* getBoundField(JNIEnv* env, jclass configurationClass, jobject jconfiguration, const char* id) {
 	jclass boundClass = env->FindClass("com/xoomcode/acidmaps/core/Bounds");
 
 	jfieldID fieldId = env->GetFieldID(configurationClass, id, "Lcom/xoomcode/acidmaps/core/Bounds;");
@@ -61,10 +62,11 @@ acid_maps::Configuration* buildConfiguration(JNIEnv* env, jobject jconfiguration
 	configuration->simplify_method = getIntField(env, configurationClass, jconfiguration, "simplifyMethod");
  	configuration->dataset_size = getIntField(env, configurationClass, jconfiguration, "datasetSize");
  	configuration->interpolation_strategy = getIntField(env, configurationClass, jconfiguration, "interpolationStrategy");
- 	configuration->width = getIntField(env, configurationClass, jconfiguration, "width");
- 	configuration->height = getIntField(env, configurationClass, jconfiguration, "height");
- 	configuration->color_depth = getIntField(env, configurationClass, jconfiguration, "colorDepth");
 
+ 	int width = getIntField(env, configurationClass, jconfiguration, "width");
+ 	int height = getIntField(env, configurationClass, jconfiguration, "height");
+ 	acid_maps::Size* tile_size = new acid_maps::Size(width, height);
+ 	configuration->tile_size = tile_size;
 	return configuration;
 }
 
@@ -74,23 +76,21 @@ JNIEXPORT void JNICALL Java_com_xoomcode_acidmaps_adapter_JCAdapter_interpolateC
  	jbyte* joutpt;
  	jboolean isCopy;
 
- 	
-
  	joutpt = env->GetByteArrayElements(out, &isCopy);
 	acid_maps::Configuration* configuration = buildConfiguration(env, jconfiguration);
 
- 	int outSize = configuration->width * configuration->height * configuration->color_depth;
-	char* charOut = new char[outSize];
+ 	int outSize = configuration->tile_size->width * configuration->tile_size->height * 4;
+	unsigned char* charOut = new unsigned char[outSize];
 	acid_maps::generate(configuration, charOut);
-	// TODO return output_buffer to java
-	//delete[] configuration->output_buffer;
-	//delete configuration;
+		// TODO return output_buffer to java
+		//delete[] configuration->output_buffer;
+		//delete configuration;
 
- 	joutpt = new jbyte[outSize];
+ 	/*joutpt = new jbyte[outSize];
 
  	for (int i = 0; i < outSize; ++i) {
  		joutpt[i] = charOut[i];
-	}
+	}*/
 	
 	env->ReleaseByteArrayElements(out, joutpt, 0);
  	//delete charOut;

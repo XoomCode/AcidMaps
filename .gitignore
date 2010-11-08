@@ -2,4 +2,8 @@ geoserver/plugin/.classpath
 geoserver/plugin/.project
 geoserver/plugin/.settings
 geoserver/plugin/target
+geoserver/jni/build
+lib/build/
+lib/test/build
+lib/bin/
 **/*.class
