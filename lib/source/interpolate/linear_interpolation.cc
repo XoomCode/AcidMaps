@@ -33,8 +33,8 @@ void LinearInterpolation::interpolate(Size* tile_size, int dataset[], int datase
     bounds.resize(0, 0, tile_size->width, tile_size->height);
     bounds.intersect(point_x - radius, point_x + radius, point_y - radius, point_y + radius);
     
-    for (int x = bounds.min_x; x < bounds.max_x; x++) {
-      for (int y = bounds.min_y; y < bounds.max_y; y++) {
+    for (int y = bounds.min_y; y < bounds.max_y; y++) {
+      for (int x = bounds.min_x; x < bounds.max_x; x++) {
         distance_x = x - point_x;
         distance_y = y - point_y;
         distance = std::sqrt(std::pow(distance_x, 2) + std::pow(distance_y, 2));

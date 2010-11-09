@@ -14,7 +14,7 @@ namespace acid_maps {
 
 Simplifier* SimplifierFactory::get(int method) {
   switch (method) {
-    case DUMMY:
+    case COPY:
       return new DummySimplifier();
   }
 }

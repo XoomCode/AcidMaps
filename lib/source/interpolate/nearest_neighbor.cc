@@ -26,8 +26,8 @@ void NearestNeighbor::interpolate(Size* tile_size, int dataset[], int dataset_si
   int minimum_distance;
   
   int distance_x, distance_y, distance;
-  for (int x = 0; x < tile_size->width; x++) {
-    for (int y = 0; y < tile_size->height; y++) {
+  for (int y = 0; y < tile_size->height; y++) {
+    for (int x = 0; x < tile_size->width; x++) {
       
       int min_distance = INT_MAX;
       for (int i = 0; i < dataset_size; i++) {
