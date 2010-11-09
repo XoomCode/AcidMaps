@@ -7,7 +7,7 @@
  */
 
 #include "../constants/constants.h"
-#include "../core/configuration.h"
+#include "../core/size.h"
 #include "./dummy_interpolation.h"
 #include <cstring>
 
