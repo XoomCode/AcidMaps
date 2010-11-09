@@ -30,7 +30,7 @@ public:
     dataset[1] = 10;
     dataset[2] = 200;
     
-    interpolation->interpolate(size, dataset, 1, interpolated_bitmap);
+    interpolation->interpolate(size, dataset, 1, 0, interpolated_bitmap);
     
     CPPUNIT_ASSERT_EQUAL(interpolated_bitmap[5130], 200);
     
@@ -55,7 +55,7 @@ public:
     dataset[10] = 20;
     dataset[11] = 260;
     
-    interpolation->interpolate(size, dataset, 4, interpolated_bitmap);
+    interpolation->interpolate(size, dataset, 4, 0, interpolated_bitmap);
     
     CPPUNIT_ASSERT_EQUAL(interpolated_bitmap[8832], 200);
     CPPUNIT_ASSERT_EQUAL(interpolated_bitmap[5131], 100);
@@ -68,7 +68,7 @@ public:
   void emptyPointTest () {
     int* dataset = create_dataset(0);
     
-    interpolation->interpolate(size, dataset, 0, interpolated_bitmap);
+    interpolation->interpolate(size, dataset, 0, 0, interpolated_bitmap);
     
     delete[] dataset;
   }

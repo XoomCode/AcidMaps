@@ -1,7 +1,7 @@
 #ifndef LIB_SOURCE_CORE_SIZE_H_
 #define LIB_SOURCE_CORE_SIZE_H_
 /**
- * @file bounds.h
+ * @file size.h
  * @brief Size structure definition
  * 
  * @date 2010-11-05
@@ -23,5 +23,5 @@ struct Size {
 
 };  // namespace acid_maps
 
-#endif  // LIB_SOURCE_CORE_BOUNDS_H_
+#endif  // LIB_SOURCE_CORE_SIZE_H_
 

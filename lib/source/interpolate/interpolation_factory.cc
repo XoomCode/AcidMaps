@@ -9,12 +9,16 @@
 #include "./interpolation_factory.h"
 #include "./interpolation_strategy.h"
 #include "./dummy_interpolation.h"
+#include "./nearest_neighbor.h"
 
 namespace acid_maps {
 
 Interpolation* InterpolationFactory::get(int strategy) {
   switch (strategy) {
-    case DUMMY:
+    case NEAREST_NEIGHBOR:
+      return new NearestNeighbor();
+      
+    default:
       return new DummyInterpolation();
   }
 }
