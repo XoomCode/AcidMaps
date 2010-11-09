@@ -11,13 +11,13 @@
 namespace acid_maps {
 
 Bounds::Bounds() {
-  min_x = 0;
-  min_y = 0;
-  max_x = 0;
-  max_y = 0;
+  min_x = 0.0;
+  min_y = 0.0;
+  max_x = 0.0;
+  max_y = 0.0;
 }
 
-Bounds::Bounds(int min_x, int min_y, int max_x, int max_y) {
+Bounds::Bounds(float min_x, float min_y, float max_x, float max_y) {
   this->min_x = min_x;
   this->min_y = min_y;
   this->max_x = max_x;

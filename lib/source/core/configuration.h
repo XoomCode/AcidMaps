@@ -51,7 +51,7 @@ struct Configuration {
   int* intervals;
   
   /// Intervals array
-  unsigned char* interval_colors;
+  unsigned char* intervals_colors;
   
   /// Size of the itervals array
   int intervals_size;

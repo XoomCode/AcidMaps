@@ -18,12 +18,13 @@ namespace acid_maps {
  */ 
 void SparseRenderer::render(Size* tile_size, int interpolated_bitmap[], int intervals[],
     int intervals_size, unsigned char intervals_colors[], unsigned char output_buffer[]) {
-  int pixel, interval_index;
-  for (int x = 0; x < tile_size->width; x++) {
-    for (int y = 0; y < tile_size->height; y++) {
+  unsigned long pixel;
+  int interval_index;
+  for (int y = 0; y < tile_size->height; y++) {
+    for (int x = 0; x < tile_size->width; x++) {
       pixel = y * tile_size->width + x;
       interval_index = this->interval(interpolated_bitmap[pixel], intervals, intervals_size);
-      std::memcpy((unsigned char*)output_buffer[pixel * RGBA], (unsigned char*)intervals_colors[interval_index], sizeof(unsigned char) * RGBA);
+      std::memcpy(output_buffer + pixel * RGBA, intervals_colors + interval_index, sizeof(unsigned char) * RGBA);
     }
   }
 }
