@@ -34,6 +34,16 @@ float* getFloatArrayField(JNIEnv* env, jclass configurationClass, jobject jconfi
 	}
 }
 
+int* getIntArrayField(JNIEnv* env, jclass configurationClass, jobject jconfiguration, const char* id) {
+	jfieldID fieldId = env->GetFieldID(configurationClass, id, "[I");
+	jintArray value = (jintArray)env->GetObjectField(jconfiguration, fieldId);
+	if(value){
+		return env->GetIntArrayElements(value, NULL);
+	} else {
+		return NULL;
+	}
+}
+
 acid_maps::Bounds* getBoundField(JNIEnv* env, jclass configurationClass, jobject jconfiguration, const char* id) {
 	jclass boundClass = env->FindClass("com/xoomcode/acidmaps/core/Bounds");
 
@@ -67,6 +77,10 @@ acid_maps::Configuration* buildConfiguration(JNIEnv* env, jobject jconfiguration
  	int height = getIntField(env, configurationClass, jconfiguration, "height");
  	acid_maps::Size* tile_size = new acid_maps::Size(width, height);
  	configuration->tile_size = tile_size;
+
+ 	configuration->intervals = getIntArrayField(env, configurationClass, jconfiguration, "intervals");
+ 	configuration->interval_colors = getIntArrayField(env, configurationClass, jconfiguration, "intervalColors");
+ 	configuration->intervals_size = getIntField(env, configurationClass, jconfiguration, "intervalSize");
 	return configuration;
 }
 
@@ -81,7 +95,7 @@ JNIEXPORT void JNICALL Java_com_xoomcode_acidmaps_adapter_JCAdapter_interpolateC
 
  	int outSize = configuration->tile_size->width * configuration->tile_size->height * 4;
 	unsigned char* charOut = new unsigned char[outSize];
-	acid_maps::generate(configuration, charOut);
+	//acid_maps::generate(configuration, charOut);
 		// TODO return output_buffer to java
 		//delete[] configuration->output_buffer;
 		//delete configuration;

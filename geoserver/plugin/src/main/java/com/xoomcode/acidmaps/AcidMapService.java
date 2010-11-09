@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import javax.imageio.ImageIO;
 import javax.media.jai.JAI;
@@ -40,6 +41,7 @@ import org.opengis.filter.FilterFactory;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Point;
 import com.xoomcode.acidmaps.adapter.JCAdapter;
+import com.xoomcode.acidmaps.core.AcidMapParameters;
 import com.xoomcode.acidmaps.core.Bounds;
 import com.xoomcode.acidmaps.core.Configuration;
 
@@ -114,6 +116,8 @@ public class AcidMapService {
 		final String featureVersion = request.getFeatureVersion();
 
 		MapLayerInfo layer = null;
+		Map<String, String> rawKvp = request.getRawKvp();
+		String valueColumn = rawKvp.get(AcidMapParameters.VALUE_COLUMN);
 		
 		layer = request.getLayers().get(0);
 		Filter layerFilter = buildLayersFilters(request.getFilter(), request.getLayers())[0];
@@ -141,7 +145,7 @@ public class AcidMapService {
 			dataset[i++] = (float)point.getX();
 			dataset[i++] = (float)point.getY();
 			
-			Property value = f.getProperty("value");
+			Property value = f.getProperty(valueColumn);
 			if(value != null){
 				dataset[i] = new Float((Double)value.getValue());
 			}
@@ -163,10 +167,10 @@ public class AcidMapService {
 		
 		byte[] out = new byte[configuration.width * configuration.height * RGBA_SIZE];
 		JCAdapter jCAdapter = new JCAdapter();
-		jCAdapter.interpolate(new Configuration(), out);
+		/*jCAdapter.interpolate(new Configuration(), out);
 		BufferedImage image=ImageIO.read(new ByteArrayInputStream(out));
-		RenderedImage renderedImage = JAI.create("fileload", image);
-		//RenderedImage renderedImage = JAI.create("fileload", "/home/cfarina/wk/geoserver/acidmaps/src/main/java/com/xoomcode/acidmaps/landscape.jpg");
+		RenderedImage renderedImage = JAI.create("fileload", image);*/
+		RenderedImage renderedImage = JAI.create("fileload", "/home/cfarina/wk/geoserver/acidmaps/src/main/java/com/xoomcode/acidmaps/landscape.jpg");
         
         final String outputFormat = request.getFormat();
         RenderedImageMap result = new RenderedImageMap(mapContext, renderedImage, outputFormat);

@@ -18,7 +18,10 @@ public class JCAdapterTest {
 		
 		byte[] out = new byte[5];
 		
-		jCAdapter.interpolate(new Configuration(), out);
+		Configuration configuration = new Configuration();
+		configuration.intervals = new int[15];
+		configuration.intervalColors = new int[15];
+		jCAdapter.interpolate(configuration, out);
 		
 		for (byte c : out) {
 			System.out.print(c);
