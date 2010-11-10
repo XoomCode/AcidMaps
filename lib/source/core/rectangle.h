@@ -14,16 +14,16 @@ namespace acid_maps {
  * @brief Size representation
  */
 class Rectangle {
-  public:
-    Rectangle();
-    Rectangle(int min_x, int min_y, int max_x, int max_y);
-    void resize(int min_x, int min_y, int max_x, int max_y);
-    void intersect(int min_x, int min_y, int max_x, int max_y);
-  
-    int min_x;
-    int min_y;
-    int max_x;
-    int max_y;
+public:
+  Rectangle();
+  Rectangle(int min_x, int min_y, int max_x, int max_y);
+  void resize(int min_x, int min_y, int max_x, int max_y);
+  void intersect(int min_x, int min_y, int max_x, int max_y);
+
+  int min_x;
+  int min_y;
+  int max_x;
+  int max_y;
 };
 
 };  // namespace acid_maps

@@ -37,7 +37,7 @@ void NearestNeighbor::interpolate(Size* tile_size, int dataset[], int dataset_si
         
         if (distance <  minimum_distance) {
           minimum_distance = distance;
-          value = dataset[VPP * i + 2];      
+          value = dataset[VPP * i + 2];
         }  
       }
       interpolated_bitmap[y * tile_size->width + x] = value;

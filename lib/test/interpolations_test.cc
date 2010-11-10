@@ -4,6 +4,7 @@
 #include "../source/simplify/simplify_method.h"
 #include "../source/interpolate/interpolation_strategy.h"
 #include "../source/render/renderer_type.h"
+#include "../source/encode/encoding_format.h"
 #include "../source/acid_maps.h"
 
 #include <cstdio>
@@ -30,19 +31,24 @@ public:
     configuration->intervals_colors = create_intervals_colors();
     configuration->intervals_size = 5;
     configuration->intervals_type = ams::SPARSE;
-    output_buffer_size = 1024 * 512 * ams::RGBA;
-    output_buffer = new unsigned char[output_buffer_size];
+    configuration->format = ams::PNG;
+    
   }
   
   void linearInterpolation () {
     configuration->interpolation_strategy = ams::LINEAR;
     configuration->interpolation_parameter = 32;
-
-    ams::generate(configuration, output_buffer);
     
-    file = std::fopen("linear.ppm", "w");
-    fwrite (output_buffer, output_buffer_size, sizeof(output_buffer), file);
+    size_t output_size;
+    ams::generate(configuration, output_buffer, &output_size);
+    
+    std::printf("%d\n", output_size);
+    
+    file = std::fopen("linear.png", "w");
+    fwrite (output_buffer, output_size, sizeof(output_buffer), file);
     std::fclose(file);
+    
+    delete[] output_buffer;
   }
     
   void tearDown() {
@@ -58,7 +64,6 @@ public:
 private:
   ams::Configuration* configuration;
   unsigned char* output_buffer;
-  unsigned int output_buffer_size;
   std::FILE* file;
   
   float* create_dataset() {

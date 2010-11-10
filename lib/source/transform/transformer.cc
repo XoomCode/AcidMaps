@@ -11,6 +11,8 @@
 #include "../core/configuration.h"
 #include "./transformer.h"
 
+#include <stdio.h>
+
 namespace acid_maps {
 
 /**

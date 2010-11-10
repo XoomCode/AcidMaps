@@ -18,10 +18,12 @@
 #include "interpolate/interpolation_factory.h"
 #include "render/renderer.h"
 #include "render/renderer_factory.h"
+#include "encode/encoder.h"
+#include "encode/encoder_factory.h"
 
 namespace acid_maps {
 
-void generate(Configuration* configuration, unsigned char output_buffer[]) {
+void generate(Configuration* configuration, unsigned char* output_buffer, unsigned int* output_size) {
   float* simplified_dataset = new float[configuration->simplify_size * VPP ];
   Simplifier* simplifier = SimplifierFactory::get(configuration->simplify_method);
 
@@ -38,8 +40,9 @@ void generate(Configuration* configuration, unsigned char output_buffer[]) {
     
   delete transformer;
   delete[] simplified_dataset;
-  
-  int* interpolated_bitmap = new int[configuration->tile_size->width * configuration->tile_size->height];
+
+  int buffer_size = configuration->tile_size->width * configuration->tile_size->height;
+  int* interpolated_bitmap = new int[buffer_size];
   Interpolation* interpolation = InterpolationFactory::get(configuration->interpolation_strategy);
   
   interpolation->interpolate(configuration->tile_size, transformed_dataset, configuration->simplify_size, 
@@ -48,11 +51,17 @@ void generate(Configuration* configuration, unsigned char output_buffer[]) {
   delete interpolation;
   delete[] transformed_dataset;
   
+  unsigned char* rgba_buffer = new unsigned char[buffer_size * RGBA];
   Renderer* renderer = RendererFactory::get(configuration->intervals_type);
   renderer->render(configuration->tile_size, interpolated_bitmap, configuration->intervals, 
-    configuration->intervals_size, configuration->intervals_colors, output_buffer);
+    configuration->intervals_size, configuration->intervals_colors, rgba_buffer);
   delete renderer;
   delete[] interpolated_bitmap;
+  
+  Encoder* encoder = EncoderFactory::get(configuration->format);
+  encoder->encode(configuration->tile_size, rgba_buffer, output_buffer, output_size);
+  delete encoder;
+  delete[] rgba_buffer;
 }
 
 };  // namespace acid_maps
