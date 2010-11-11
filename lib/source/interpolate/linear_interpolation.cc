@@ -13,8 +13,6 @@
 #include <cstring>
 #include <cmath>
 
-#include <stdio.h>
-
 namespace acid_maps {
 
 /**

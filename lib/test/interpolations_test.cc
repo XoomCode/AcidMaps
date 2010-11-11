@@ -75,7 +75,7 @@ private:
   int* create_intervals(int intervals_size) {
     int* intervals = new int[intervals_size];
     for (int i = 0; i < intervals_size; i++) {
-      intervals[i] = (i + 1 )* 15;
+      intervals[i] = (i + 1 )* 25;
     }
     return intervals;
   }
@@ -83,8 +83,8 @@ private:
   unsigned char* create_intervals_colors() {
     unsigned char* colors = new unsigned char[5 * ams::RGBA];
     colors[0] = 0x00; colors[1] = 0x00; colors[2] = 0x00; colors[3] = 0x00;
-    colors[4] = 0xFF; colors[5] = 0x30; colors[6] = 0x30; colors[7] = 0x90;
-    colors[8] = 0xFF; colors[9] = 0x90; colors[10] = 0x10; colors[11] = 0xB0;
+    colors[4] = 0xFF; colors[5] = 0x30; colors[6] = 0x30; colors[7] = 0xFF;
+    colors[8] = 0xFF; colors[9] = 0x90; colors[10] = 0x10; colors[11] = 0xFF;
     colors[12] = 0x00; colors[13] = 0xFF; colors[14] = 0x30; colors[15] = 0xFF;
     colors[16] = 0x00; colors[17] = 0x30; colors[18] = 0xFF; colors[19] = 0xFF;
     return colors; 

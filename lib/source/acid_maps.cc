@@ -21,10 +21,6 @@
 #include "encode/encoder_factory.h"
 #include "./acid_maps.h"
 
-#include "encode/png/lodepng.h"
-
-#include <cstdio>
-
 namespace acid_maps {
 
 void generate(Configuration* configuration, unsigned char** output_buffer, unsigned int* output_size) {
