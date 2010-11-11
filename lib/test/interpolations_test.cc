@@ -39,17 +39,15 @@ public:
     configuration->interpolation_parameter = 32;
     
     unsigned int output_size;
-    ams::generate(configuration, output_buffer, &output_size);
-    
-    std::printf("%d\n", output_size);
-    
-    file = std::fopen("linear.png", "w");
-    //std::fwrite(output_buffer, sizeof(output_buffer), output_size, file);
+    ams::generate(configuration, &output_buffer, &output_size);
+
+    file = std::fopen("linear.png", "wb");
+    std::fwrite(output_buffer, sizeof(unsigned char), output_size, file);
     std::fclose(file);
   }
     
   void tearDown() {
-    delete[] output_buffer;
+    free(output_buffer);
     delete[] configuration->intervals_colors;
     delete[] configuration->intervals;
     delete configuration->tile_size;

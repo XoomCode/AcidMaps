@@ -27,7 +27,7 @@ public:
     /**
      * @todo brief
      */
-  virtual void encode(Size* tile_size, const unsigned char* rgba_buffer, unsigned char* output_buffer, unsigned int* output_size) = 0;
+  virtual void encode(Size* tile_size, unsigned char* rgba_buffer, unsigned char** output_buffer, unsigned int* output_size) = 0;
 };
 
 };  // namespace acid_maps
