@@ -23,28 +23,23 @@
 
 namespace acid_maps {
 
-void generate(Configuration* configuration, unsigned char* output_buffer, std::size_t* output_size) {
+void generate(Configuration* configuration, unsigned char* output_buffer, unsigned int* output_size) {
   float* simplified_dataset = new float[configuration->simplify_size * VPP ];
   Simplifier* simplifier = SimplifierFactory::get(configuration->simplify_method);
-
   simplifier->simplify(configuration->dataset, configuration->dataset_size,
     configuration->simplify_size, simplified_dataset);
-  
   delete simplifier;
   
   int* transformed_dataset = new int[configuration->simplify_size * VPP];
   Transformer* transformer = new Transformer();
-
   transformer->transform(configuration->bounds, configuration->tile_size,
     simplified_dataset, configuration->simplify_size, transformed_dataset);
-    
   delete transformer;
   delete[] simplified_dataset;
 
   int buffer_size = configuration->tile_size->width * configuration->tile_size->height;
   int* interpolated_bitmap = new int[buffer_size];
   Interpolation* interpolation = InterpolationFactory::get(configuration->interpolation_strategy);
-  
   interpolation->interpolate(configuration->tile_size, transformed_dataset, configuration->simplify_size, 
     configuration->interpolation_parameter, interpolated_bitmap);
   
@@ -53,7 +48,7 @@ void generate(Configuration* configuration, unsigned char* output_buffer, std::s
   
   unsigned char* rgba_buffer = new unsigned char[buffer_size * RGBA];
   Renderer* renderer = RendererFactory::get(configuration->intervals_type);
-  renderer->render(configuration->tile_size, interpolated_bitmap, configuration->intervals, 
+  renderer->render(interpolated_bitmap, configuration->tile_size, configuration->intervals, 
     configuration->intervals_size, configuration->intervals_colors, rgba_buffer);
   delete renderer;
   delete[] interpolated_bitmap;

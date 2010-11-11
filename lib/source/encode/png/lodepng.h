@@ -50,7 +50,7 @@ Also, some text editors allow expanding/collapsing #ifdef sections.
 #define LODEPNG_COMPILE_PNG              /*png encoder and png decoder*/
 #define LODEPNG_COMPILE_DECODER          /*deflate&zlib decoder and png decoder*/
 #define LODEPNG_COMPILE_ENCODER          /*deflate&zlib encoder and png encoder*/
-//define LODEPNG_COMPILE_DISK             /*the optional built in harddisk file loading and saving functions*/
+#define LODEPNG_COMPILE_DISK             /*the optional built in harddisk file loading and saving functions*/
 #define LODEPNG_COMPILE_ANCILLARY_CHUNKS /*any code or struct datamember related to chunks other than IHDR, IDAT, PLTE, tRNS, IEND*/
 #define LODEPNG_COMPILE_UNKNOWN_CHUNKS   /*handling of unknown chunks*/
 #define LODEPNG_COMPILE_ERROR_TEXT       /*ability to convert error numerical codes to English text string*/

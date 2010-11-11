@@ -15,7 +15,7 @@
 
 namespace acid_maps {
 
-void PngEncoder::encode(Size* tile_size, const unsigned char* rgba_buffer, unsigned char* output_buffer, std::size_t* output_size) {
+void PngEncoder::encode(Size* tile_size, const unsigned char* rgba_buffer, unsigned char* output_buffer, unsigned int* output_size) {
   LodePNG_encode32(&output_buffer, output_size, rgba_buffer, tile_size->width, tile_size->height);
 }
 

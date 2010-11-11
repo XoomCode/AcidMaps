@@ -26,13 +26,12 @@ public:
     configuration->simplify_method = ams::COPY;
     configuration->simplify_size = 6;
     configuration->bounds = new ams::Bounds(-180, -90, 180, 90);
-    configuration->tile_size = new ams::Size(256, 256);
-    configuration->intervals = create_intervals();
-    configuration->intervals_colors = create_intervals_colors();
+    configuration->tile_size = new ams::Size(20, 20);
     configuration->intervals_size = 5;
+    configuration->intervals = create_intervals(configuration->intervals_size);
+    configuration->intervals_colors = create_intervals_colors();
     configuration->intervals_type = ams::SPARSE;
     configuration->format = ams::PNG;
-    
   }
   
   void linearInterpolation () {
@@ -49,7 +48,7 @@ public:
     }
         
     file = std::fopen("linear.png", "w");
-    std::fwrite (output_buffer, sizeof(output_buffer), output_size, file);
+    //std::fwrite (output_buffer, sizeof(output_buffer), output_size, file);
     std::fclose(file);
   }
     
@@ -78,13 +77,11 @@ private:
     return dataset;
   }
   
-  int* create_intervals() {
-    int* intervals = new int[5];
-    intervals[0] = 10;
-    intervals[1] = 22;
-    intervals[2] = 45;
-    intervals[3] = 70;
-    intervals[4] = 110;
+  int* create_intervals(int intervals_size) {
+    int* intervals = new int[intervals_size];
+    for (int i = 0; i < intervals_size; i++) {
+      intervals[i] = (i + 1) * 10;
+    }
     return intervals;
   }
   
