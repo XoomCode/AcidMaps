@@ -20,6 +20,7 @@ void SparseRenderer::render(int interpolated_bitmap[], Size* tile_size, int inte
     int intervals_size, unsigned char intervals_colors[], unsigned char* output_buffer) {
   int interval_index;
   int bitmap_size = tile_size->width * tile_size->height;
+  
   for (unsigned int i = 0; i < bitmap_size; i++) {
     interval_index = this->interval(interpolated_bitmap[i], intervals, intervals_size);
     std::memcpy(output_buffer + i * RGBA, intervals_colors + interval_index, sizeof(unsigned char) * RGBA);

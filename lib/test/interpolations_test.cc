@@ -26,7 +26,7 @@ public:
     configuration->simplify_method = ams::COPY;
     configuration->simplify_size = 6;
     configuration->bounds = new ams::Bounds(-180, -90, 180, 90);
-    configuration->tile_size = new ams::Size(20, 20);
+    configuration->tile_size = new ams::Size(1024, 512);
     configuration->intervals_size = 5;
     configuration->intervals = create_intervals(configuration->intervals_size);
     configuration->intervals_colors = create_intervals_colors();
@@ -38,17 +38,13 @@ public:
     configuration->interpolation_strategy = ams::LINEAR;
     configuration->interpolation_parameter = 32;
     
-    size_t output_size;
+    unsigned int output_size;
     ams::generate(configuration, output_buffer, &output_size);
     
     std::printf("%d\n", output_size);
     
-    for (int i = 0; i < output_size; i++) {
-      printf("%c", output_buffer[i]);
-    }
-        
     file = std::fopen("linear.png", "w");
-    //std::fwrite (output_buffer, sizeof(output_buffer), output_size, file);
+    //std::fwrite(output_buffer, sizeof(output_buffer), output_size, file);
     std::fclose(file);
   }
     
