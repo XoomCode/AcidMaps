@@ -4571,7 +4571,7 @@ unsigned LodePNG_encode(unsigned char** out, size_t* outsize, const unsigned cha
 
 unsigned LodePNG_encode32(unsigned char** out, size_t* outsize, const unsigned char* image, unsigned w, unsigned h)
 {
-  return LodePNG_encode(out, outsize, image, w, h, 6, 8);;
+  return LodePNG_encode(out, outsize, image, w, h, 6, 8);
 }
 
 #ifdef LODEPNG_COMPILE_DISK

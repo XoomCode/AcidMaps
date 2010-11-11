@@ -8,7 +8,6 @@
  * @todo Brief and description
  */
 
-#include "./acid_maps.h"
 #include "constants/constants.h"
 #include "core/configuration.h"
 #include "simplify/simplifier.h"
@@ -20,10 +19,11 @@
 #include "render/renderer_factory.h"
 #include "encode/encoder.h"
 #include "encode/encoder_factory.h"
+#include "./acid_maps.h"
 
 namespace acid_maps {
 
-void generate(Configuration* configuration, unsigned char* output_buffer, unsigned int* output_size) {
+void generate(Configuration* configuration, unsigned char* output_buffer, std::size_t* output_size) {
   float* simplified_dataset = new float[configuration->simplify_size * VPP ];
   Simplifier* simplifier = SimplifierFactory::get(configuration->simplify_method);
 

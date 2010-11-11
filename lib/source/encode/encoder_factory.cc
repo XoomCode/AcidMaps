@@ -6,8 +6,8 @@
  * @authors Fabio R. Panettieri
  */
 #include "./encoder.h"
-#include "./encoder_factory.h"
 #include "./encoding_format.h"
+#include "./encoder_factory.h"
 #include "png/png_encoder.h"
 
 namespace acid_maps {

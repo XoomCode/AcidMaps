@@ -15,11 +15,8 @@
 
 namespace acid_maps {
 
-void PngEncoder::encode(Size* tile_size, unsigned char* rgba_buffer, unsigned char* output_buffer, unsigned int* output_size) {
-  LodePNG_Encoder encoder;
-  LodePNG_Encoder_init(&encoder);
-  LodePNG_Encoder_encode(&encoder, &output_buffer, output_size, rgba_buffer, tile_size->width, tile_size->height);
-  LodePNG_Encoder_cleanup(&encoder);
+void PngEncoder::encode(Size* tile_size, const unsigned char* rgba_buffer, unsigned char* output_buffer, std::size_t* output_size) {
+  LodePNG_encode32(&output_buffer, output_size, rgba_buffer, tile_size->width, tile_size->height);
 }
 
 };  // namespace acid_maps

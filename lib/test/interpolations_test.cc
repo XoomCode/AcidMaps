@@ -26,7 +26,7 @@ public:
     configuration->simplify_method = ams::COPY;
     configuration->simplify_size = 6;
     configuration->bounds = new ams::Bounds(-180, -90, 180, 90);
-    configuration->tile_size = new ams::Size(1024, 512);
+    configuration->tile_size = new ams::Size(256, 256);
     configuration->intervals = create_intervals();
     configuration->intervals_colors = create_intervals_colors();
     configuration->intervals_size = 5;
@@ -44,11 +44,13 @@ public:
     
     std::printf("%d\n", output_size);
     
+    for (int i = 0; i < output_size; i++) {
+      printf("%c", output_buffer[i]);
+    }
+        
     file = std::fopen("linear.png", "w");
-    fwrite (output_buffer, output_size, sizeof(output_buffer), file);
+    std::fwrite (output_buffer, sizeof(output_buffer), output_size, file);
     std::fclose(file);
-    
-    delete[] output_buffer;
   }
     
   void tearDown() {
