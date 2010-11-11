@@ -42,9 +42,11 @@ public class Configuration {
 	
 	public int[] intervals;
 	
-	public int[] intervalColors;
+	public byte[] intervalsColors;
 	
-	public int intervalSize;
+	public int intervalsSize;
+	
+	public int intervalsType;
 
 	/**
 	 * Instantiates a new configuration.

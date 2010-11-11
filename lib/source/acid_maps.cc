@@ -49,7 +49,7 @@ void generate(Configuration* configuration, unsigned char output_buffer[]) {
   delete[] transformed_dataset;
   
   Renderer* renderer = RendererFactory::get(configuration->intervals_type);
-  renderer->render(configuration->tile_size, interpolated_bitmap, configuration->intervals, 
+  renderer->render(configuration->tile_size, interpolated_bitmap, configuration->intervals,
     configuration->intervals_size, configuration->intervals_colors, output_buffer);
   delete renderer;
   delete[] interpolated_bitmap;

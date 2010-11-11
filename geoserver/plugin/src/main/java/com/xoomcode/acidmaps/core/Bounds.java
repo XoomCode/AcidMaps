@@ -20,4 +20,25 @@ public class Bounds {
 	
 	/** The max y. */
 	public float maxY;
+
+	public Bounds() {
+		// TODO Auto-generated constructor stub
+	}
+
+	/**
+	 * @param minX
+	 * @param minY
+	 * @param maxX
+	 * @param maxY
+	 */
+	public Bounds(float minX, float minY, float maxX, float maxY) {
+		super();
+		this.minX = minX;
+		this.minY = minY;
+		this.maxX = maxX;
+		this.maxY = maxY;
+	}
+	
+	
+	
 }

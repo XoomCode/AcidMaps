@@ -11,4 +11,18 @@ package com.xoomcode.acidmaps.core;
 public class AcidMapParameters {
 
 	public static final String VALUE_COLUMN = "VALUE_COLUMN";
+	
+	public static final String SIMPLIFY_METHOD = "SIMPLIFY_METHOD";
+	
+	public static final String SIMPLIFY_SIZE = "SIMPLIFY_SIZE";
+	
+	public static final String INTERVALS = "INTERVALS[]";
+	
+	public static final String INTERVALS_COLORS = "INTERVALS_COLORS[]";
+	
+	public static final String INTERVALS_TYPE = "INTERVALS_TYPE";
+	
+	public static final String INTERPOLATION_STRATEGY = "INTERPOLATION_STRATEGY";
+	
+	public static final String INTERPOLATION_PARAMETER = "INTERPOLATION_PARAMETER";
 }
