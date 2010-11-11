@@ -1,0 +1,33 @@
+<project default="deploy">
+	<property name="dir.src" value="src" />
+	<property name="dir.build" value="target/classes" />
+	<property name="dir.dist" value="target" />
+
+	<!-- Creates the output directories -->
+
+	<target name="compile" description="Compile all source code.">
+		<javac srcdir="${dir.src}" destdir="${dir.build}" />
+	</target>
+
+	<target name="jar" depends="compile">
+		<delete file="${dir.dist}/acidmaps-1.0.jar" />
+		<property name="version.num" value="1.0" />
+
+		<manifest file="MANIFEST.MF">
+			<attribute name="Built-By" value="${user.name}" />
+			<attribute name="Implementation-Version" value="${version.num}-b${build.number}" />
+		</manifest>
+
+		<jar destfile="/target/acidmaps-1.0.jar" manifest="MANIFEST.MF">
+			<fileset dir="${dir.build}" includes="**/*.class" excludes="**/UnitTest*.class" />
+			<fileset dir="${dir.src}" includes="applicationContext.xml" />
+		</jar>
+	</target>
+
+	<target name="deploy" depends="jar" />
+
+	<target name="clean" description="Remove all generated files.">
+		<delete dir="${dir.build}" />
+		<delete dir="${dir.dist}" />
+	</target>
+</project>
