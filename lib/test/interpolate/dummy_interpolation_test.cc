@@ -85,4 +85,4 @@ private:
   
 };
 
-CPPUNIT_TEST_SUITE_REGISTRATION( DummyInterpolationTest );
+//CPPUNIT_TEST_SUITE_REGISTRATION( DummyInterpolationTest );

@@ -8,7 +8,6 @@
  * @todo Brief and description
  */
 
-#include "./acid_maps.h"
 #include "constants/constants.h"
 #include "core/configuration.h"
 #include "simplify/simplifier.h"
@@ -18,41 +17,46 @@
 #include "interpolate/interpolation_factory.h"
 #include "render/renderer.h"
 #include "render/renderer_factory.h"
+#include "encode/encoder.h"
+#include "encode/encoder_factory.h"
+#include "./acid_maps.h"
 
 namespace acid_maps {
 
-void generate(Configuration* configuration, unsigned char output_buffer[]) {
+void generate(Configuration* configuration, unsigned char** output_buffer, unsigned int* output_size) {
   float* simplified_dataset = new float[configuration->simplify_size * VPP ];
   Simplifier* simplifier = SimplifierFactory::get(configuration->simplify_method);
-
   simplifier->simplify(configuration->dataset, configuration->dataset_size,
     configuration->simplify_size, simplified_dataset);
-  
   delete simplifier;
   
   int* transformed_dataset = new int[configuration->simplify_size * VPP];
   Transformer* transformer = new Transformer();
-
   transformer->transform(configuration->bounds, configuration->tile_size,
     simplified_dataset, configuration->simplify_size, transformed_dataset);
-    
   delete transformer;
   delete[] simplified_dataset;
-  
-  int* interpolated_bitmap = new int[configuration->tile_size->width * configuration->tile_size->height];
+
+  int buffer_size = configuration->tile_size->width * configuration->tile_size->height;
+  int* interpolated_bitmap = new int[buffer_size];
   Interpolation* interpolation = InterpolationFactory::get(configuration->interpolation_strategy);
-  
   interpolation->interpolate(configuration->tile_size, transformed_dataset, configuration->simplify_size, 
     configuration->interpolation_parameter, interpolated_bitmap);
   
   delete interpolation;
   delete[] transformed_dataset;
   
+  unsigned char* rgba_buffer = new unsigned char[buffer_size * RGBA];
   Renderer* renderer = RendererFactory::get(configuration->intervals_type);
-  renderer->render(configuration->tile_size, interpolated_bitmap, configuration->intervals,
-    configuration->intervals_size, configuration->intervals_colors, output_buffer);
+  renderer->render(interpolated_bitmap, configuration->tile_size, configuration->intervals, 
+    configuration->intervals_size, configuration->intervals_colors, rgba_buffer);
   delete renderer;
   delete[] interpolated_bitmap;
+  
+  Encoder* encoder = EncoderFactory::get(configuration->format);
+  encoder->encode(configuration->tile_size, rgba_buffer, output_buffer, output_size);
+  delete encoder;
+  delete[] rgba_buffer;
 }
 
 };  // namespace acid_maps

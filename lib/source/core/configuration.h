@@ -58,6 +58,9 @@ struct Configuration {
   
   /// Determines how intervals are going to be accessed in the rendering step
   int intervals_type;
+  
+  /// Image format
+  int format;
 };
 
 };  // namespace acid_maps

@@ -116,4 +116,4 @@ private:
   
 };
 
-CPPUNIT_TEST_SUITE_REGISTRATION( TransformerTest );
+//CPPUNIT_TEST_SUITE_REGISTRATION( TransformerTest );

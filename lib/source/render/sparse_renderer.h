@@ -19,8 +19,8 @@ class SparseRenderer : public Renderer {
   /**
    * @todo brief
    */
-  void render(Size* tile_size, int interpolated_bitmap[], int intervals[],
-    int intervals_size, unsigned char intervals_colors[], unsigned char output_buffer[]);
+  void render(int interpolated_bitmap[], Size* tile_size, int intervals[],
+  int intervals_size, unsigned char intervals_colors[], unsigned char* output_buffer);
   
   int interval(int value, int intervals[], int intervals_size);
 };

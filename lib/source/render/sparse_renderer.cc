@@ -16,16 +16,14 @@ namespace acid_maps {
 /**
  * @todo Marching squares
  */ 
-void SparseRenderer::render(Size* tile_size, int interpolated_bitmap[], int intervals[],
-    int intervals_size, unsigned char intervals_colors[], unsigned char output_buffer[]) {
-  unsigned long pixel;
+void SparseRenderer::render(int interpolated_bitmap[], Size* tile_size, int intervals[],
+    int intervals_size, unsigned char intervals_colors[], unsigned char* output_buffer) {
   int interval_index;
-  for (int y = 0; y < tile_size->height; y++) {
-    for (int x = 0; x < tile_size->width; x++) {
-      pixel = y * tile_size->width + x;
-      interval_index = this->interval(interpolated_bitmap[pixel], intervals, intervals_size);
-      std::memcpy(output_buffer + pixel * RGBA, intervals_colors + interval_index, sizeof(unsigned char) * RGBA);
-    }
+  int bitmap_size = tile_size->width * tile_size->height;
+  
+  for (unsigned int i = 0; i < bitmap_size; i++) {
+    interval_index = this->interval(interpolated_bitmap[i], intervals, intervals_size);
+    std::memcpy(output_buffer + i * RGBA, intervals_colors + interval_index, sizeof(unsigned char) * RGBA);
   }
 }
 
@@ -54,7 +52,6 @@ int SparseRenderer::interval(int value, int intervals[], int intervals_size) {
       return mid;
     }
   }
-  
   return -1;
 }
 

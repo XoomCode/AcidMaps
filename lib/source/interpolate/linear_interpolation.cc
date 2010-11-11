@@ -20,18 +20,18 @@ namespace acid_maps {
  */
 void LinearInterpolation::interpolate(Size* tile_size, int dataset[], int dataset_size, 
   int radius, int interpolated_bitmap[]) {
-  std::memset(interpolated_bitmap, 0, dataset_size * sizeof(interpolated_bitmap[0]));
+  std::memset(interpolated_bitmap, 0, tile_size->width * tile_size->height * sizeof(interpolated_bitmap[0]));
   
   Rectangle bounds;
   int point_x, point_y, point_value;
-  int distance_x, distance_y, distance;
+  float distance_x, distance_y, distance;
   for (int i = 0; i < dataset_size; i++) {
     point_x = dataset[VPP * i];
     point_y = dataset[VPP * i + 1];
     point_value = dataset[VPP * i + 2];
     
     bounds.resize(0, 0, tile_size->width, tile_size->height);
-    bounds.intersect(point_x - radius, point_x + radius, point_y - radius, point_y + radius);
+    bounds.intersect(point_x - radius, point_y - radius, point_x + radius, point_y + radius);
     
     for (int y = bounds.min_y; y < bounds.max_y; y++) {
       for (int x = bounds.min_x; x < bounds.max_x; x++) {
@@ -44,6 +44,7 @@ void LinearInterpolation::interpolate(Size* tile_size, int dataset[], int datase
         }
       }
     }
+    
     
   }
 }
