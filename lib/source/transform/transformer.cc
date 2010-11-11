@@ -28,6 +28,7 @@ void Transformer::transform(Bounds* bounds, Size* tile_size, float dataset[],
   float vertical_resolution = bounds_height / tile_size->height;
 
   float* x, *y, *v;
+  
   for (int i = 0; i < dataset_size; i++) {
     transformed_dataset[i * VPP] = (int)((dataset[i * VPP] - bounds->min_x) / horizontal_resolution);
     transformed_dataset[i * VPP + 1] = (int)((bounds->max_y - dataset[i * VPP + 1]) / vertical_resolution);

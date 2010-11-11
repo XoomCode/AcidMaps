@@ -20,6 +20,7 @@ class InterpolationsTest : public CppUnit::TestFixture {
   
 public:
   void setUp() {
+    srand(time(0));
     configuration = new ams::Configuration();
     configuration->dataset = create_dataset();
     configuration->dataset_size = 10;
@@ -63,7 +64,11 @@ private:
   
   float* create_dataset() {
     float* dataset = new float[10 * ams::VPP];
-    for (int i = 0; i < 10; i++) {
+    dataset[0] = 0; dataset[1] = 0; dataset[2] = 50;
+    dataset[3] = 90; dataset[4] = 45; dataset[3] = 30;
+    dataset[6] = -90; dataset[7] = -45; dataset[8] = 70;
+    
+    for (int i = 3; i < 10; i++) {
       dataset[i * ams::VPP] = std::rand() % 360 - 180;
       dataset[i * ams::VPP + 1] = std::rand() % 180 - 90;
       dataset[i * ams::VPP + 2] = std::rand() % 150;
@@ -72,11 +77,17 @@ private:
   }
   
   int* create_intervals(int intervals_size) {
+
+    printf("Intervals\n");
+    
     int* intervals = new int[intervals_size];
     for (int i = 0; i < intervals_size; i++) {
-      intervals[i] = (i + 1) * 10;
+      intervals[i] = (i + 1 )* 15;
+      printf("%d\n", intervals[i]);
     }
     return intervals;
+    
+    printf("done\n");
   }
   
   unsigned char* create_intervals_colors() {
