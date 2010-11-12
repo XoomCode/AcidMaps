@@ -162,22 +162,20 @@ ams::Configuration* buildConfiguration(JNIEnv* env, jobject jconfiguration){
 	return configuration;
 }
 
-JNIEXPORT void JNICALL Java_com_xoomcode_acidmaps_adapter_JCAdapter_interpolateC
-  (JNIEnv* env, jobject obj, jobject jconfiguration, jbyteArray out)
+JNIEXPORT jbyteArray JNICALL Java_com_xoomcode_acidmaps_adapter_JCAdapter_interpolateC
+  (JNIEnv* env, jobject obj, jobject jconfiguration)
 {
- 	jbyte* joutpt;
-
 	ams::Configuration* configuration = buildConfiguration(env, jconfiguration);
 
-	int outSize = configuration->tile_size->width * configuration->tile_size->height * ams::RGBA;
- 	joutpt = new jbyte[outSize];
+	unsigned char* charOut;
+	unsigned int charOutSize;
+	ams::generate(configuration, &charOut, &charOutSize);
+ 	jbyte* joutpt = new jbyte[charOutSize];
 
-	unsigned char* charOut = new unsigned char[outSize];
-	ams::generate(configuration, charOut);
+ 	memcpy(joutpt, charOut, charOutSize * sizeof(unsigned char));
 
- 	memcpy(joutpt, charOut, outSize * sizeof(unsigned char));
-
-	env->SetByteArrayRegion(out, 0, outSize, joutpt);
+ 	jbyteArray out = env->NewByteArray(charOutSize);
+	env->SetByteArrayRegion(out, 0, charOutSize, joutpt);
 
 	delete[] configuration->dataset;
 	delete configuration->bounds;
@@ -186,7 +184,9 @@ JNIEXPORT void JNICALL Java_com_xoomcode_acidmaps_adapter_JCAdapter_interpolateC
 	delete[] configuration->intervals_colors;
 	delete configuration;
 	delete[] joutpt;
-	delete[] charOut;
+	free(charOut);
+
+	return out;
 }
 
 

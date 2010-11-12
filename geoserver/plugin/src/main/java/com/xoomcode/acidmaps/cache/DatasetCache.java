@@ -3,19 +3,29 @@
  */
 package com.xoomcode.acidmaps.cache;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * @date 11/11/2010
  * @author cfarina
  *	
  */
-public class DatasetCache {
+public class DatasetCache extends TimerTask {
 
 	private Map<DatasetCacheKey, Dataset> cache = new Hashtable<DatasetCacheKey, Dataset>();
 
+	private Timer timer = new Timer();
+	
+	public DatasetCache() {
+		timer.scheduleAtFixedRate(this, 0, 60000);
+	}
+	
 	/**
 	 * @param datasetCacheKey
 	 * @return
@@ -28,7 +38,11 @@ public class DatasetCache {
 	 * @param datasetCacheKey
 	 */
 	public float[] getDataset(DatasetCacheKey datasetCacheKey) {
-		return cache.get(datasetCacheKey).getDataset();
+		if(cache.get(datasetCacheKey) != null){
+			//cache.get(datasetCacheKey).setDate(new Date());
+			return cache.get(datasetCacheKey).getDataset();
+		}
+		return null;
 	}
 
 	/**
@@ -36,17 +50,29 @@ public class DatasetCache {
 	 * @param dataset
 	 */
 	public void put(DatasetCacheKey datasetCacheKey, float[] dataset) {
-		Dataset cachedDataset = new Dataset(dataset, this, datasetCacheKey);
+		Dataset cachedDataset = new Dataset(dataset);
 		cache.put(datasetCacheKey, cachedDataset);
-		cachedDataset.initInvalidateTimer(10000);
 	}
 
-	/**
-	 * @param dataset
+	/* (non-Javadoc)
+	 * @see java.util.TimerTask#run()
 	 */
-	public void remove(Dataset dataset) {
-		cache.remove(dataset.getDatasetCacheKey());
+	@Override
+	public void run() {
+		List<DatasetCacheKey> datasetCacheKeyForRemove = new ArrayList<DatasetCacheKey>();
+		Date now = new Date();
+		for (DatasetCacheKey datasetCacheKey : cache.keySet()) {
+			Dataset dataset = cache.get(datasetCacheKey);
+			long delay = now.getTime() - dataset.getDate().getTime();
+			if(delay > 10000){
+				datasetCacheKeyForRemove.add(datasetCacheKey);
+			}
+		}
+		
+		for (DatasetCacheKey datasetCacheKey : datasetCacheKeyForRemove) {
+			cache.remove(datasetCacheKey);
+		}
+		
 	}
-	
 	
 }

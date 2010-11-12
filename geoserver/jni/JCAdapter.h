@@ -12,7 +12,7 @@ extern "C" {
  * Method:    interpolateC
  * Signature: (LConfiguration;[B)V
  */
-JNIEXPORT void JNICALL Java_com_xoomcode_acidmaps_adapter_JCAdapter_interpolateC(JNIEnv *, jobject, jobject, jbyteArray);
+JNIEXPORT jbyteArray JNICALL Java_com_xoomcode_acidmaps_adapter_JCAdapter_interpolateC(JNIEnv *, jobject, jobject);
 
 #ifdef __cplusplus
 }
