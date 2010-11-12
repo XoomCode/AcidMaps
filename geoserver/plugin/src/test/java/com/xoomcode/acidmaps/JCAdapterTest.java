@@ -100,7 +100,7 @@ public class JCAdapterTest extends TestCase {
 		configuration.interpolationParameter = 32;
 		byte[] outputBuffer = jCAdapter.interpolate(configuration);
 
-		try {
+		/*try {
 			FileOutputStream fos = new FileOutputStream("image.png");
 			fos.write(outputBuffer);
 			fos.close();
@@ -108,7 +108,7 @@ public class JCAdapterTest extends TestCase {
 			System.out.println("FileNotFoundException : " + ex);
 		} catch (IOException ioe) {
 			System.out.println("IOException : " + ioe);
-		}
+		}*/
 	}
 
 }

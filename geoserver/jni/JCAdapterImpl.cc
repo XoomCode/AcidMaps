@@ -158,6 +158,7 @@ ams::Configuration* buildConfiguration(JNIEnv* env, jobject jconfiguration){
  	configuration->intervals_size = getCharArrayLength(env, configurationClass, jconfiguration, "intervalsColors") / ams::RGBA;
  	configuration->intervals_type = getIntField(env, configurationClass, jconfiguration, "intervalsType");
  	configuration->interpolation_parameter = getIntField(env, configurationClass, jconfiguration, "interpolationParameter");
+ 	configuration->format = getIntField(env, configurationClass, jconfiguration, "format");
 
 	return configuration;
 }
