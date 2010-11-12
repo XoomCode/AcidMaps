@@ -39,6 +39,14 @@ public class Configuration {
 
 	/** Interpolation parameter for every interpolation type. */
 	public int interpolationParameter;
+	
+	public int[] intervals;
+	
+	public byte[] intervalsColors;
+	
+	public int intervalsSize;
+	
+	public int intervalsType;
 
 	/**
 	 * Instantiates a new configuration.
