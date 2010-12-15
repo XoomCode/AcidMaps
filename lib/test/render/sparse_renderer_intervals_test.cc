@@ -86,4 +86,4 @@ private:
   int intervals_size;
 };
 
-//CPPUNIT_TEST_SUITE_REGISTRATION( SparseRendererIntervalsTest );
+CPPUNIT_TEST_SUITE_REGISTRATION( SparseRendererIntervalsTest );

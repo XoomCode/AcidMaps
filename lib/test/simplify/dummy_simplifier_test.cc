@@ -80,4 +80,4 @@ private:
   
 };
 
-//CPPUNIT_TEST_SUITE_REGISTRATION( DummySimplifierTest );
+CPPUNIT_TEST_SUITE_REGISTRATION( DummySimplifierTest );

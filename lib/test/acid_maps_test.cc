@@ -11,4 +11,4 @@ public:
   }
 };
 
-//CPPUNIT_TEST_SUITE_REGISTRATION( AcidMapsTest );
+CPPUNIT_TEST_SUITE_REGISTRATION( AcidMapsTest );

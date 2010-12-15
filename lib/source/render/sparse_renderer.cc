@@ -11,6 +11,8 @@
 #include "./sparse_renderer.h"
 #include <cstring>
 
+#include <stdio.h>
+
 namespace acid_maps {
 
 /**
@@ -21,10 +23,22 @@ void SparseRenderer::render(int interpolated_bitmap[], Size* tile_size, int inte
   int interval_index;
   int bitmap_size = tile_size->width * tile_size->height;
   
+  FILE* file = fopen("img.pnm", "wb");
+  FILE* color = fopen("img_color.pnm", "wb");
+  fputs("P5 1024 512 255 ", file);
+  fputs("P6 1024 512 255 ", color);
   for (unsigned int i = 0; i < bitmap_size; i++) {
     interval_index = this->interval(interpolated_bitmap[i], intervals, intervals_size);
-    std::memcpy(output_buffer + i * RGBA, intervals_colors + interval_index, sizeof(unsigned char) * RGBA);
+    //std::memcpy(output_buffer + i * RGBA, intervals_colors + interval_index, sizeof(unsigned char) * RGBA);
+    output_buffer[i * RGBA + 0] = intervals_colors[interval_index + 0];
+    output_buffer[i * RGBA + 1] = intervals_colors[interval_index + 1];
+    output_buffer[i * RGBA + 2] = intervals_colors[interval_index + 2];
+    output_buffer[i * RGBA + 3] = intervals_colors[interval_index + 3];
+    fputc(interpolated_bitmap[i], file);
+    fwrite(intervals_colors + interval_index, 3, sizeof(unsigned char), color);
   }
+  fclose(file);
+  fclose(color);
 }
 
 int SparseRenderer::interval(int value, int intervals[], int intervals_size) {
