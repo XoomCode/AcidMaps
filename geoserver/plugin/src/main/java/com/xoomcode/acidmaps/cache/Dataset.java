@@ -3,60 +3,41 @@
  */
 package com.xoomcode.acidmaps.cache;
 
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.Date;
 
 /**
  * @date 11/11/2010
  * @author cfarina
  *	
  */
-public class Dataset extends TimerTask {
+public class Dataset {
 
 	private float[] dataset;
 	
-	private DatasetCacheKey datasetCacheKey;
+	private Date date = new Date();
 
-	private DatasetCache datasetCache;
-	
 	/**
 	 * @param timer
 	 * @param dataset
 	 */
-	public Dataset(float[] dataset, DatasetCache datasetCache, DatasetCacheKey datasetCacheKey) {
+	public Dataset(float[] dataset) {
 		this.dataset = dataset;
-		this.datasetCache = datasetCache;
-		this.datasetCacheKey = datasetCacheKey;
 	}
 	
-	public void initInvalidateTimer(int mils){
-		
-		Timer timer = new Timer(); 
-		timer.scheduleAtFixedRate(this, 0, 1000);
-	}
-	
-	/* (non-Javadoc)
-	 * @see java.util.TimerTask#run()
+	/**
+	 * @param date the date to set
 	 */
-	@Override
-	public void run() {
-		datasetCache.remove(this);
+	public void setDate(Date date) {
+		this.date = date;
 	}
 
 	/**
-	 * @return the datasetCache
+	 * @return the date
 	 */
-	public DatasetCache getDatasetCache() {
-		return datasetCache;
+	public Date getDate() {
+		return date;
 	}
-	
-	/**
-	 * @param datasetCache the datasetCache to set
-	 */
-	public void setDatasetCache(DatasetCache datasetCache) {
-		this.datasetCache = datasetCache;
-	}
-	
+
 	/**
 	 * @return the dataset
 	 */
@@ -71,17 +52,4 @@ public class Dataset extends TimerTask {
 		this.dataset = dataset;
 	}
 
-	/**
-	 * @return the datasetCacheKey
-	 */
-	public DatasetCacheKey getDatasetCacheKey() {
-		return datasetCacheKey;
-	}
-	
-	/**
-	 * @param datasetCacheKey the datasetCacheKey to set
-	 */
-	public void setDatasetCacheKey(DatasetCacheKey datasetCacheKey) {
-		this.datasetCacheKey = datasetCacheKey;
-	}
 }

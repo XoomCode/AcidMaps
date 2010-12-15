@@ -4,10 +4,7 @@
 package com.xoomcode.acidmaps;
 
 import java.awt.image.BufferedImage;
-import java.awt.image.RenderedImage;
 import java.io.ByteArrayInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,10 +12,8 @@ import java.util.List;
 import java.util.Map;
 
 import javax.imageio.ImageIO;
-import javax.media.jai.JAI;
 import javax.servlet.ServletException;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.geoserver.platform.ServiceException;
 import org.geoserver.wms.GetMapRequest;
 import org.geoserver.wms.MapLayerInfo;
@@ -31,19 +26,18 @@ import org.geotools.factory.GeoTools;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
 import org.geotools.styling.FeatureTypeConstraint;
-import org.geotools.styling.Style;
 import org.opengis.feature.Feature;
 import org.opengis.feature.Property;
 import org.opengis.feature.simple.SimpleFeature;
-import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.FeatureType;
 import org.opengis.feature.type.GeometryDescriptor;
 import org.opengis.filter.Filter;
 import org.opengis.filter.FilterFactory;
 
-import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Point;
 import com.xoomcode.acidmaps.adapter.JCAdapter;
+import com.xoomcode.acidmaps.cache.DatasetCache;
+import com.xoomcode.acidmaps.cache.DatasetCacheKey;
 import com.xoomcode.acidmaps.constants.Constants;
 import com.xoomcode.acidmaps.core.AcidMapParameters;
 import com.xoomcode.acidmaps.core.Bounds;
@@ -54,6 +48,8 @@ import com.xoomcode.acidmaps.core.Configuration;
  * The Class AcidMapService.
  */
 public class AcidMapService {
+	
+	private static DatasetCache datasetCache = new DatasetCache();
 	
 	/** The filter fac. */
 	private FilterFactory filterFac;
@@ -90,7 +86,14 @@ public class AcidMapService {
 		WMSMapContext mapContext = new WMSMapContext(request);
 		try {
 			if (request.getLayers() != null && request.getLayers().size() > 0) {
-				return run(request, mapContext);
+				MapLayerInfo layer = request.getLayers().get(0);
+				DatasetCacheKey datasetCacheKey = new DatasetCacheKey(layer.getName());
+				if(datasetCache.isCached(datasetCacheKey)){
+					return run(request, mapContext);
+				} else {
+					return synchronizedRun(request, mapContext);
+					
+				}
 			}
 			return null;
 		} catch (ServiceException e) {
@@ -115,17 +118,13 @@ public class AcidMapService {
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	
-	private static float[] dataset;
-	public WebMap run(final GetMapRequest request, WMSMapContext mapContext)
-			throws ServiceException, IOException {
-		//final Envelope envelope = request.getBbox();
-		//final String featureVersion = request.getFeatureVersion();
-
+	public synchronized WebMap synchronizedRun(final GetMapRequest request, WMSMapContext mapContext) throws ServiceException, IOException {
 		Map<String, String> rawKvp = request.getRawKvp();
 		String valueColumn = rawKvp.get(AcidMapParameters.VALUE_COLUMN);
-		Configuration configuration = buildConfiguration(request);
 		
 		MapLayerInfo layer = request.getLayers().get(0);
+		DatasetCacheKey datasetCacheKey = new DatasetCacheKey(layer.getName());
+		
 		Filter layerFilter = buildLayersFilters(request.getFilter(), request.getLayers())[0];
 		//Style layerStyle = request.getStyles().toArray(new Style[] {})[0];
 		
@@ -133,13 +132,8 @@ public class AcidMapService {
 		FeatureType schema = source.getSchema();
 		final GeometryDescriptor geometryAttribute = schema.getGeometryDescriptor();
 		
-        //sourceCrs = geometryAttribute.getType().getCoordinateReferenceSystem();
-        
-		FeatureType type = source.getSchema();
-		//String geometry = type.getGeometryDescriptor().getName().getLocalPart();
-
-		if(dataset == null){
-			//dataset = createDataset();
+		float[] dataset = null;
+		if(!datasetCache.isCached(datasetCacheKey)){
 			FeatureCollection<? extends FeatureType, ? extends Feature> features = source.getFeatures(layerFilter);
 			FeatureIterator<? extends Feature> featureIterator = features.features();
 			dataset = new float[features.size() * 3];
@@ -157,64 +151,33 @@ public class AcidMapService {
 				}
 				i+=3;
 			}
+			datasetCache.put(datasetCacheKey, dataset);
 		}
+		return run(request, mapContext);
+	}
+
+	public WebMap run(final GetMapRequest request, WMSMapContext mapContext)
+			throws ServiceException, IOException {
+
+		Configuration configuration = buildConfiguration(request);
 		
-		configuration.dataset = dataset;
+		MapLayerInfo layer = request.getLayers().get(0);
 		
-		byte[] outputBuffer = new byte[configuration.width * configuration.height * RGBA_SIZE];
+		DatasetCacheKey datasetCacheKey = new DatasetCacheKey(layer.getName());
+		
+		configuration.dataset = datasetCache.getDataset(datasetCacheKey);;
+		
 		JCAdapter jCAdapter = new JCAdapter();
-		jCAdapter.interpolate(configuration, outputBuffer);
+		byte[] outputBuffer = jCAdapter.interpolate(configuration);
 		
-		String ppmHeader = "P6 256 256 255\n";
-		byte[] out = ArrayUtils.addAll(ppmHeader.getBytes(), outputBuffer);
-		
-		/*BufferedImage image=ImageIO.read(new ByteArrayInputStream(out));
-		RenderedImage renderedImage = null;
-		if(image != null){
-			renderedImage = JAI.create("fileload", image);
-		} else {
-			renderedImage = JAI.create("fileload", "/home/cfarina/wk/geoserver/acidmaps/src/main/java/com/xoomcode/acidmaps/landscape.jpg");
-		}*/
-		RenderedImage renderedImage = JAI.create("fileload", "/home/cfarina/wk/geoserver/acidmaps/src/main/java/com/xoomcode/acidmaps/landscape.jpg");
-		
-		try {
-			FileOutputStream fos = new FileOutputStream("/home/cfarina/wk/geoserver/acidmaps/src/main/java/com/xoomcode/acidmaps/image.ppm");
-			fos.write(out);
-			fos.close();
-		} catch (FileNotFoundException ex) {
-			System.out.println("FileNotFoundException : " + ex);
-		} catch (IOException ioe) {
-			System.out.println("IOException : " + ioe);
-		}
+		BufferedImage image=ImageIO.read(new ByteArrayInputStream(outputBuffer));
         
         final String outputFormat = request.getFormat();
-        RenderedImageMap result = new RenderedImageMap(mapContext, renderedImage, outputFormat);
+        RenderedImageMap result = new RenderedImageMap(mapContext, image, outputFormat);
         return result;
 		
 	}
 	
-	private float[] createDataset() {
-		float[] dataset = new float[10 * Constants.VPP];
-		/*for (int i = 0; i < 10; i++) {
-			dataset[i * Constants.VPP] = (float) Math.random() % 360 - 180;
-			dataset[i * Constants.VPP + 1] = (float) Math.random() % 180 - 90;
-			dataset[i * Constants.VPP + 2] = (float) Math.random() % 150;
-		}*/
-		
-		dataset[0] = 163; dataset[1] = 16;  dataset[2] = 27;
-		dataset[3] = -65; dataset[4] = 23;  dataset[5] = 85;
-		dataset[6] = 46;  dataset[7] = -78; dataset[8] = 99;
-		dataset[9] = 1;   dataset[10] = 32;	dataset[11] = 127; 
-		dataset[12] = -130; dataset[13] = -11; dataset[14] = 113;
-		dataset[15] = -14;  dataset[16] = -30; dataset[17] = 126;
-		dataset[18] = -128; dataset[19] = 46; dataset[20] = 11;
-		dataset[21] = -172; dataset[22] = -3; dataset[23] = 129;
-		dataset[24] = -118; dataset[25] = 80; dataset[26] = 62;
-		dataset[27] = 103; dataset[28] = 37; dataset[29] = 85;
-		
-		return dataset;
-	}
-
 	/**
 	 * @param request
 	 * @param rawKvp
@@ -236,9 +199,9 @@ public class AcidMapService {
 
 		Bounds bounds = new Bounds();
 		bounds.minY = (float)request.getBbox().getMinY();
-		bounds.minY = (float)request.getBbox().getMinX();
-		bounds.maxX = (float)request.getBbox().getMaxX();
+		bounds.minX = (float)request.getBbox().getMinX();
 		bounds.maxY = (float)request.getBbox().getMaxY();
+		bounds.maxX = (float)request.getBbox().getMaxX();
 		configuration.bounds = bounds;
 		
 		configuration.width = request.getWidth();

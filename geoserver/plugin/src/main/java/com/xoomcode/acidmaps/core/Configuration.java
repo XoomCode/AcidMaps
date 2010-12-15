@@ -9,10 +9,6 @@ public class Configuration {
 	/** Set of valued points, stored 3 floats per point. X, Y, Value */
 	public float[] dataset;
 
-	/** Number of points in the dataset. */
-	/** @note Each point is composed of 3 floats, X, Y, Value */
-	public int datasetSize;
-
 	/** Desired simplify method. */
 	public int simplifyMethod;
 
@@ -25,17 +21,11 @@ public class Configuration {
 	/** Strategy used to interpolate missing values. */
 	public int interpolationStrategy;
 
-	/** Interpolated values will be stored here. */
-	public int[] interpolatedBitmap;
-
 	/** Output image width. */
 	public int width;
 
 	/** Output image height. */
 	public int height;
-
-	/** Bits per pixel. Allowed values are 24(RGB) or 32(RGBA) */
-	public int colorDepth;
 
 	/** Interpolation parameter for every interpolation type. */
 	public int interpolationParameter;
@@ -47,6 +37,8 @@ public class Configuration {
 	public int intervalsSize;
 	
 	public int intervalsType;
+	
+	public int format;
 
 	/**
 	 * Instantiates a new configuration.

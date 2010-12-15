@@ -28,8 +28,6 @@ public class JCAdapterTest extends TestCase {
 
 	private Configuration configuration = new Configuration();
 
-	private byte[] outputBuffer;
-	
 	/**
 	 * @see junit.framework.TestCase#setUp()
 	 */
@@ -47,8 +45,6 @@ public class JCAdapterTest extends TestCase {
 	    configuration.intervalsColors = createIntervalsColors();
 	    //configuration.intervalsSize = 5;
 	    configuration.intervalsType = RendererType.SPARSE;
-	    int outputBufferSize = configuration.width * configuration.height * Constants.RGBA;
-	    outputBuffer = new byte[outputBufferSize];
 		super.setUp();
 	}
 	
@@ -102,21 +98,17 @@ public class JCAdapterTest extends TestCase {
 
 		configuration.interpolationStrategy = InterpolationStrategy.LINEAR;
 		configuration.interpolationParameter = 32;
-		jCAdapter.interpolate(configuration, outputBuffer);
+		byte[] outputBuffer = jCAdapter.interpolate(configuration);
 
-		String ppmHeader = "P6 1024 512 255\n";
-		
-		byte[] out = ArrayUtils.addAll(ppmHeader.getBytes(), outputBuffer);
-
-		try {
-			FileOutputStream fos = new FileOutputStream("image.ppm");
-			fos.write(out);
+		/*try {
+			FileOutputStream fos = new FileOutputStream("image.png");
+			fos.write(outputBuffer);
 			fos.close();
 		} catch (FileNotFoundException ex) {
 			System.out.println("FileNotFoundException : " + ex);
 		} catch (IOException ioe) {
 			System.out.println("IOException : " + ioe);
-		}
+		}*/
 	}
 
 }

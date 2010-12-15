@@ -14,7 +14,7 @@ public class JCAdapter {
 	 * @param configuration the configuration
 	 * @param out the out
 	 */
-	private native void interpolateC(Configuration configuration, byte[] out);
+	private native byte[] interpolateC(Configuration configuration);
 	
 	static {
 		// The runtime system executes a class's static
@@ -28,7 +28,7 @@ public class JCAdapter {
 	 * @param configuration the configuration
 	 * @param out the out
 	 */
-	public void interpolate(Configuration configuration, byte[] out){
-		interpolateC(configuration, out);
+	public byte[] interpolate(Configuration configuration){
+		return interpolateC(configuration);
 	}
 }
