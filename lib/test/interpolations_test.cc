@@ -92,7 +92,6 @@ private:
     return intervals;
   }
   
-  // ABGR!!
   unsigned char* create_intervals_colors() {
     unsigned char* colors = new unsigned char[5 * ams::RGBA];
     colors[0] = 0x00; colors[1] = 0x00; colors[2] = 0x00; colors[3] = 0x00;
