@@ -19,7 +19,7 @@ namespace acid_maps {
  * @todo Marching squares
  */ 
 void SparseRenderer::render(int interpolated_bitmap[], Size* tile_size, int intervals[],
-    int intervals_size, unsigned char intervals_colors[], unsigned char* output_buffer) {
+  int intervals_size, unsigned char intervals_colors[], unsigned char* output_buffer) {
   int interval_index;
   int bitmap_size = tile_size->width * tile_size->height;
   
@@ -29,13 +29,13 @@ void SparseRenderer::render(int interpolated_bitmap[], Size* tile_size, int inte
   fputs("P6 1024 512 255 ", color);
   for (unsigned int i = 0; i < bitmap_size; i++) {
     interval_index = this->interval(interpolated_bitmap[i], intervals, intervals_size);
-    //std::memcpy(output_buffer + i * RGBA, intervals_colors + interval_index, sizeof(unsigned char) * RGBA);
-    output_buffer[i * RGBA + 0] = intervals_colors[interval_index + 0];
-    output_buffer[i * RGBA + 1] = intervals_colors[interval_index + 1];
-    output_buffer[i * RGBA + 2] = intervals_colors[interval_index + 2];
-    output_buffer[i * RGBA + 3] = intervals_colors[interval_index + 3];
+    std::memcpy(output_buffer + i * RGBA, intervals_colors + interval_index * RGBA, sizeof(unsigned char) * RGBA);
+    
+    // Write the interpolated bitmap
     fputc(interpolated_bitmap[i], file);
-    fwrite(intervals_colors + interval_index, 3, sizeof(unsigned char), color);
+    
+    // Colored pnm
+    fwrite(intervals_colors + interval_index * RGBA, 3, sizeof(unsigned char), color);
   }
   fclose(file);
   fclose(color);

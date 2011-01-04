@@ -95,11 +95,11 @@ private:
   // ABGR!!
   unsigned char* create_intervals_colors() {
     unsigned char* colors = new unsigned char[5 * ams::RGBA];
-    colors[0] = 0x30; colors[1] = 0x00; colors[2] = 0x00; colors[3] = 0xFF;
-    colors[4] = 0x60; colors[5] = 0x00; colors[6] = 0x90; colors[7] = 0xFF;
-    colors[8] = 0x90; colors[9] = 0x00; colors[10] = 0xFF; colors[11] = 0xFF;
-    colors[12] = 0xB0; colors[13] = 0x00; colors[14] = 0xFF; colors[15] = 0x00;
-    colors[16] = 0xFF; colors[17] = 0xFF; colors[18] = 0x00; colors[19] = 0x00;
+    colors[0] = 0x00; colors[1] = 0x00; colors[2] = 0x00; colors[3] = 0x00;
+    colors[4] = 0xFF; colors[5] = 0x00; colors[6] = 0x00; colors[7] = 0xFF;
+    colors[8] = 0xFF; colors[9] = 0xFF; colors[10] = 0x00; colors[11] = 0xFF;
+    colors[12] = 0x00; colors[13] = 0xFF; colors[14] = 0x00; colors[15] = 0xFF;
+    colors[16] = 0x00; colors[17] = 0x00; colors[18] = 0xFF; colors[19] = 0xFF;
     return colors; 
   }
 };
