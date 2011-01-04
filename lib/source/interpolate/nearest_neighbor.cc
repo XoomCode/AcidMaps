@@ -22,9 +22,7 @@ namespace acid_maps {
 void NearestNeighbor::interpolate(Size* tile_size, int dataset[], int dataset_size, 
   int interpolation_parameter, int interpolated_bitmap[]) {
   
-  int minimum_distance;
-  
-  float distance_x, distance_y, distance;
+  float minimum_distance, distance_x, distance_y, distance;
   for (int y = 0; y < tile_size->height; y++) {
     for (int x = 0; x < tile_size->width; x++) {
       
@@ -35,10 +33,10 @@ void NearestNeighbor::interpolate(Size* tile_size, int dataset[], int dataset_si
         distance = std::sqrt(std::pow(distance_x, 2) + std::pow(distance_y, 2));
         
         if (distance <  minimum_distance) {
-          interpolated_bitmap[y * tile_size->width + x] = dataset[VPP * i + 2];
+				  minimum_distance = distance;
+          interpolated_bitmap[y * tile_size->width + x] = dataset[i * VPP + 2];
         }  
       }
-    
     }
   }
   
