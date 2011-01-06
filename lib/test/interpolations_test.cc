@@ -15,8 +15,10 @@ namespace ams = acid_maps;
 
 class InterpolationsTest : public CppUnit::TestFixture {
   CPPUNIT_TEST_SUITE(InterpolationsTest);
+  CPPUNIT_TEST(dummyInterpolation);
   CPPUNIT_TEST(linearInterpolation);
   CPPUNIT_TEST(nearestNeighborInterpolation);
+  CPPUNIT_TEST(inverseDistanceWeightingInterpolation);
   CPPUNIT_TEST_SUITE_END();
   
 public:
@@ -36,30 +38,35 @@ public:
     configuration->format = ams::PNG;
   }
   
+  void dummyInterpolation () {
+    configuration->interpolation_strategy = ams::DUMMY;
+    configuration->interpolation_parameter = 32;
+    ams::generate(configuration, &output_buffer, &output_size);
+    file = std::fopen("dummy.png", "wb");
+  }
+  
   void linearInterpolation () {
     configuration->interpolation_strategy = ams::LINEAR;
     configuration->interpolation_parameter = 32;
-    
-    unsigned int output_size;
     ams::generate(configuration, &output_buffer, &output_size);
-
     file = std::fopen("linear.png", "wb");
-    std::fwrite(output_buffer, sizeof(unsigned char), output_size, file);
-    std::fclose(file);
   }
   
   void nearestNeighborInterpolation () {
     configuration->interpolation_strategy = ams::NEAREST_NEIGHBOR;
-    
-    unsigned int output_size;
     ams::generate(configuration, &output_buffer, &output_size);
-
     file = std::fopen("nearest.png", "wb");
-    std::fwrite(output_buffer, sizeof(unsigned char), output_size, file);
-    std::fclose(file);
+  }
+  
+  void inverseDistanceWeightingInterpolation () {
+    configuration->interpolation_strategy = ams::INVERSE_DISTANCE_WEIGHTING;
+    ams::generate(configuration, &output_buffer, &output_size);
+    file = std::fopen("idw.png", "wb");
   }
     
   void tearDown() {
+    std::fwrite(output_buffer, sizeof(unsigned char), output_size, file);
+    std::fclose(file);
     free(output_buffer);
     delete[] configuration->intervals_colors;
     delete[] configuration->intervals;
@@ -72,6 +79,7 @@ public:
 private:
   ams::Configuration* configuration;
   unsigned char* output_buffer;
+  unsigned int output_size;
   std::FILE* file;
   
   float* create_dataset() {
@@ -94,11 +102,11 @@ private:
   
   unsigned char* create_intervals_colors() {
     unsigned char* colors = new unsigned char[5 * ams::RGBA];
-    colors[0] = 0x00; colors[1] = 0x00; colors[2] = 0x00; colors[3] = 0x00;
-    colors[4] = 0xFF; colors[5] = 0x00; colors[6] = 0x00; colors[7] = 0x50;
-    colors[8] = 0xFF; colors[9] = 0xFF; colors[10] = 0x00; colors[11] = 0x90;
-    colors[12] = 0x00; colors[13] = 0xFF; colors[14] = 0x00; colors[15] = 0xB0;
-    colors[16] = 0x00; colors[17] = 0x00; colors[18] = 0xFF; colors[19] = 0xC0;
+    colors[0] = 0x20; colors[1] = 0x20; colors[2] = 0x20; colors[3] = 0xFF;
+    colors[4] = 0xFF; colors[5] = 0x00; colors[6] = 0x00; colors[7] = 0xFF;
+    colors[8] = 0xFF; colors[9] = 0xFF; colors[10] = 0x00; colors[11] = 0xFF;
+    colors[12] = 0x00; colors[13] = 0xFF; colors[14] = 0x00; colors[15] = 0xFF;
+    colors[16] = 0x00; colors[17] = 0x00; colors[18] = 0xFF; colors[19] = 0xFF;
     return colors; 
   }
 };

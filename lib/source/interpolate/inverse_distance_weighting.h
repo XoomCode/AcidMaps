@@ -1,10 +1,10 @@
-#ifndef LIB_SOURCE_INTERPOLATE_LINEAR_INTERPOLATION_H_
-#define LIB_SOURCE_INTERPOLATE_LINEAR_INTERPOLATION_H_
+#ifndef LIB_SOURCE_INTERPOLATE_IDW_H_
+#define LIB_SOURCE_INTERPOLATE_IDW_H_
 /**
- * @file linear_interpolation.h
- * @brief Linear interpolation implementation
+ * @file inverse_distance_weighting.h
+ * @brief Inverse Distance Weighted Interpolation
  *
- * @date 2010-11-09
+ * @date 2011-01-05
  * @authors Fabio R. Panettieri
  */
 
@@ -15,7 +15,7 @@ namespace acid_maps {
 /**
  * @todo brief and description
  */
-class LinearInterpolation : public Interpolation {
+class InverseDistanceWeighting : public Interpolation {
   /**
    * @todo brief and description
    */

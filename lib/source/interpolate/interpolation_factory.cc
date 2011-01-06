@@ -11,6 +11,7 @@
 #include "./dummy_interpolation.h"
 #include "./nearest_neighbor.h"
 #include "./linear_interpolation.h"
+#include "./inverse_distance_weighting.h"
 
 namespace acid_maps {
 
@@ -21,6 +22,9 @@ Interpolation* InterpolationFactory::get(int strategy) {
     
     case LINEAR:
       return new LinearInterpolation();
+    
+    case INVERSE_DISTANCE_WEIGHTING:
+      return new InverseDistanceWeighting();
       
     default:
       return new DummyInterpolation();
