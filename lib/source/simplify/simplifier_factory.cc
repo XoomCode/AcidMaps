@@ -8,14 +8,18 @@
 #include "./simplifier.h"
 #include "./simplify_method.h"
 #include "./simplifier_factory.h"
-#include "./dummy_simplifier.h"
+#include "./copy_simplifier.h"
+#include "./grid_simplifier.h"
 
 namespace acid_maps {
 
 Simplifier* SimplifierFactory::get(int method) {
   switch (method) {
     case COPY:
-      return new DummySimplifier();
+      return new CopySimplifier();
+    
+    case GRID:
+      return new GridSimplifier();
   }
 }
 

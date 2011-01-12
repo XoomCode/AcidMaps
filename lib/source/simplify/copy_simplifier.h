@@ -1,8 +1,8 @@
-#ifndef LIB_SOURCE_SIMPLIFY_DUMMY_SIMPLIFIER_H_
-#define LIB_SOURCE_SIMPLIFY_DUMMY_SIMPLIFIER_H_
+#ifndef LIB_SOURCE_SIMPLIFY_COPY_SIMPLIFIER_H_
+#define LIB_SOURCE_SIMPLIFY_COPY_SIMPLIFIER_H_
 /**
- * @file dummy_simplifier.h
- * @brief Dummy simplifier implementation
+ * @file copy_simplifier.h
+ * @brief Copy simplifier implementation
  *
  * Keeps the dataset untouched
  *
@@ -17,7 +17,7 @@ namespace acid_maps {
 /**
  * @brief Keeps the dataset untouched
  */
-class DummySimplifier : public Simplifier {
+class CopySimplifier : public Simplifier {
   /**
    * @brief It does nothing with the dataset
    */
@@ -26,5 +26,5 @@ class DummySimplifier : public Simplifier {
 
 };  // namespace acid_maps
 
-#endif  // LIB_SOURCE_SIMPLIFY_DUMMY_SIMPLIFIER_H_
+#endif  // LIB_SOURCE_SIMPLIFY_COPY_SIMPLIFIER_H_
 

@@ -24,7 +24,7 @@
 namespace acid_maps {
 
 void generate(Configuration* configuration, unsigned char** output_buffer, unsigned int* output_size) {
-  float* simplified_dataset = new float[configuration->simplify_size * VPP ];
+  float* simplified_dataset = new float[configuration->simplify_size * VPP];
   Simplifier* simplifier = SimplifierFactory::get(configuration->simplify_method);
   simplifier->simplify(configuration->dataset, configuration->dataset_size,
     configuration->simplify_size, simplified_dataset);

@@ -1,10 +1,10 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include "../../source/constants/constants.h"
 #include "../../source/simplify/simplifier.h"
-#include "../../source/simplify/dummy_simplifier.h"
+#include "../../source/simplify/copy_simplifier.h"
 
-class DummySimplifierTest : public CppUnit::TestFixture {
-  CPPUNIT_TEST_SUITE(DummySimplifierTest);
+class CopySimplifierTest : public CppUnit::TestFixture {
+  CPPUNIT_TEST_SUITE(CopySimplifierTest);
   CPPUNIT_TEST( singlePointDataset );
   CPPUNIT_TEST( multiPointDataset );
   CPPUNIT_TEST( emptyDataset );
@@ -14,7 +14,7 @@ public:
   void setUp() {
     dataset_size = 4;
     dataset = create_dataset();
-    simplifier = new acid_maps::DummySimplifier();
+    simplifier = new acid_maps::CopySimplifier();
   }
   
   void tearDown() {
@@ -80,4 +80,4 @@ private:
   
 };
 
-CPPUNIT_TEST_SUITE_REGISTRATION( DummySimplifierTest );
+CPPUNIT_TEST_SUITE_REGISTRATION( CopySimplifierTest );
