@@ -16,6 +16,7 @@ namespace acid_maps {
  * Forward declaration
  */
 struct Configuration;
+struct Point;
 
 /**
  * @brief Simplifier's base class
@@ -35,7 +36,7 @@ class Simplifier {
      *
      * @param simplified_dataset float Output buffer
      */
-    virtual void simplify(float dataset[], int dataset_size, int simplify_size, float simplified_dataset[]) = 0;
+    virtual void simplify(Point* dataset, int dataset_size, int simplify_size, Point* simplified_dataset) = 0;
 };
 
 };  // namespace acid_maps

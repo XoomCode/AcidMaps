@@ -7,14 +7,15 @@
  */
 
 #include "../constants/constants.h"
+#include "../core/point.h"
 #include "./copy_simplifier.h"
 #include <cstring>
 
 namespace acid_maps {
 
-void CopySimplifier::simplify(float dataset[], int dataset_size, int simplify_size, float simplified_dataset[]) {
+void CopySimplifier::simplify(Point* dataset, int dataset_size, int simplify_size, Point* simplified_dataset) {
   int size = simplify_size <= dataset_size ? simplify_size : dataset_size;
-  std::memcpy((float*)simplified_dataset, (float*)dataset, sizeof(float) * size * VPP);
+  std::memcpy((Point*)simplified_dataset, (Point*)dataset, sizeof(Point) * size);
 }
 
 };  // namespace acid_maps

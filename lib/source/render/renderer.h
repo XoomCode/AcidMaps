@@ -28,10 +28,10 @@ public:
    * @brief After the interpolated bitmap has been generated, the renderer generates
    * an image that represents that bitmap
    */
-  virtual void render(int interpolated_bitmap[], Size* tile_size, int intervals[],
+  virtual void render(float interpolated_bitmap[], Size* tile_size, float intervals[],
     int intervals_size, unsigned char intervals_colors[], unsigned char* output_buffer) = 0;
   
-  virtual int interval(int value, int intervals[], int intervals_size) = 0;
+  virtual int interval(float value, float intervals[], int intervals_size) = 0;
 };
 
 };  // namespace acid_maps

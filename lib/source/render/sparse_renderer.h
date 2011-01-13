@@ -19,10 +19,10 @@ class SparseRenderer : public Renderer {
   /**
    * @todo brief
    */
-  void render(int interpolated_bitmap[], Size* tile_size, int intervals[],
+  void render(float interpolated_bitmap[], Size* tile_size, float intervals[],
   int intervals_size, unsigned char intervals_colors[], unsigned char* output_buffer);
   
-  int interval(int value, int intervals[], int intervals_size);
+  int interval(float value, float intervals[], int intervals_size);
 };
 
 };  // namespace acid_maps

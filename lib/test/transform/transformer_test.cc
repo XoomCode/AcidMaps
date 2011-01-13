@@ -1,6 +1,8 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include "../../source/core/configuration.h"
 #include "../../source/core/bounds.h"
+#include "../../source/core/point.h"
+#include "../../source/core/pixel.h"
 #include "../../source/core/size.h"
 #include "../../source/transform/transformer.h"
 
@@ -29,73 +31,78 @@ public:
   }
   
   void singlePointDataset () {
-    float* dataset = create_dataset(1);
-    dataset[0] = 90.0;
-    dataset[1] = 45.0;
-    dataset[2] = 200;
+    acid_maps::Point* dataset = new acid_maps::Point[1];
+    dataset->x = 90.0;
+    dataset->y = 45.0;
+    dataset->value = 200;
     
     configuration->dataset_size = 1;
     configuration->dataset = dataset;
     
-    int* transformed_dataset = create_transformed_dataset(1);
+    acid_maps::Pixel* transformed_dataset = new acid_maps::Pixel[1];
     transformer->transform(configuration->bounds, configuration->tile_size, dataset, 1, transformed_dataset);
     
-    CPPUNIT_ASSERT_EQUAL(transformed_dataset[0], configuration->tile_size->width / 4 * 3);
-    CPPUNIT_ASSERT_EQUAL(transformed_dataset[1], configuration->tile_size->height / 4);
-    CPPUNIT_ASSERT_EQUAL(transformed_dataset[2], (int)dataset[2]);
+    CPPUNIT_ASSERT_EQUAL(transformed_dataset[0].x, configuration->tile_size->width / 4 * 3);
+    CPPUNIT_ASSERT_EQUAL(transformed_dataset[0].y, configuration->tile_size->height / 4);
+    CPPUNIT_ASSERT_EQUAL(transformed_dataset[0].value, dataset[0].value);
     
     delete[] transformed_dataset;
     delete[] dataset; 
   }
   
   void multiPointDataset () {
-    float* dataset = create_dataset(4);
+    acid_maps::Point* dataset = new acid_maps::Point[4];
+    acid_maps::Point* point;
     
-    dataset[0] = 90.0;
-    dataset[1] = 45.0;
-    dataset[2] = 200;
+    point = dataset;
+    point->x = 90.0;
+    point->y = 45.0;
+    point->value = 200;
     
-    dataset[3] = -90.0;
-    dataset[4] = 45.0;
-    dataset[5] = 100;
+    point = dataset + 1;
+    point->x = -90.0;
+    point->y = 45.0;
+    point->value = 100;
     
-    dataset[6] = 90.0;
-    dataset[7] = -45.0;
-    dataset[8] = 50;
+    point = dataset + 2;
+    point->x = 90.0;
+    point->y = -45.0;
+    point->value = 50;
     
-    dataset[9] = -90.0;
-    dataset[10] = -45.0;
-    dataset[11] = 260;
+    point = dataset + 3;
+    point->x = -90.0;
+    point->y = -45.0;
+    point->value = 260;
     
     configuration->dataset_size = 4;
     configuration->dataset = dataset;
     
-    int* transformed_dataset = create_transformed_dataset(4);
+    acid_maps::Pixel* transformed_dataset = new acid_maps::Pixel[4];
     transformer->transform(configuration->bounds, configuration->tile_size, dataset, 4, transformed_dataset);
     
-    CPPUNIT_ASSERT_EQUAL(transformed_dataset[0], configuration->tile_size->width / 4 * 3);
-    CPPUNIT_ASSERT_EQUAL(transformed_dataset[1], configuration->tile_size->height / 4);
+    CPPUNIT_ASSERT_EQUAL(transformed_dataset[0].x, configuration->tile_size->width / 4 * 3);
+    CPPUNIT_ASSERT_EQUAL(transformed_dataset[0].y, configuration->tile_size->height / 4);
     
-    CPPUNIT_ASSERT_EQUAL(transformed_dataset[3], configuration->tile_size->width / 4);
-    CPPUNIT_ASSERT_EQUAL(transformed_dataset[4], configuration->tile_size->height / 4);
+    CPPUNIT_ASSERT_EQUAL(transformed_dataset[1].x, configuration->tile_size->width / 4);
+    CPPUNIT_ASSERT_EQUAL(transformed_dataset[1].y, configuration->tile_size->height / 4);
     
-    CPPUNIT_ASSERT_EQUAL(transformed_dataset[6], configuration->tile_size->width / 4 * 3);
-    CPPUNIT_ASSERT_EQUAL(transformed_dataset[7], configuration->tile_size->height / 4 * 3);
+    CPPUNIT_ASSERT_EQUAL(transformed_dataset[2].x, configuration->tile_size->width / 4 * 3);
+    CPPUNIT_ASSERT_EQUAL(transformed_dataset[2].y, configuration->tile_size->height / 4 * 3);
     
-    CPPUNIT_ASSERT_EQUAL(transformed_dataset[9], configuration->tile_size->width / 4);
-    CPPUNIT_ASSERT_EQUAL(transformed_dataset[10], configuration->tile_size->height / 4 * 3);
+    CPPUNIT_ASSERT_EQUAL(transformed_dataset[3].x, configuration->tile_size->width / 4);
+    CPPUNIT_ASSERT_EQUAL(transformed_dataset[3].y, configuration->tile_size->height / 4 * 3);
     
     delete[] transformed_dataset;
     delete[] dataset; 
   }
   
   void emptyDataset () {
-    float* dataset = create_dataset(0);
+    acid_maps::Point* dataset = new acid_maps::Point[0];
     
     configuration->dataset_size = 0;
     configuration->dataset = dataset;
     
-    int* transformed_dataset = create_transformed_dataset(0);
+    acid_maps::Pixel* transformed_dataset = new acid_maps::Pixel[0];
     transformer->transform(configuration->bounds, configuration->tile_size, dataset, 0, transformed_dataset);
     
     delete[] transformed_dataset;
@@ -105,15 +112,6 @@ public:
 private:
   acid_maps::Configuration* configuration;
   acid_maps::Transformer* transformer;
-  
-  float* create_dataset(int points) {
-    return new float[points * 3];
-  }
-  
-  int* create_transformed_dataset(int points) {
-    return new int[points * 3];
-  }
-  
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION( TransformerTest );

@@ -23,7 +23,7 @@ public:
     
     renderer = new acid_maps::SparseRenderer();
     intervals_size = std::rand() % 10 + 5;
-    intervals = new int[intervals_size];
+    intervals = new float[intervals_size];
     for (int i = 0; i < intervals_size; i++) {
       intervals[i] = (i + 1) * 10;
     }
@@ -63,7 +63,8 @@ public:
   }
   
   void randomIntervals () {
-    int value, interval;
+    float value;
+    int interval;
     int validations = std::rand() % 80 + 20;
     for (int i = 0; i < validations; i++) {
       value = std::rand() % (intervals_size * 10) - 20;
@@ -82,7 +83,7 @@ public:
 
 private:
   acid_maps::Renderer* renderer;
-  int* intervals;
+  float* intervals;
   int intervals_size;
 };
 

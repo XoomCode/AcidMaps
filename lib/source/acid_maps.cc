@@ -10,6 +10,7 @@
 
 #include "constants/constants.h"
 #include "core/configuration.h"
+#include "core/pixel.h"
 #include "simplify/simplifier.h"
 #include "simplify/simplifier_factory.h"
 #include "transform/transformer.h"
@@ -24,13 +25,13 @@
 namespace acid_maps {
 
 void generate(Configuration* configuration, unsigned char** output_buffer, unsigned int* output_size) {
-  float* simplified_dataset = new float[configuration->simplify_size * VPP];
+  Point* simplified_dataset = new Point[configuration->simplify_size];
   Simplifier* simplifier = SimplifierFactory::get(configuration->simplify_method);
   simplifier->simplify(configuration->dataset, configuration->dataset_size,
     configuration->simplify_size, simplified_dataset);
   delete simplifier;
   
-  int* transformed_dataset = new int[configuration->simplify_size * VPP];
+  Pixel* transformed_dataset = new Pixel[configuration->simplify_size];
   Transformer* transformer = new Transformer();
   transformer->transform(configuration->bounds, configuration->tile_size,
     simplified_dataset, configuration->simplify_size, transformed_dataset);
@@ -38,7 +39,7 @@ void generate(Configuration* configuration, unsigned char** output_buffer, unsig
   delete[] simplified_dataset;
 
   int buffer_size = configuration->tile_size->width * configuration->tile_size->height;
-  int* interpolated_bitmap = new int[buffer_size];
+  float* interpolated_bitmap = new float[buffer_size];
   Interpolation* interpolation = InterpolationFactory::get(configuration->interpolation_strategy);
   interpolation->interpolate(configuration->tile_size, transformed_dataset, configuration->simplify_size, 
     configuration->interpolation_parameter, interpolated_bitmap);

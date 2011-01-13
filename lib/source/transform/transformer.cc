@@ -9,6 +9,8 @@
 #include "../constants/constants.h"
 #include "../core/bounds.h"
 #include "../core/configuration.h"
+#include "../core/point.h"
+#include "../core/pixel.h"
 #include "./transformer.h"
 
 namespace acid_maps {
@@ -16,8 +18,8 @@ namespace acid_maps {
 /**
  * @ todo Store pixel positions in int*
  */
-void Transformer::transform(Bounds* bounds, Size* tile_size, float dataset[],
-  int dataset_size, int transformed_dataset[]) {
+void Transformer::transform(Bounds* bounds, Size* tile_size, Point* dataset,
+  int dataset_size, Pixel* transformed_dataset) {
 
   float bounds_width = bounds->max_x - bounds->min_x;
   float bounds_height = bounds->max_y - bounds->min_y;
@@ -25,12 +27,15 @@ void Transformer::transform(Bounds* bounds, Size* tile_size, float dataset[],
   float horizontal_resolution = bounds_width / tile_size->width;
   float vertical_resolution = bounds_height / tile_size->height;
 
-  float* x, *y, *v;
-  
+  Pixel* pixel;
+  Point* point;
   for (int i = 0; i < dataset_size; i++) {
-    transformed_dataset[i * VPP] = (int)((dataset[i * VPP] - bounds->min_x) / horizontal_resolution);
-    transformed_dataset[i * VPP + 1] = (int)((bounds->max_y - dataset[i * VPP + 1]) / vertical_resolution);
-    transformed_dataset[i * VPP + 2] = (int)dataset[i * VPP + 2];
+    pixel = transformed_dataset + i;
+    point = dataset + i;
+    
+    pixel->x = (point->x - bounds->min_x) / horizontal_resolution;
+    pixel->y = (bounds->max_y - point->y) / vertical_resolution;
+    pixel->value = point->value;
   }
 }
 

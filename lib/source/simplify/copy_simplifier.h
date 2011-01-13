@@ -21,7 +21,7 @@ class CopySimplifier : public Simplifier {
   /**
    * @brief It does nothing with the dataset
    */
-  void simplify(float dataset[], int dataset_size, int simplify_size, float simplified_dataset[]);
+  void simplify(Point* dataset, int dataset_size, int simplify_size, Point* simplified_dataset);
 };
 
 };  // namespace acid_maps

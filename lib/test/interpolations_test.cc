@@ -47,7 +47,7 @@ public:
   
   void linearInterpolation () {
     configuration->interpolation_strategy = ams::LINEAR;
-    configuration->interpolation_parameter = 32;
+    configuration->interpolation_parameter = 64;
     ams::generate(configuration, &output_buffer, &output_size);
     file = std::fopen("linear.png", "wb");
   }
@@ -82,18 +82,20 @@ private:
   unsigned int output_size;
   std::FILE* file;
   
-  float* create_dataset() {
-    float* dataset = new float[100 * ams::VPP];
+  ams::Point* create_dataset() {
+    ams::Point* dataset = new ams::Point[100];
+    ams::Point* point;
     for (int i = 0; i < 100; i++) {
-      dataset[i * ams::VPP] = std::rand() % 360 - 180;
-      dataset[i * ams::VPP + 1] = std::rand() % 180 - 90;
-      dataset[i * ams::VPP + 2] = std::rand() % 100;
+      point = dataset + i;
+      point->x = std::rand() % 360 - 180;
+      point->y = std::rand() % 180 - 90;
+      point->value = std::rand() % 100;
     }
     return dataset;
   }
   
-  int* create_intervals(int intervals_size) {
-    int* intervals = new int[intervals_size];
+  float* create_intervals(int intervals_size) {
+    float* intervals = new float[intervals_size];
     for (int i = 0; i < intervals_size; i++) {
       intervals[i] = (i + 1 ) * 20;
     }

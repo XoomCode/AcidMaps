@@ -1,5 +1,6 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include "../../source/constants/constants.h"
+#include "../../source/core/point.h"
 #include "../../source/simplify/simplifier.h"
 #include "../../source/simplify/copy_simplifier.h"
 
@@ -23,58 +24,64 @@ public:
   }
   
   void singlePointDataset () {
-    float* simplified_dataset = new float[acid_maps::VPP];
+    acid_maps::Point* simplified_dataset = new acid_maps::Point[1];
     simplifier->simplify(dataset, dataset_size, 1, simplified_dataset);
 
-    CPPUNIT_ASSERT_EQUAL(dataset[0], simplified_dataset[0]);
-    CPPUNIT_ASSERT_EQUAL(dataset[1], simplified_dataset[1]);
-    CPPUNIT_ASSERT_EQUAL(dataset[2], simplified_dataset[2]);
+    CPPUNIT_ASSERT_EQUAL(dataset[0].x, simplified_dataset[0].x);
+    CPPUNIT_ASSERT_EQUAL(dataset[0].y, simplified_dataset[0].y);
+    CPPUNIT_ASSERT_EQUAL(dataset[0].value, simplified_dataset[0].value);
     
-    delete[] simplified_dataset;
+    delete simplified_dataset;
   }
   
   void multiPointDataset () {
-    float* simplified_dataset = new float[2 * acid_maps::VPP];
+    acid_maps::Point* simplified_dataset = new acid_maps::Point[2];
     simplifier->simplify(dataset, dataset_size, 2, simplified_dataset);
-    
-    CPPUNIT_ASSERT_EQUAL(dataset[0], simplified_dataset[0]);
-    CPPUNIT_ASSERT_EQUAL(dataset[1], simplified_dataset[1]);
-    CPPUNIT_ASSERT_EQUAL(dataset[2], simplified_dataset[2]);
-    
-    CPPUNIT_ASSERT_EQUAL(dataset[3], simplified_dataset[3]);
-    CPPUNIT_ASSERT_EQUAL(dataset[4], simplified_dataset[4]);
-    CPPUNIT_ASSERT_EQUAL(dataset[5], simplified_dataset[5]);
+
+    CPPUNIT_ASSERT_EQUAL(dataset[0].x, simplified_dataset[0].x);
+    CPPUNIT_ASSERT_EQUAL(dataset[0].y, simplified_dataset[0].y);
+    CPPUNIT_ASSERT_EQUAL(dataset[0].value, simplified_dataset[0].value);
+
+    CPPUNIT_ASSERT_EQUAL(dataset[1].x, simplified_dataset[1].x);
+    CPPUNIT_ASSERT_EQUAL(dataset[1].y, simplified_dataset[1].y);
+    CPPUNIT_ASSERT_EQUAL(dataset[1].value, simplified_dataset[1].value);
     
     delete[] simplified_dataset;
   }
   
   void emptyDataset () {
-    float* simplified_dataset;
+    acid_maps::Point* simplified_dataset;
     simplifier->simplify(dataset, dataset_size, 0, simplified_dataset);
   }
 
 private:
   acid_maps::Simplifier* simplifier;
-  float* dataset;
+  acid_maps::Point* dataset;
   int dataset_size;
   
-  float* create_dataset() {
-    float* dataset = new float[dataset_size * acid_maps::VPP];
-    dataset[0] = 90.0;
-    dataset[1] = 45.0;
-    dataset[2] = 200;
+  acid_maps::Point* create_dataset() {
+    acid_maps::Point* dataset = new acid_maps::Point[dataset_size];
+    acid_maps::Point* point;
     
-    dataset[3] = -90.0;
-    dataset[4] = 45.0;
-    dataset[5] = 100;
+    point = dataset;
+    point->x = 90.0;
+    point->y = 45.0;
+    point->value = 200;
     
-    dataset[6] = 90.0;
-    dataset[7] = -45.0;
-    dataset[8] = 50;
+    point = dataset + 1;
+    point->x = -90.0;
+    point->y = 45.0;
+    point->value = 100;
     
-    dataset[9] = -90.0;
-    dataset[10] = -45.0;
-    dataset[11] = 260;
+    point = dataset + 2;
+    point->x = 90.0;
+    point->y = -45.0;
+    point->value = 50;
+    
+    point = dataset + 3;
+    point->x = -90.0;
+    point->y = -45.0;
+    point->value = 260;
     return dataset;
   }
   

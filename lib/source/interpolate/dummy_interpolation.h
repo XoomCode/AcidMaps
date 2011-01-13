@@ -19,8 +19,8 @@ class DummyInterpolation : public Interpolation {
   /**
    * @brief It allocates an empty bitmap
    */
-  void interpolate(Size* tile_size, int dataset[], int dataset_size, 
-    int interpolation_parameter, int interpolated_bitmap[]);
+  void interpolate(Size* tile_size, Pixel* dataset, int dataset_size, 
+    int interpolation_parameter, float interpolated_bitmap[]);
 };
 
 };  // namespace acid_maps

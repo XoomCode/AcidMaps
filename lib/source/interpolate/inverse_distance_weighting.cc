@@ -9,6 +9,7 @@
 
 #include "../constants/constants.h"
 #include "../core/size.h"
+#include "../core/pixel.h"
 #include "../core/rectangle.h"
 #include "./inverse_distance_weighting.h"
 #include <cstring>
@@ -19,29 +20,31 @@ namespace acid_maps {
 /**
  * @todo
  */
-void InverseDistanceWeighting::interpolate(Size* tile_size, int dataset[], int dataset_size, 
-  int radius, int interpolated_bitmap[]) {
+void InverseDistanceWeighting::interpolate(Size* tile_size, Pixel* dataset, int dataset_size, 
+  int radius, float interpolated_bitmap[]) {
 
-	float distance_x, distance_y, distance, weight, accummulated_value, accummulated_weight;
+  Pixel* pixel;
+  float distance_x, distance_y, distance, weight, accummulated_value, accummulated_weight;
   for (int y = 0; y < tile_size->height; y++) {
     for (int x = 0; x < tile_size->width; x++) {  
     
-    	accummulated_value = 0;
-    	accummulated_weight = 0;
-		  for (int i = 0; i < dataset_size; i++) {
-        distance_x = x - dataset[VPP * i];
-        distance_y = y - dataset[VPP * i + 1];
+      accummulated_value = 0;
+      accummulated_weight = 0;
+      for (int i = 0; i < dataset_size; i++) {
+        pixel = dataset + i;
+        distance_x = x - pixel->x;
+        distance_y = y - pixel->y;
         
         if(distance_x == 0 && distance_y == 0){
-        	weight = 1;
+          weight = 1;
         } else {
-        	weight = 1.0 / (std::pow(distance_x, 2) + std::pow(distance_y, 2));
+          weight = 1.0 / (std::pow(distance_x, 2) + std::pow(distance_y, 2));
         }
         
-        accummulated_value += dataset[VPP * i + 2]  * weight;
+        accummulated_value += pixel->value  * weight;
         accummulated_weight += weight;
       }
-	    interpolated_bitmap[y * tile_size->width + x] = accummulated_value / accummulated_weight;
+      interpolated_bitmap[y * tile_size->width + x] = accummulated_value / accummulated_weight;
     }
   }
 

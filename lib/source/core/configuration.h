@@ -11,6 +11,7 @@
  * 
  */
 
+#include "./point.h"
 #include "./bounds.h"
 #include "./size.h"
 
@@ -23,10 +24,9 @@ namespace acid_maps {
  */
 struct Configuration {
   /// Set of valued points, stored 3 floats per point. X, Y, Value
-  float* dataset;
+  Point* dataset;
 
   /// Number of points in the dataset
-  /// @note Each point is composed of 3 floats, X, Y, Value
   int dataset_size;
   
   /// Desired simplify method
@@ -48,7 +48,7 @@ struct Configuration {
   Size* tile_size;
   
   /// Intervals array
-  int* intervals;
+  float* intervals;
   
   /// Intervals array
   unsigned char* intervals_colors;

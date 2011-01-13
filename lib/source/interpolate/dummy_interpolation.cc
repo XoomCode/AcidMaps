@@ -8,6 +8,7 @@
 
 #include "../constants/constants.h"
 #include "../core/size.h"
+#include "../core/pixel.h"
 #include "./dummy_interpolation.h"
 #include <cstring>
 
@@ -16,18 +17,16 @@ namespace acid_maps {
 /**
  * @todo use the parameter
  */
-void DummyInterpolation::interpolate(Size* tile_size, int dataset[], int dataset_size, 
-  int interpolation_parameter, int interpolated_bitmap[]) {
+void DummyInterpolation::interpolate(Size* tile_size, Pixel* dataset, int dataset_size, 
+  int interpolation_parameter, float interpolated_bitmap[]) {
   std::memset(interpolated_bitmap, 0, dataset_size * sizeof(interpolated_bitmap[0]));
   
-  int* x, *y, *v;
+  Pixel* pixel;
   for (int i = 0; i < dataset_size; i++) {
-    x = dataset + VPP * i;
-    y = dataset + VPP * i + 1;
-    v = dataset + VPP * i + 2;
+    pixel = dataset + i;
     
-    if (*x >= 0 && *x < tile_size->width && *y >= 0 && *y < tile_size->height) {
-      interpolated_bitmap[*y * tile_size->width + *x] = *v;
+    if (pixel->x >= 0 && pixel->x < tile_size->width && pixel->y >= 0 && pixel->y < tile_size->height) {
+      interpolated_bitmap[pixel->y * tile_size->width + pixel->x] = pixel->value;
     }
   }
 }
