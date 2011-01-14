@@ -30,7 +30,7 @@ void SparseRenderer::render(float interpolated_bitmap[], Size* tile_size, float 
 int SparseRenderer::interval(float value, float intervals[], int intervals_size) {
   int first = 0;
   int last = intervals_size - 1;
-  int mid;
+  int mid = 0;
   
   if (value >= intervals[last]) {
     return last;

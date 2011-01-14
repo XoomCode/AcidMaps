@@ -13,6 +13,9 @@
 
 namespace ams = acid_maps;
 
+#define DATASET_SIZE 4000
+#define SIMPLIFY_SIZE 1024
+
 class InterpolationsTest : public CppUnit::TestFixture {
   CPPUNIT_TEST_SUITE(InterpolationsTest);
   CPPUNIT_TEST(dummyInterpolation);
@@ -26,9 +29,9 @@ public:
     srand(time(0));
     configuration = new ams::Configuration();
     configuration->dataset = create_dataset();
-    configuration->dataset_size = 100;
-    configuration->simplify_method = ams::COPY;
-    configuration->simplify_size = 100;
+    configuration->dataset_size = DATASET_SIZE;
+    configuration->simplify_size = SIMPLIFY_SIZE;
+    configuration->simplify_method = ams::GRID;
     configuration->bounds = new ams::Bounds(-180, -90, 180, 90);
     configuration->tile_size = new ams::Size(1024, 512);
     configuration->intervals_size = 5;
@@ -83,9 +86,9 @@ private:
   std::FILE* file;
   
   ams::Point* create_dataset() {
-    ams::Point* dataset = new ams::Point[100];
+    ams::Point* dataset = new ams::Point[DATASET_SIZE];
     ams::Point* point;
-    for (int i = 0; i < 100; i++) {
+    for (int i = 0; i < DATASET_SIZE; i++) {
       point = dataset + i;
       point->x = std::rand() % 360 - 180;
       point->y = std::rand() % 180 - 90;

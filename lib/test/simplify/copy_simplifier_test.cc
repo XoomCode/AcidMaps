@@ -87,4 +87,4 @@ private:
   
 };
 
-CPPUNIT_TEST_SUITE_REGISTRATION( CopySimplifierTest );
+//CPPUNIT_TEST_SUITE_REGISTRATION( CopySimplifierTest );
