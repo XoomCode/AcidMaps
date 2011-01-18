@@ -10,6 +10,7 @@
 #include "../core/size.h"
 #include "./sparse_renderer.h"
 #include <cstring>
+#include <cstdio>
 
 namespace acid_maps {
 
@@ -32,12 +33,14 @@ int SparseRenderer::interval(float value, float intervals[], int intervals_size)
   int last = intervals_size - 1;
   int mid = 0;
   
-  if (value >= intervals[last]) {
-    return last;
-  } else if (value < intervals[first]) {
-    return first;
-  }
+  float x = intervals[0];
   
+  if (value < intervals[first]) {
+    return first;
+  } else if (value >= intervals[last]) {
+    return last;
+  }
+
   while (first <= last) {
     mid = (first + last) / 2;
     if (value > intervals[mid]) {  

@@ -28,7 +28,7 @@ class GridSimplifier : public Simplifier {
   /**
    * @brief It does nothing with the dataset
    */
-  void simplify(Point* dataset, int dataset_size, int simplify_size, Point* simplified_dataset);
+  void simplify(Point* dataset, int dataset_size, Point* simplified_dataset, int& simplify_size);
 };
 
 };  // namespace acid_maps

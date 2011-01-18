@@ -36,7 +36,7 @@ class Simplifier {
      *
      * @param simplified_dataset float Output buffer
      */
-    virtual void simplify(Point* dataset, int dataset_size, int simplify_size, Point* simplified_dataset) = 0;
+    virtual void simplify(Point* dataset, int dataset_size, Point* simplified_dataset, int& simplify_size) = 0;
 };
 
 };  // namespace acid_maps

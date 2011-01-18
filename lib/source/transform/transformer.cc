@@ -13,13 +13,15 @@
 #include "../core/pixel.h"
 #include "./transformer.h"
 
+#include <cstdio>
+
 namespace acid_maps {
 
 /**
  * @ todo Store pixel positions in int*
  */
-void Transformer::transform(Bounds* bounds, Size* tile_size, Point* dataset,
-  int dataset_size, Pixel* transformed_dataset) {
+void Transformer::transform(Bounds* bounds, Size* tile_size, Point dataset[],
+  int dataset_size, Pixel transformed_dataset[]) {
 
   float bounds_width = bounds->max_x - bounds->min_x;
   float bounds_height = bounds->max_y - bounds->min_y;

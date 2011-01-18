@@ -13,9 +13,10 @@
 
 namespace acid_maps {
 
-void CopySimplifier::simplify(Point* dataset, int dataset_size, int simplify_size, Point* simplified_dataset) {
-  int size = simplify_size <= dataset_size ? simplify_size : dataset_size;
-  std::memcpy((Point*)simplified_dataset, (Point*)dataset, sizeof(Point) * size);
+void CopySimplifier::simplify(Point* dataset, int dataset_size, Point* simplified_dataset, int& simplify_size) {
+  if (dataset_size < simplify_size) simplify_size = dataset_size;
+  simplified_dataset = new Point[simplify_size];
+  std::memcpy((Point*)simplified_dataset, (Point*)dataset, sizeof(Point) * simplify_size);
 }
 
 };  // namespace acid_maps

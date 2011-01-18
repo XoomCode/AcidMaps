@@ -8,13 +8,14 @@
 #include "../source/acid_maps.h"
 
 #include <cstdio>
+#include <cstring>
 #include <cstdlib>
 #include <ctime>
 
 namespace ams = acid_maps;
 
-#define DATASET_SIZE 4000
-#define SIMPLIFY_SIZE 1024
+#define DATASET_SIZE 100
+#define SIMPLIFY_SIZE 100
 
 class InterpolationsTest : public CppUnit::TestFixture {
   CPPUNIT_TEST_SUITE(InterpolationsTest);
@@ -26,7 +27,7 @@ class InterpolationsTest : public CppUnit::TestFixture {
   
 public:
   void setUp() {
-    srand(time(0));
+    srand(time(NULL));
     configuration = new ams::Configuration();
     configuration->dataset = create_dataset();
     configuration->dataset_size = DATASET_SIZE;
@@ -42,29 +43,37 @@ public:
   }
   
   void dummyInterpolation () {
+    printf("#### DUMMY INTERPOLATION\n\n");
     configuration->interpolation_strategy = ams::DUMMY;
     configuration->interpolation_parameter = 32;
     ams::generate(configuration, &output_buffer, &output_size);
     file = std::fopen("dummy.png", "wb");
+    printf("###/ DUMMY INTERPOLATION\n\n");
   }
   
   void linearInterpolation () {
+    printf("#### LINEAR INTERPOLATION\n\n");
     configuration->interpolation_strategy = ams::LINEAR;
     configuration->interpolation_parameter = 64;
     ams::generate(configuration, &output_buffer, &output_size);
     file = std::fopen("linear.png", "wb");
+    printf("###/ LINEAR INTERPOLATION\n\n");
   }
   
   void nearestNeighborInterpolation () {
+    printf("#### NEAREST NEIGHBOR\n\n");
     configuration->interpolation_strategy = ams::NEAREST_NEIGHBOR;
     ams::generate(configuration, &output_buffer, &output_size);
     file = std::fopen("nearest.png", "wb");
+    printf("###/ NEAREST NEIGHBOR\n\n");
   }
   
   void inverseDistanceWeightingInterpolation () {
+    printf("#### IDW\n\n");
     configuration->interpolation_strategy = ams::INVERSE_DISTANCE_WEIGHTING;
     ams::generate(configuration, &output_buffer, &output_size);
     file = std::fopen("idw.png", "wb");
+    printf("###/ IDW\n\n");
   }
     
   void tearDown() {
@@ -99,6 +108,8 @@ private:
   
   float* create_intervals(int intervals_size) {
     float* intervals = new float[intervals_size];
+    std::memset(intervals, 0.0f, intervals_size * sizeof(intervals[0]));
+    
     for (int i = 0; i < intervals_size; i++) {
       intervals[i] = (i + 1 ) * 20;
     }
