@@ -20,9 +20,9 @@ namespace ams = acid_maps;
 class InterpolationsTest : public CppUnit::TestFixture {
   CPPUNIT_TEST_SUITE(InterpolationsTest);
   CPPUNIT_TEST(dummyInterpolation);
-//  CPPUNIT_TEST(linearInterpolation);
-//  CPPUNIT_TEST(nearestNeighborInterpolation);
-//  CPPUNIT_TEST(inverseDistanceWeightingInterpolation);
+  CPPUNIT_TEST(linearInterpolation);
+  CPPUNIT_TEST(nearestNeighborInterpolation);
+  CPPUNIT_TEST(inverseDistanceWeightingInterpolation);
   CPPUNIT_TEST_SUITE_END();
   
 public:
@@ -127,4 +127,4 @@ private:
   }
 };
 
-CPPUNIT_TEST_SUITE_REGISTRATION( InterpolationsTest );
+//CPPUNIT_TEST_SUITE_REGISTRATION( InterpolationsTest );

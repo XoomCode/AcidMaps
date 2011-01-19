@@ -19,7 +19,7 @@ namespace acid_maps {
  */
 void DummyInterpolation::interpolate(Size* tile_size, Pixel* dataset, int dataset_size, 
   int interpolation_parameter, float interpolated_bitmap[]) {
-  std::memset(interpolated_bitmap, 0, dataset_size * sizeof(interpolated_bitmap[0]));
+  std::memset(interpolated_bitmap, 0, tile_size->width * tile_size->height * sizeof(interpolated_bitmap[0]));
   
   Pixel* pixel;
   for (int i = 0; i < dataset_size; i++) {
