@@ -23,12 +23,23 @@ namespace acid_maps {
 void Transformer::transform(Bounds* bounds, Size* tile_size, Point dataset[],
   int dataset_size, Pixel transformed_dataset[]) {
 
+  printf("# Transformer\n\n");
+  printf("# Bounds\n");
+  printf("min_x: %f\n", bounds->min_x);
+  printf("min_y: %f\n", bounds->min_y);
+  printf("max_x: %f\n", bounds->max_x);
+  printf("max_y: %f\n", bounds->max_y);
+
   float bounds_width = bounds->max_x - bounds->min_x;
   float bounds_height = bounds->max_y - bounds->min_y;
+  
+  
 
   float horizontal_resolution = bounds_width / tile_size->width;
   float vertical_resolution = bounds_height / tile_size->height;
 
+  
+  
   Pixel* pixel;
   Point* point;
   for (int i = 0; i < dataset_size; i++) {

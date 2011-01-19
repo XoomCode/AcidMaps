@@ -20,9 +20,9 @@ namespace ams = acid_maps;
 class InterpolationsTest : public CppUnit::TestFixture {
   CPPUNIT_TEST_SUITE(InterpolationsTest);
   CPPUNIT_TEST(dummyInterpolation);
-  CPPUNIT_TEST(linearInterpolation);
-  CPPUNIT_TEST(nearestNeighborInterpolation);
-  CPPUNIT_TEST(inverseDistanceWeightingInterpolation);
+//  CPPUNIT_TEST(linearInterpolation);
+//  CPPUNIT_TEST(nearestNeighborInterpolation);
+//  CPPUNIT_TEST(inverseDistanceWeightingInterpolation);
   CPPUNIT_TEST_SUITE_END();
   
 public:
@@ -43,37 +43,37 @@ public:
   }
   
   void dummyInterpolation () {
-    printf("#### DUMMY INTERPOLATION\n\n");
+    printf("\n#### DUMMY INTERPOLATION\n\n");
     configuration->interpolation_strategy = ams::DUMMY;
     configuration->interpolation_parameter = 32;
     ams::generate(configuration, &output_buffer, &output_size);
     file = std::fopen("dummy.png", "wb");
-    printf("###/ DUMMY INTERPOLATION\n\n");
+    printf("\n###/ DUMMY INTERPOLATION\n\n");
   }
   
   void linearInterpolation () {
-    printf("#### LINEAR INTERPOLATION\n\n");
+    printf("\n#### LINEAR INTERPOLATION\n\n");
     configuration->interpolation_strategy = ams::LINEAR;
     configuration->interpolation_parameter = 64;
     ams::generate(configuration, &output_buffer, &output_size);
     file = std::fopen("linear.png", "wb");
-    printf("###/ LINEAR INTERPOLATION\n\n");
+    printf("\n###/ LINEAR INTERPOLATION\n\n");
   }
   
   void nearestNeighborInterpolation () {
-    printf("#### NEAREST NEIGHBOR\n\n");
+    printf("\n#### NEAREST NEIGHBOR\n\n");
     configuration->interpolation_strategy = ams::NEAREST_NEIGHBOR;
     ams::generate(configuration, &output_buffer, &output_size);
     file = std::fopen("nearest.png", "wb");
-    printf("###/ NEAREST NEIGHBOR\n\n");
+    printf("\n###/ NEAREST NEIGHBOR\n\n");
   }
   
   void inverseDistanceWeightingInterpolation () {
-    printf("#### IDW\n\n");
+    printf("\n#### IDW\n\n");
     configuration->interpolation_strategy = ams::INVERSE_DISTANCE_WEIGHTING;
     ams::generate(configuration, &output_buffer, &output_size);
     file = std::fopen("idw.png", "wb");
-    printf("###/ IDW\n\n");
+    printf("\n###/ IDW\n\n");
   }
     
   void tearDown() {

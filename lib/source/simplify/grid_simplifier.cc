@@ -17,12 +17,13 @@
 
 namespace acid_maps {
 
-static const float MARGIN = 1.05;
+static const float MARGIN = 1.01;
 
+/**
+ * TODO: SIMD
+ */
 void GridSimplifier::simplify(Point* dataset, int dataset_size, Point* simplified_dataset, int& simplify_size) {
-  simplified_dataset = new Point[simplify_size];
-  std::memset(simplified_dataset, 0, simplify_size * sizeof(simplified_dataset[0]));
-  printf("# Grid simplifier\n\n");
+  printf("\n# Grid simplifier\n\n");
   
   // Step 1: Get the bounding box
   float min_x = INT_MAX;
@@ -52,42 +53,48 @@ void GridSimplifier::simplify(Point* dataset, int dataset_size, Point* simplifie
   printf("# Cells\n");
   printf("cells: %d\ncell_width: %f\ncell_height %f\n\n", cells, cell_width, cell_height);
 
+  // Create the grid
   int grid_size = std::pow(cells, 2);
+  Point* grid = new Point[grid_size];
+  std::memset(grid, 0, grid_size * sizeof(grid[0]));
+  
+  // Create the grid counter
   int* cell_count = new int[grid_size];
   std::memset(cell_count, 0, grid_size * sizeof(cell_count[0]));
-  printf("cell_count initialized\n");
+  printf("# Cell_count initialized\n");
   
   // Step 3: We iterate through the grid acummulating values
-  // TODO: Determine what we do when the simplified size is not a perfect square
+  // TODO: SIMD
   int index;
   for (int i = 0; i < dataset_size; i++){
     point = dataset + i;
     index =  (point->y - min_y) / cell_height * cells + (point->x - min_x) / cell_width;
-    simplified_dataset[index].x += point->x;
-    simplified_dataset[index].y += point->y;
-    simplified_dataset[index].value += point->value;
+    grid[index].x += point->x;
+    grid[index].y += point->y;
+    grid[index].value += point->value;
     cell_count[index]++;
   }
-  printf("values accumulated\n");
+  printf("# Values accumulated\n");
   
-  printf("Grid %d => Simplify %d\n", grid_size, simplify_size);
   // Step 4: We calculate the average value for each cell
-  // TODO: check the possibility of using acummulated value instead of the average
+  // Also we check how many non empty cells exist
+  simplify_size = 0;
   for (int i = 0; i < grid_size; i++){
     if(cell_count[i] > 0){
-      simplified_dataset[i].x /= cell_count[i];
-      simplified_dataset[i].y /= cell_count[i];
-      simplified_dataset[i].value /= cell_count[i];
+      grid[i].x /= cell_count[i];
+      grid[i].y /= cell_count[i];
+      grid[i].value /= cell_count[i];
+      simplify_size++;
     }
   }
-  printf("averaged\n");
+  printf("# Averaged\n");
+  printf("# Grid %d => Simplify %d\n", grid_size, simplify_size);
   
-  printf("########### Simplified Dataset\n");
-  for (int i = 0; i < simplify_size; i++){
-    point = simplified_dataset + i;
-    printf("n: %d\tx: %f\ty: %f\tv: %f\tc: %d\n", i, point->x, point->y, point->value, cell_count[i]);
+  // Step 5: Copy valued points only <= simplify_size
+  index = 0;
+  for (int i = 0; i < grid_size; i++){
+    if(cell_count[i] > 0) simplified_dataset[index++] = grid[i];
   }
-  
   
 }
 
