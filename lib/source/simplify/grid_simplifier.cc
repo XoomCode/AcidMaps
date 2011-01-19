@@ -66,13 +66,14 @@ void GridSimplifier::simplify(Point* dataset, int dataset_size, Point* simplifie
   // Step 3: We iterate through the grid acummulating values
   // TODO(fpanettieri): SIMD
   int index;
-  point = NULL;
+  Point* cell;
   for (int i = 0; i < dataset_size; i++) {
     point = dataset + i;
     index =  (point->y - min_y) / cell_height * cells + (point->x - min_x) / cell_width;
-    grid[index].x += point->x;
-    grid[index].y += point->y;
-    grid[index].value += point->value;
+    cell = grid + index;
+    cell->x += point->x;
+    cell->y += point->y;
+    cell->value += point->value;
     cell_count[index]++;
   }
   printf("# Values accumulated\n");
