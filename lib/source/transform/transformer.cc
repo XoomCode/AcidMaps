@@ -25,30 +25,35 @@ void Transformer::transform(Bounds* bounds, Size* tile_size, Point dataset[],
 
   printf("# Transformer\n\n");
   printf("# Bounds\n");
-  printf("min_x: %f\n", bounds->min_x);
-  printf("min_y: %f\n", bounds->min_y);
-  printf("max_x: %f\n", bounds->max_x);
-  printf("max_y: %f\n", bounds->max_y);
+  printf("min_x: %.2f\n", bounds->min_x);
+  printf("min_y: %.2f\n", bounds->min_y);
+  printf("max_x: %.2f\n", bounds->max_x);
+  printf("max_y: %.2f\n\n", bounds->max_y);
 
   float bounds_width = bounds->max_x - bounds->min_x;
   float bounds_height = bounds->max_y - bounds->min_y;
   
-  
+  printf("width: %f\n", bounds_width);
+  printf("height: %f\n\n", bounds_height);
 
   float horizontal_resolution = bounds_width / tile_size->width;
   float vertical_resolution = bounds_height / tile_size->height;
 
-  
-  
+  printf("# Horizontal resolution: %f \n", horizontal_resolution);
+  printf("# Vertical resolution: %f \n\n", vertical_resolution);
+
+  printf("# Transforming dataset :%f \n\n", vertical_resolution);  
   Pixel* pixel;
   Point* point;
   for (int i = 0; i < dataset_size; i++) {
-    pixel = transformed_dataset + i;
     point = dataset + i;
+    pixel = transformed_dataset + i;
     
     pixel->x = (point->x - bounds->min_x) / horizontal_resolution;
     pixel->y = (bounds->max_y - point->y) / vertical_resolution;
     pixel->value = point->value;
+    
+    printf("(%.2f, %.2f, %.2f) => (%d, %d, %.2f)\n", point->x, point->y, point->value, pixel->x, pixel->y, pixel->value);
   }
 }
 
