@@ -14,7 +14,7 @@
 namespace ams = acid_maps;
 
 #define DATASET_SIZE 100
-#define SIMPLIFY_SIZE 100
+#define SIMPLIFY_SIZE 75
 
 class InterpolationsTest : public CppUnit::TestFixture {
   CPPUNIT_TEST_SUITE(InterpolationsTest);
@@ -31,7 +31,7 @@ public:
     configuration->dataset = create_dataset();
     configuration->dataset_size = DATASET_SIZE;
     configuration->simplify_size = SIMPLIFY_SIZE;
-    configuration->simplify_method = ams::GRID;
+    configuration->simplify_method = ams::COPY;
     configuration->bounds = new ams::Bounds(-180, -90, 180, 90);
     configuration->tile_size = new ams::Size(1024, 512);
     configuration->intervals_size = 5;

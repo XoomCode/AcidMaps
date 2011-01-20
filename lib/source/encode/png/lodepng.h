@@ -1,5 +1,5 @@
 /*
-LodePNG version 20101107
+LodePNG version 20101211
 
 Copyright (c) 2005-2010 Lode Vandevenne
 
@@ -26,14 +26,9 @@ freely, subject to the following restrictions:
 #ifndef LODEPNG_H
 #define LODEPNG_H
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
 #ifdef __cplusplus
 #include <vector>
 #include <string>
-#include <fstream>
 #endif /*__cplusplus*/
 
 /* ////////////////////////////////////////////////////////////////////////// */
@@ -48,12 +43,12 @@ Also, some text editors allow expanding/collapsing #ifdef sections.
 
 #define LODEPNG_COMPILE_ZLIB             /*deflate&zlib encoder and deflate&zlib decoder*/
 #define LODEPNG_COMPILE_PNG              /*png encoder and png decoder*/
-#define LODEPNG_COMPILE_DECODER          /*deflate&zlib decoder and png decoder*/
+//#define LODEPNG_COMPILE_DECODER          /*deflate&zlib decoder and png decoder*/
 #define LODEPNG_COMPILE_ENCODER          /*deflate&zlib encoder and png encoder*/
-#define LODEPNG_COMPILE_DISK             /*the optional built in harddisk file loading and saving functions*/
-#define LODEPNG_COMPILE_ANCILLARY_CHUNKS /*any code or struct datamember related to chunks other than IHDR, IDAT, PLTE, tRNS, IEND*/
-#define LODEPNG_COMPILE_UNKNOWN_CHUNKS   /*handling of unknown chunks*/
-#define LODEPNG_COMPILE_ERROR_TEXT       /*ability to convert error numerical codes to English text string*/
+//#define LODEPNG_COMPILE_DISK             /*the optional built in harddisk file loading and saving functions*/
+//#define LODEPNG_COMPILE_ANCILLARY_CHUNKS /*any code or struct datamember related to chunks other than IHDR, IDAT, PLTE, tRNS, IEND*/
+//#define LODEPNG_COMPILE_UNKNOWN_CHUNKS   /*handling of unknown chunks*/
+//#define LODEPNG_COMPILE_ERROR_TEXT       /*ability to convert error numerical codes to English text string*/
 
 /* ////////////////////////////////////////////////////////////////////////// */
 /* Simple Functions                                                           */
@@ -379,6 +374,9 @@ typedef struct LodePNG_InfoColor
   If you encode an image with palette, don't forget that you have to set the alpha channels (A) of the palette
   too, set them to 255 for an opaque palette. If you leave them at zero, the image will be encoded as
   fully invisible. This both for the palette in the infoRaw and the infoPng if the png is to have a palette.
+  
+  When decoding, by default you can ignore this information, since LodePNG gives the
+  raw output as RGBA pixels by default and already fills the palette values in them.
   */
   unsigned char* palette; /*palette in RGBARGBA... order*/
   size_t palettesize; /*palette size in number of colors (amount of bytes is 4 * palettesize)*/
@@ -387,6 +385,9 @@ typedef struct LodePNG_InfoColor
   transparent color key (tRNS)
   This color is 8-bit for 8-bit PNGs, 16-bit for 16-bit per channel PNGs.
   For greyscale PNGs, r, g and b will all 3 be set to the same.
+  
+  When decoding, by default you can ignore this information, since LodePNG sets
+  pixels with this key to transparent already in the raw RGBA output.
   */
   unsigned key_defined; /*is a transparent color key given? 0 = false, 1 = true*/
   unsigned key_r;       /*red/greyscale component of color key*/
@@ -406,8 +407,19 @@ unsigned LodePNG_InfoColor_addPalette(LodePNG_InfoColor* info, unsigned char r, 
 /*additional color info*/
 unsigned LodePNG_InfoColor_getBpp(const LodePNG_InfoColor* info);      /*get the total amount of bits per pixel, based on colorType and bitDepth in the struct*/
 unsigned LodePNG_InfoColor_getChannels(const LodePNG_InfoColor* info); /*get the amount of color channels used, based on colorType in the struct. If a palette is used, it counts as 1 channel.*/
-unsigned LodePNG_InfoColor_isGreyscaleType(const LodePNG_InfoColor* info); /*is it a greyscale type? (colorType 0 or 4)*/
-unsigned LodePNG_InfoColor_isAlphaType(const LodePNG_InfoColor* info);     /*has it got an alpha channel? (colorType 2 or 6)*/
+unsigned LodePNG_InfoColor_isGreyscaleType(const LodePNG_InfoColor* info); /*is it a greyscale type? (only colorType 0 or 4)*/
+unsigned LodePNG_InfoColor_isAlphaType(const LodePNG_InfoColor* info);     /*has it got an alpha channel? (only colorType 2 or 6)*/
+unsigned LodePNG_InfoColor_isPaletteType(const LodePNG_InfoColor* info);   /*has it got a palette? (only colorType 3)*/
+unsigned LodePNG_InfoColor_hasPaletteAlpha(const LodePNG_InfoColor* info); /*only returns true if there is a palette and there is a value in the palette with alpha < 255. Loops through the palette to check this.*/
+
+/*
+LodePNG_InfoColor_canHaveAlpha
+Check if the given color info indicates the possibility of having non-opaque pixels in the PNG image.
+Returns true if the image can have translucent or invisible pixels (it still be opaque if it doesn't use such pixels).
+Returns false if the image can only have opaque pixels.
+In detail, it returns true only if it's a color type with alpha, or has a palette with non-opaque values, or if "key_defined" is true.
+*/
+unsigned LodePNG_InfoColor_canHaveAlpha(const LodePNG_InfoColor* info);
 
 #ifdef LODEPNG_COMPILE_ANCILLARY_CHUNKS
 /*
@@ -1728,6 +1740,10 @@ yyyymmdd.
 Some changes aren't backwards compatible. Those are indicated with a (!)
 symbol.
 
+*) 11 dec 2010: encoding is made faster, based on suggestion by Peter Eastman
+    to optimize long sequences of zeros.
+*) 13 nov 2010: added LodePNG_InfoColor_hasPaletteAlpha and
+    LodePNG_InfoColor_canHaveAlpha functions for convenience.
 *) 7 nov 2010: added LodePNG_error_text function to get error code description.
 *) 30 okt 2010: made decoding slightly faster
 *) 26 okt 2010: (!) changed some C function and struct names (more consistent).
