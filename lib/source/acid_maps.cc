@@ -22,23 +22,15 @@
 #include "encode/encoder_factory.h"
 #include "./acid_maps.h"
 
-#include <cstdio>
-
 namespace acid_maps {
 
 void generate(Configuration* configuration, unsigned char** output_buffer, unsigned int* output_size) {
 
-  std::printf("************************ Begin\n");
-  std::printf("Simplify size: %d\n", configuration->simplify_size);
-  
   Point* simplified_dataset = new Point[configuration->simplify_size];
   Simplifier* simplifier = SimplifierFactory::get(configuration->simplify_method);
   simplifier->simplify(configuration->dataset, configuration->dataset_size,
     simplified_dataset, configuration->simplify_size);
   delete simplifier;
-
-  std::printf("\nSimplify size: %d\n", configuration->simplify_size);
-  std::printf("************************ Simplified\n");
   
   Pixel* transformed_dataset = new Pixel[configuration->simplify_size];
   Transformer* transformer = new Transformer();
@@ -47,8 +39,6 @@ void generate(Configuration* configuration, unsigned char** output_buffer, unsig
   delete transformer;
   delete[] simplified_dataset;
   
-  std::printf("************************ Transformed\n");
-
   int buffer_size = configuration->tile_size->width * configuration->tile_size->height;
   float* interpolated_bitmap = new float[buffer_size];
   Interpolation* interpolation = InterpolationFactory::get(configuration->interpolation_strategy);
@@ -57,8 +47,6 @@ void generate(Configuration* configuration, unsigned char** output_buffer, unsig
   delete interpolation;
   delete[] transformed_dataset;
   
-  std::printf("************************ Interpolated\n");
-
   unsigned char* rgba_buffer = new unsigned char[buffer_size * RGBA];
   Renderer* renderer = RendererFactory::get(configuration->intervals_type);
   renderer->render(interpolated_bitmap, configuration->tile_size, configuration->intervals, 
@@ -66,14 +54,10 @@ void generate(Configuration* configuration, unsigned char** output_buffer, unsig
   delete renderer;
   delete[] interpolated_bitmap;
   
-  std::printf("************************ Rendered\n");
-
   Encoder* encoder = EncoderFactory::get(configuration->format);
   encoder->encode(configuration->tile_size, rgba_buffer, output_buffer, output_size);
   delete encoder;
   delete[] rgba_buffer;
-  
-  std::printf("************************ Encoded\n");
 }
 
 };  // namespace acid_maps

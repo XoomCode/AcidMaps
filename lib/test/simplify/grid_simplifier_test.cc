@@ -8,7 +8,7 @@ class GridSimplifierTest : public CppUnit::TestFixture {
   CPPUNIT_TEST_SUITE(GridSimplifierTest);
   CPPUNIT_TEST( singlePointDataset );
   CPPUNIT_TEST( multiPointDataset );
-//  CPPUNIT_TEST( emptyDataset );
+  CPPUNIT_TEST( emptyDataset );
   CPPUNIT_TEST_SUITE_END();
   
 public:

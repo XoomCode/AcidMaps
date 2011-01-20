@@ -10,7 +10,6 @@
 #include "../core/size.h"
 #include "./sparse_renderer.h"
 #include <cstring>
-#include <cstdio>
 
 namespace acid_maps {
 
