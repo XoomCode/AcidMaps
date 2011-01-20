@@ -7,8 +7,8 @@
 class GridSimplifierTest : public CppUnit::TestFixture {
   CPPUNIT_TEST_SUITE(GridSimplifierTest);
   CPPUNIT_TEST( singlePointDataset );
-//  CPPUNIT_TEST( multiPointDataset );
-  CPPUNIT_TEST( emptyDataset );
+  CPPUNIT_TEST( multiPointDataset );
+//  CPPUNIT_TEST( emptyDataset );
   CPPUNIT_TEST_SUITE_END();
   
 public:
@@ -30,7 +30,7 @@ public:
 
     CPPUNIT_ASSERT_EQUAL(0.0f, simplified_dataset[0].x);
     CPPUNIT_ASSERT_EQUAL(0.0f, simplified_dataset[0].y);
-    CPPUNIT_ASSERT_EQUAL(227.5f, simplified_dataset[0].value);
+    CPPUNIT_ASSERT_EQUAL(152.5f, simplified_dataset[0].value);
     
     delete[] simplified_dataset;
   }
@@ -41,9 +41,11 @@ public:
     simplifier->simplify(dataset, dataset_size, simplified_dataset, simplify_size);
 
     for (int i = 0 ; i < 4; i++) {
-      CPPUNIT_ASSERT_EQUAL(dataset[i].x, simplified_dataset[i].x);
-      CPPUNIT_ASSERT_EQUAL(dataset[i].y, simplified_dataset[i].y);
-      CPPUNIT_ASSERT_EQUAL(dataset[i].value, simplified_dataset[i].value);
+      for (int j = 0 ; j < 4; j++) {
+        if(dataset[j].x == simplified_dataset[i].x && dataset[j].y == simplified_dataset[i].y){
+          CPPUNIT_ASSERT_EQUAL(dataset[j].value, simplified_dataset[i].value);
+        }
+      }
     }
     
     delete[] simplified_dataset;

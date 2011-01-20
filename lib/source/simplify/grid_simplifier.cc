@@ -17,7 +17,7 @@
 
 namespace acid_maps {
 
-static const float MARGIN = 1.01;
+static const float MARGIN = 1.0001;
 
 /**
  * TODO: SIMD
@@ -46,7 +46,7 @@ void GridSimplifier::simplify(Point* dataset, int dataset_size, Point* simplifie
   // Step 2: Create the NxN simplified grid
   // In order to create a NxN proportional grid that will allow us to simplify the dataset
   // we need to calculate the closest perfect square number to get N
-  int cells = std::floor(std::sqrt(simplify_size));
+  int cells = (int)std::floor(std::sqrt(simplify_size));
   float cell_width = (max_x - min_x) * MARGIN / cells;
   float cell_height = (max_y - min_y) * MARGIN / cells;
 
@@ -65,11 +65,15 @@ void GridSimplifier::simplify(Point* dataset, int dataset_size, Point* simplifie
 
   // Step 3: We iterate through the grid acummulating values
   // TODO(fpanettieri): SIMD
-  int index;
+  int index_x, index_y, index;
   Point* cell;
   for (int i = 0; i < dataset_size; i++) {
     point = dataset + i;
-    index =  (point->y - min_y) / cell_height * cells + (point->x - min_x) / cell_width;
+    index_x = (int)((point->y - min_y) / cell_height);
+    index_y = (int)((point->x - min_x) / cell_width);
+    index = index_y * cells + index_x;
+    printf("x %d, y %d, p %d\n", index_x, index_y, index);
+    
     cell = grid + index;
     cell->x += point->x;
     cell->y += point->y;
