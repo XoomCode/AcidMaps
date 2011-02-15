@@ -2,10 +2,10 @@
 #include "../../source/constants/constants.h"
 #include "../../source/core/point.h"
 #include "../../source/simplify/simplifier.h"
-#include "../../source/simplify/extremes_simplifier.h"
+#include "../../source/simplify/random_simplifier.h"
 
-class ExtremesSimplifierTest : public CppUnit::TestFixture {
-  CPPUNIT_TEST_SUITE(ExtremesSimplifierTest);
+class RandomSimplifierTest : public CppUnit::TestFixture {
+  CPPUNIT_TEST_SUITE(RandomSimplifierTest);
   CPPUNIT_TEST( singlePointDataset );
   CPPUNIT_TEST( multiPointDataset );
   CPPUNIT_TEST( emptyDataset );
@@ -14,7 +14,7 @@ class ExtremesSimplifierTest : public CppUnit::TestFixture {
 public:
   void setUp() {
     dataset = create_dataset();
-    simplifier = new acid_maps::ExtremesSimplifier();
+    simplifier = new acid_maps::RandomSimplifier();
   }
   
   void tearDown() {
@@ -27,29 +27,29 @@ public:
     acid_maps::Point* simplified_dataset = new acid_maps::Point[simplify_size];
     simplifier->simplify(dataset, dataset_size, simplified_dataset, simplify_size);
     
-    CPPUNIT_ASSERT_EQUAL(90.0f, simplified_dataset[0].x);
-    CPPUNIT_ASSERT_EQUAL(-45.0f, simplified_dataset[0].y);
-    CPPUNIT_ASSERT_EQUAL(50.0f, simplified_dataset[0].value);
-    
+    for (int i = 0 ; i < simplify_size; i++) {
+      for (int j = 0 ; j < dataset_size; j++) {
+        if(dataset[j].x == simplified_dataset[i].x && dataset[j].y == simplified_dataset[i].y){
+          CPPUNIT_ASSERT_EQUAL(dataset[j].value, simplified_dataset[i].value);
+        }
+      }
+    }
+
     delete[] simplified_dataset;
   }
   
   void multiPointDataset () {
-    simplify_size = 3;
+    simplify_size = 4;
     acid_maps::Point* simplified_dataset = new acid_maps::Point[simplify_size];
     simplifier->simplify(dataset, dataset_size, simplified_dataset, simplify_size);
 
-    CPPUNIT_ASSERT_EQUAL(90.0f, simplified_dataset[0].x);
-    CPPUNIT_ASSERT_EQUAL(-45.0f, simplified_dataset[0].y);
-    CPPUNIT_ASSERT_EQUAL(50.0f, simplified_dataset[0].value);
-
-    CPPUNIT_ASSERT_EQUAL(-90.0f, simplified_dataset[1].x);
-    CPPUNIT_ASSERT_EQUAL(-45.0f, simplified_dataset[1].y);
-    CPPUNIT_ASSERT_EQUAL(260.0f, simplified_dataset[1].value);
-    
-    CPPUNIT_ASSERT_EQUAL(-90.0f, simplified_dataset[2].x);
-    CPPUNIT_ASSERT_EQUAL(45.0f, simplified_dataset[2].y);
-    CPPUNIT_ASSERT_EQUAL(100.0f, simplified_dataset[2].value);
+    for (int i = 0 ; i < simplify_size; i++) {
+      for (int j = 0 ; j < dataset_size; j++) {
+        if(dataset[j].x == simplified_dataset[i].x && dataset[j].y == simplified_dataset[i].y){
+          CPPUNIT_ASSERT_EQUAL(dataset[j].value, simplified_dataset[i].value);
+        }
+      }
+    }
     
     delete[] simplified_dataset;
   }
@@ -96,4 +96,4 @@ private:
   
 };
 
-CPPUNIT_TEST_SUITE_REGISTRATION( ExtremesSimplifierTest );
+CPPUNIT_TEST_SUITE_REGISTRATION( RandomSimplifierTest );

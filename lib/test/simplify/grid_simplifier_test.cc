@@ -13,7 +13,6 @@ class GridSimplifierTest : public CppUnit::TestFixture {
   
 public:
   void setUp() {
-    dataset_size = 4;
     dataset = create_dataset();
     simplifier = new acid_maps::GridSimplifier();
   }
@@ -64,6 +63,8 @@ private:
   int simplify_size;
   
   acid_maps::Point* create_dataset() {
+    dataset_size = 4;
+    
     acid_maps::Point* dataset = new acid_maps::Point[dataset_size];
     acid_maps::Point* point;
     
