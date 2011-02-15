@@ -58,7 +58,6 @@ void GridSimplifier::simplify(Point* dataset, int dataset_size, Point* simplifie
   std::memset(cell_count, 0, grid_size * sizeof(cell_count[0]));
 
   // Step 3: We iterate through the grid acummulating values
-  // TODO(fpanettieri): SIMD
   int index_x, index_y, index;
   Point* cell;
   for (int i = 0; i < dataset_size; i++) {
@@ -82,6 +81,8 @@ void GridSimplifier::simplify(Point* dataset, int dataset_size, Point* simplifie
     if (cell_count[i] > 0) {
       grid[i].x /= cell_count[i];
       grid[i].y /= cell_count[i];
+      
+      // TODO: Make this configurable
       grid[i].value /= cell_count[i];
       simplify_size++;
     }
