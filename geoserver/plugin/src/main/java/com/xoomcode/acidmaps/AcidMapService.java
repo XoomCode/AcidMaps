@@ -5,6 +5,7 @@ package com.xoomcode.acidmaps;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -87,7 +88,7 @@ public class AcidMapService {
 		try {
 			if (request.getLayers() != null && request.getLayers().size() > 0) {
 				MapLayerInfo layer = request.getLayers().get(0);
-				DatasetCacheKey datasetCacheKey = new DatasetCacheKey(layer.getName());
+				DatasetCacheKey datasetCacheKey = new DatasetCacheKey(layer.getName(), request.getFilter().toString());
 				if(datasetCache.isCached(datasetCacheKey)){
 					return run(request, mapContext);
 				} else {
@@ -123,7 +124,7 @@ public class AcidMapService {
 		String valueColumn = rawKvp.get(AcidMapParameters.VALUE_COLUMN);
 		
 		MapLayerInfo layer = request.getLayers().get(0);
-		DatasetCacheKey datasetCacheKey = new DatasetCacheKey(layer.getName());
+		DatasetCacheKey datasetCacheKey = new DatasetCacheKey(layer.getName(), request.getFilter().toString());
 		
 		Filter layerFilter = buildLayersFilters(request.getFilter(), request.getLayers())[0];
 		//Style layerStyle = request.getStyles().toArray(new Style[] {})[0];
@@ -163,7 +164,7 @@ public class AcidMapService {
 		
 		MapLayerInfo layer = request.getLayers().get(0);
 		
-		DatasetCacheKey datasetCacheKey = new DatasetCacheKey(layer.getName());
+		DatasetCacheKey datasetCacheKey = new DatasetCacheKey(layer.getName(), request.getFilter().toString());
 		
 		configuration.dataset = datasetCache.getDataset(datasetCacheKey);;
 		
@@ -171,7 +172,9 @@ public class AcidMapService {
 		byte[] outputBuffer = jCAdapter.interpolate(configuration);
 		
 		BufferedImage image=ImageIO.read(new ByteArrayInputStream(outputBuffer));
-        
+		//File input = new File("/home/cfarina/wk/geoserver/acidmaps/src/main/java/com/xoomcode/acidmaps/landscape.png");
+		//BufferedImage image = ImageIO.read(input);
+		
         final String outputFormat = request.getFormat();
         RenderedImageMap result = new RenderedImageMap(mapContext, image, outputFormat);
         return result;

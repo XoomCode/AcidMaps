@@ -33,6 +33,14 @@ package com.xoomcode.acidmaps
 			this.valueColumn = valueColumn;
 		}
 		
+		public function set filter(value:String):void {
+			_filter = value;
+		}
+		
+		public function get filter():String {
+			return _filter;
+		}
+		
 		public function set valueColumn(value:String):void {
 			_valueColumn = value;
 		}
