@@ -11,6 +11,6 @@ package com.xoomcode.acidmaps.simplify;
 public class SimplifyMethod {
 	public static final int COPY = 0; 
 	public static final int GRID = 1; 
-	public static final int SAMPLING = 2; 
-	public static final int EXTREME_VALUES = 3; 
+	public static final int RANDOM = 2; 
+	public static final int EXTREMES = 3; 
 }

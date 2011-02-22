@@ -22,14 +22,6 @@
       <artifactId>main</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.geoserver</groupId>
-      <artifactId>wfs</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.geoserver</groupId>
-      <artifactId>wcs</artifactId>
-    </dependency>
-    <dependency>
       <groupId>org.geotools</groupId>
       <artifactId>gt-render</artifactId>
     </dependency>
@@ -38,53 +30,14 @@
       <artifactId>gt-svg</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.geotools</groupId>
-      <artifactId>gt-shapefile-renderer</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.geotools</groupId>
-      <artifactId>gt-geotiff</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.geotools</groupId>
-      <artifactId>gt-wfs</artifactId>
-    </dependency>
-    <!-- end of SVG rendering markers support -->
-    <dependency>
-      <groupId>com.lowagie</groupId>
-      <artifactId>itext</artifactId>
-    </dependency>
-    <dependency>
       <groupId>com.h2database</groupId>
       <artifactId>h2</artifactId> 
-    </dependency>
-	<dependency>
-      <groupId>org.geoserver</groupId>
-      <artifactId>ows</artifactId>
-      <classifier>tests</classifier>
-      <scope>tests</scope>
     </dependency>
     <dependency>
       <groupId>org.geoserver</groupId>
       <artifactId>main</artifactId>
       <classifier>tests</classifier>
       <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.mockrunner</groupId>
-      <artifactId>mockrunner</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.easymock</groupId>
-      <artifactId>easymock</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-     <groupId>org.easymock</groupId>
-     <artifactId>easymockclassextension</artifactId>
-     <version>2.3</version>
-	 <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>xmlunit</groupId>

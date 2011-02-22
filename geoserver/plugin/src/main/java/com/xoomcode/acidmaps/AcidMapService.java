@@ -26,6 +26,7 @@ import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.factory.GeoTools;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
+import org.geotools.filter.OrImpl;
 import org.geotools.styling.FeatureTypeConstraint;
 import org.opengis.feature.Feature;
 import org.opengis.feature.Property;
@@ -133,24 +134,27 @@ public class AcidMapService {
 		FeatureType schema = source.getSchema();
 		final GeometryDescriptor geometryAttribute = schema.getGeometryDescriptor();
 		
-		float[] dataset = null;
+		com.xoomcode.acidmaps.core.Point[] dataset = null;
 		if(!datasetCache.isCached(datasetCacheKey)){
+			
 			FeatureCollection<? extends FeatureType, ? extends Feature> features = source.getFeatures(layerFilter);
 			FeatureIterator<? extends Feature> featureIterator = features.features();
-			dataset = new float[features.size() * 3];
+			dataset = new com.xoomcode.acidmaps.core.Point[features.size()];
 			int i = 0;
 			while (featureIterator.hasNext()) {
 				SimpleFeature f = (SimpleFeature) featureIterator.next();
 				Property theGeom = f.getProperty(geometryAttribute.getName());
 				Point point = (Point)theGeom.getValue();
-				dataset[i] = (float)point.getX();
-				dataset[i+1] = (float)point.getY();
+				com.xoomcode.acidmaps.core.Point acidMapPoint = new com.xoomcode.acidmaps.core.Point();
+				acidMapPoint.x = (float)point.getX();
+				acidMapPoint.y = (float)point.getY();
 				
 				Property value = f.getProperty(valueColumn);
 				if(value != null){
-					dataset[i+2] = new Float((Double)value.getValue());
+					acidMapPoint.value = new Float((Double)value.getValue());
 				}
-				i+=3;
+				dataset [i] = acidMapPoint;
+				i++;
 			}
 			datasetCache.put(datasetCacheKey, dataset);
 		}
@@ -166,7 +170,8 @@ public class AcidMapService {
 		
 		DatasetCacheKey datasetCacheKey = new DatasetCacheKey(layer.getName(), request.getFilter().toString());
 		
-		configuration.dataset = datasetCache.getDataset(datasetCacheKey);;
+		configuration.dataset = datasetCache.getDataset(datasetCacheKey);
+		configuration.datasetSize = configuration.dataset.length;
 		
 		JCAdapter jCAdapter = new JCAdapter();
 		byte[] outputBuffer = jCAdapter.interpolate(configuration);
@@ -190,7 +195,7 @@ public class AcidMapService {
 		Map<String, String> rawKvp = request.getRawKvp();
 		int simplifyMethod = new Integer(rawKvp.get(AcidMapParameters.SIMPLIFY_METHOD));
 		int simplifySize = new Integer(rawKvp.get(AcidMapParameters.SIMPLIFY_SIZE));
-		int[] intervals = buildIntervals(rawKvp.get(AcidMapParameters.INTERVALS));
+		float[] intervals = buildIntervals(rawKvp.get(AcidMapParameters.INTERVALS));
 		byte[] intervalsColors = buildIntervalsColors(rawKvp.get(AcidMapParameters.INTERVALS_COLORS));
 		int intervalsType = new Integer(rawKvp.get(AcidMapParameters.INTERVALS_TYPE));
 		int interpolationStrategy = new Integer(rawKvp.get(AcidMapParameters.INTERPOLATION_STRATEGY));
@@ -237,13 +242,13 @@ public class AcidMapService {
 	 * @param string
 	 * @return
 	 */
-	private int[] buildIntervals(String intervalsStr) {
+	private float[] buildIntervals(String intervalsStr) {
 		String[] split = intervalsStr.split(",");
 		
-		int	[] intervals = new int[split.length];	
+		float [] intervals = new float[split.length];	
 		
 		for (int i = 0; i < intervals.length; i++) {
-			intervals[i] = new Integer(split[i]);
+			intervals[i] = new Float(split[i]);
 		}
 		return intervals;
 	}
@@ -291,7 +296,7 @@ public class AcidMapService {
                     layerDefinitionFilter = Filter.INCLUDE;
                 }
                 combined = filterFac.and(layerDefinitionFilter, userRequestedFilter);
-
+                //combined = filterFac.and(combined, OrImpl.);
                 FeatureTypeConstraint[] featureTypeConstraints = layer.getLayerFeatureConstraints();
                 if (featureTypeConstraints != null) {
                     List<Filter> filters = new ArrayList<Filter>();
