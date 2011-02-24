@@ -15,19 +15,19 @@
              to locate it. -->
 	<bean id="amsServiceDescriptor" class="org.geoserver.platform.Service">
 		<!-- used to reference the service in the URL -->
-        <constructor-arg index="0" value="ams"/>
+		<constructor-arg index="0" value="ams"/>
 
-        <!-- our actual service POJO defined previously -->
-        <constructor-arg index="1" ref="amsService"/>
+		<!-- our actual service POJO defined previously -->
+		<constructor-arg index="1" ref="amsService"/>
 
-        <!-- a version number for this service -->
-        <constructor-arg index="2" value="1.0.0"/>
-        
-        <constructor-arg index="3">
-	        <list>
-	        	<value>GetMap</value>
-	        </list>
-        </constructor-arg>
+		<!-- a version number for this service -->
+		<constructor-arg index="2" value="1.0.0"/>
+		
+		<constructor-arg index="3">
+			<list>
+				<value>GetMap</value>
+			</list>
+		</constructor-arg>
 	</bean>
 	
 </beans>

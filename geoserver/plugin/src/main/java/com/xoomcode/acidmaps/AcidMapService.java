@@ -5,12 +5,13 @@ package com.xoomcode.acidmaps;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 import javax.servlet.ServletException;
@@ -26,8 +27,8 @@ import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.factory.GeoTools;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
-import org.geotools.filter.OrImpl;
 import org.geotools.styling.FeatureTypeConstraint;
+import org.geotools.util.logging.Logging;
 import org.opengis.feature.Feature;
 import org.opengis.feature.Property;
 import org.opengis.feature.simple.SimpleFeature;
@@ -40,7 +41,6 @@ import com.vividsolutions.jts.geom.Point;
 import com.xoomcode.acidmaps.adapter.JCAdapter;
 import com.xoomcode.acidmaps.cache.DatasetCache;
 import com.xoomcode.acidmaps.cache.DatasetCacheKey;
-import com.xoomcode.acidmaps.constants.Constants;
 import com.xoomcode.acidmaps.core.AcidMapParameters;
 import com.xoomcode.acidmaps.core.Bounds;
 import com.xoomcode.acidmaps.core.Configuration;
@@ -51,14 +51,13 @@ import com.xoomcode.acidmaps.core.Configuration;
  */
 public class AcidMapService {
 	
+	private final static Logger LOGGER = Logging.getLogger(AcidMapService.class.toString());
+	
 	private static DatasetCache datasetCache = new DatasetCache();
 	
 	/** The filter fac. */
 	private FilterFactory filterFac;
 	
-	/** The Constant RGBA_SIZE. */
-	public static final int RGBA_SIZE = 4;
-
 	/**
 	 * Instantiates a new acid map service.
 	 */
@@ -88,13 +87,15 @@ public class AcidMapService {
 		WMSMapContext mapContext = new WMSMapContext(request);
 		try {
 			if (request.getLayers() != null && request.getLayers().size() > 0) {
+				
+				LOGGER.log(Level.WARNING, "Processing request " + request.getRawKvp().toString());
+				
 				MapLayerInfo layer = request.getLayers().get(0);
 				DatasetCacheKey datasetCacheKey = new DatasetCacheKey(layer.getName(), request.getFilter().toString());
 				if(datasetCache.isCached(datasetCacheKey)){
 					return run(request, mapContext);
 				} else {
 					return synchronizedRun(request, mapContext);
-					
 				}
 			}
 			return null;
@@ -123,12 +124,11 @@ public class AcidMapService {
 	public synchronized WebMap synchronizedRun(final GetMapRequest request, WMSMapContext mapContext) throws ServiceException, IOException {
 		Map<String, String> rawKvp = request.getRawKvp();
 		String valueColumn = rawKvp.get(AcidMapParameters.VALUE_COLUMN);
-		
+
 		MapLayerInfo layer = request.getLayers().get(0);
 		DatasetCacheKey datasetCacheKey = new DatasetCacheKey(layer.getName(), request.getFilter().toString());
 		
 		Filter layerFilter = buildLayersFilters(request.getFilter(), request.getLayers())[0];
-		//Style layerStyle = request.getStyles().toArray(new Style[] {})[0];
 		
 		FeatureSource<? extends FeatureType, ? extends Feature> source = layer.getFeatureSource(true);
 		FeatureType schema = source.getSchema();
@@ -136,7 +136,7 @@ public class AcidMapService {
 		
 		com.xoomcode.acidmaps.core.Point[] dataset = null;
 		if(!datasetCache.isCached(datasetCacheKey)){
-			
+			LOGGER.log(Level.WARNING, "Cache missed");
 			FeatureCollection<? extends FeatureType, ? extends Feature> features = source.getFeatures(layerFilter);
 			FeatureIterator<? extends Feature> featureIterator = features.features();
 			dataset = new com.xoomcode.acidmaps.core.Point[features.size()];
@@ -155,8 +155,11 @@ public class AcidMapService {
 				}
 				dataset [i] = acidMapPoint;
 				i++;
-			}
+			} 
 			datasetCache.put(datasetCacheKey, dataset);
+		} else {
+			LOGGER.log(Level.WARNING, "Cache hint");
+			
 		}
 		return run(request, mapContext);
 	}

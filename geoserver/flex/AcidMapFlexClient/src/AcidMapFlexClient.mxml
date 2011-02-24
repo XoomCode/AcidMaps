@@ -90,7 +90,7 @@
 				amsParams.intervalsColors = createIntervalsColors();
 				amsParams.filter = "NOT (lot_id = 100)";
 				amsParams.simplifyMethod = SimplifyMethod.GRID;
-				amsParams.simplifySize = 10000;
+				amsParams.simplifySize = 20000;
 				amsParams.interpolationStrategy = InterpolationStrategy.INVERSE_DISTANCE_WEIGHTING;
 				
 				var layer:WMSC = new WMSC(name, "http://localhost:8080/geoserver/" + "wms", layerName, false, true, amsParams.srs);
