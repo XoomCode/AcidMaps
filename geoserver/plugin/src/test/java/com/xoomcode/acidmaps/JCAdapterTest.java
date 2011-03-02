@@ -15,6 +15,7 @@ import com.xoomcode.acidmaps.adapter.JCAdapter;
 import com.xoomcode.acidmaps.constants.Constants;
 import com.xoomcode.acidmaps.core.Bounds;
 import com.xoomcode.acidmaps.core.Configuration;
+import com.xoomcode.acidmaps.core.Point;
 import com.xoomcode.acidmaps.interpolate.InterpolationStrategy;
 import com.xoomcode.acidmaps.renderer.RendererType;
 import com.xoomcode.acidmaps.simplify.SimplifyMethod;
@@ -35,15 +36,14 @@ public class JCAdapterTest extends TestCase {
 	protected void setUp() throws Exception {
 		configuration = new Configuration();
 	    configuration.dataset = createDataset();
-	    //configuration.datasetSize = 10;
-	    configuration.simplifyMethod = SimplifyMethod.COPY;
+	    configuration.simplifyMethod = SimplifyMethod.GRID;
 	    configuration.simplifySize = 6;
+	    configuration.interpolationStrategy = InterpolationStrategy.INVERSE_DISTANCE_WEIGHTING;
 	    configuration.bounds = new Bounds(-180, -90, 180, 90);
 	    configuration.width = 1024;
 	    configuration.height = 512;
 	    configuration.intervals = createIntervals();
 	    configuration.intervalsColors = createIntervalsColors();
-	    //configuration.intervalsSize = 5;
 	    configuration.intervalsType = RendererType.SPARSE;
 		super.setUp();
 	}
@@ -58,8 +58,8 @@ public class JCAdapterTest extends TestCase {
 	    return colors; 
 	}
 
-	private int[] createIntervals() {
-		int[] intervals = new int[5];
+	private float[] createIntervals() {
+		float[] intervals = new float[5];
 		intervals[0] = 10;
 		intervals[1] = 22;
 		intervals[2] = 45;
@@ -68,24 +68,19 @@ public class JCAdapterTest extends TestCase {
 		return intervals;
 	}
 
-	private float[] createDataset() {
-		float[] dataset = new float[10 * Constants.VPP];
-		/*for (int i = 0; i < 10; i++) {
-			dataset[i * Constants.VPP] = (float) Math.random() % 360 - 180;
-			dataset[i * Constants.VPP + 1] = (float) Math.random() % 180 - 90;
-			dataset[i * Constants.VPP + 2] = (float) Math.random() % 150;
-		}*/
+	private Point[] createDataset() {
+		Point[] dataset = new Point[10];
 		
-		dataset[0] = 163; dataset[1] = 16;  dataset[2] = 27;
-		dataset[3] = -65; dataset[4] = 23;  dataset[5] = 85;
-		dataset[6] = 46;  dataset[7] = -78; dataset[8] = 99;
-		dataset[9] = 1;   dataset[10] = 32;	dataset[11] = 127; 
-		dataset[12] = -130; dataset[13] = -11; dataset[14] = 113;
-		dataset[15] = -14;  dataset[16] = -30; dataset[17] = 126;
-		dataset[18] = -128; dataset[19] = 46; dataset[20] = 11;
-		dataset[21] = -172; dataset[22] = -3; dataset[23] = 129;
-		dataset[24] = -118; dataset[25] = 80; dataset[26] = 62;
-		dataset[27] = 103; dataset[28] = 37; dataset[29] = 85;
+		dataset[0] = new Point(163, 16, 27);
+		dataset[1] = new Point(-65, 23, 85);
+		dataset[2] = new Point(46, -78, 99);
+		dataset[3] = new Point(1, 32, 127); 
+		dataset[4] = new Point(-130, -11, 113);
+		dataset[5] = new Point(-14, -30, 126);
+		dataset[6] = new Point(-128, 46, 11);
+		dataset[7] = new Point(-172, -3, 129);
+		dataset[8] = new Point(-118, 80, 62);
+		dataset[9] = new Point(103, 37, 85);
 		
 		return dataset;
 	}
@@ -99,7 +94,7 @@ public class JCAdapterTest extends TestCase {
 		configuration.interpolationStrategy = InterpolationStrategy.LINEAR;
 		configuration.interpolationParameter = 32;
 		byte[] outputBuffer = jCAdapter.interpolate(configuration);
-
+		assertNotNull(outputBuffer);
 		/*try {
 			FileOutputStream fos = new FileOutputStream("image.png");
 			fos.write(outputBuffer);
