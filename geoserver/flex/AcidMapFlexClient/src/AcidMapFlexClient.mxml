@@ -1,10 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" creationComplete="initMap()" xmlns:openscales="http://openscales.org">
 	<mx:Canvas width="100%" height="100%">
-		<openscales:Map id="fxmap" height="100%" width="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off">
+		<openscales:Map id="fxmap" height="100%" width="100%"
+						horizontalScrollPolicy="off" 
+						verticalScrollPolicy="off"
+						centerLonLat="-68.844519,-32.889682"
+						zoom="14"
+						>
+			<openscales:Mapnik id="mapnik" name="Mapnik" isBaseLayer="true"/>
 			<openscales:Spinner id="spinner" x="{width / 2}" y="{height / 2}"/>
+			<openscales:DragHandler />
+			<openscales:ClickHandler />
+			<openscales:WheelHandler />
 			<openscales:MousePosition x="{width - 170}" y="{height - 20}"/>
+			<openscales:ScaleLine x="{width - 120}" y="{height - 100}" />
 		</openscales:Map>
+		<mx:ComboBox id="serviceTypeComboBox" change="onServiceTypeComboBoxChange()" x="{width - 200}" y="{5}"> 
+			<mx:ArrayCollection>
+				<mx:Object label="AMS" data="AMS"/>
+				<mx:Object label="WMS" data="WMS"/>
+			</mx:ArrayCollection>
+		</mx:ComboBox>
+		<mx:ComboBox id="mapTypeComboBox" change="onMapTypeComboBoxChange()" x="{width - 120}" y="{5}" 
+					 visible="{serviceTypeComboBox.selectedItem.data == 'AMS'}"> 
+			<mx:ArrayCollection>
+				<mx:Object label="Isoline" data="{InterpolationStrategy.INVERSE_DISTANCE_WEIGHTING}"/>
+				<mx:Object label="Heatmap" data="{InterpolationStrategy.LINEAR}"/>
+				<mx:Object label="Voronoi" data="{InterpolationStrategy.NEAREST_NEIGHBOR}"/>
+				<mx:Object label="Point" data="{InterpolationStrategy.DUMMY}"/>
+			</mx:ArrayCollection>
+		</mx:ComboBox>
 		<mx:VBox>
 			<openscales:ZoomComponent map="{map}"/>
 			<mx:Spacer width="100%" />
@@ -26,78 +51,90 @@
 			import org.openscales.core.basetypes.Bounds;
 			import org.openscales.core.handler.mouse.DragHandler;
 			import org.openscales.core.handler.mouse.WheelHandler;
+			import org.openscales.core.layer.ogc.WMS;
 			import org.openscales.core.layer.ogc.WMSC;
 			import org.openscales.core.layer.params.ogc.WMSParams;
 			
 			[Bindable] private var map:Map = null;
 			[Bindable] public var displayTrace:Boolean = false;	
 			[Bindable] public var displayFirebugTrace:Boolean = false;
-			private var bounds:Bounds;
 			
 			public var maxZoomLevel:int = 16;
 			public var minZoomLevel:int = 0;
 			
 			private var intervalsSize:int = 5;
+			
+			private var amsLayer:WMSC; 
+			
+			private var wmsLayer:WMSC; 
+			
+			private var overlayLayerName:String = "acidmaps:points_google";
 
 			private function initMap():void {
 				Trace.useFireBugConsole = displayFirebugTrace;
 				map = fxmap.map;
 				
-				bounds = new Bounds(2536798.25, 6366961, 2537666.75, 6367985.5);
-				map.maxExtent = bounds; 
-				map.addHandler(new DragHandler());
-				map.addHandler(new WheelHandler());
-				map.tweenZoomEnabled = true;
-				
-				var wmsLayer:WMSC = buildWMSLayer();
-				wmsLayer.isBaseLayer = true;
-				wmsLayer.maxZoomLevel = maxZoomLevel;
-				wmsLayer.minZoomLevel = minZoomLevel;
-				map.addLayer(wmsLayer);
-
-				var amsLayer:WMSC = buildAMSLayer();
-				amsLayer.isBaseLayer = false;
-				amsLayer.maxZoomLevel = maxZoomLevel;
-				amsLayer.minZoomLevel = minZoomLevel;
+				buildWMSLayer();
+				buildAMSLayer();
 				map.addLayer(amsLayer);
+				wmsLayer.visible = false;
+				map.addLayer(wmsLayer);
 			}
 			
-			public function buildWMSLayer():WMSC {
-				var layerName:String = "acidmaps:lots";
-				var wmsParams:WMSParams = new WMSParams(layerName);
-				wmsParams.format = "image/png";
-				wmsParams.srs = "EPSG:22182";
-				wmsParams.tiled = true;
-				wmsParams.transparent = false;
-				wmsParams.exceptions = "application/vnd.ogc.se_inimage";
-				
-				var layer:WMSC = new WMSC(name, "http://localhost:8080/geoserver/" + "wms", layerName, false, true, wmsParams.srs);
-				layer.params = wmsParams;
-				layer.maxExtent = new Bounds(bounds.left, bounds.bottom, bounds.right, bounds.top);
-				layer.generateResolutions(maxZoomLevel, 4.001953125);
-				return layer;
+			private function buildWMSLayer():void {
+				var wmsParams:WMSParams = new WMSParams(overlayLayerName);
+				setGenericParameters(wmsParams);
+				wmsParams.transparent = true;
+				wmsLayer = buildLayer(wmsParams);
 			}
 			
-			public function buildAMSLayer():WMSC {
-				var layerName:String = "acidmaps:posts";
-				var amsParams:AMSParameters = new AMSParameters(layerName, "value");
-				amsParams.format = "image/png";
-				amsParams.srs = "EPSG:22182";
-				amsParams.tiled = true;
-				amsParams.transparent = false;
-				amsParams.exceptions = "application/vnd.ogc.se_inimage";
+			public function buildAMSLayer():void {
+
+				var amsParams:AMSParameters = new AMSParameters(overlayLayerName, "value");
+				setGenericParameters(amsParams);
+
 				amsParams.intervals = createIntervals();
+				amsParams.transparent = false;
 				amsParams.intervalsColors = createIntervalsColors();
-				amsParams.filter = "NOT (lot_id = 100)";
 				amsParams.simplifyMethod = SimplifyMethod.GRID;
 				amsParams.simplifySize = 20000;
 				amsParams.interpolationStrategy = InterpolationStrategy.INVERSE_DISTANCE_WEIGHTING;
-				
-				var layer:WMSC = new WMSC(name, "http://localhost:8080/geoserver/" + "wms", layerName, false, true, amsParams.srs);
-				layer.params = amsParams;
-				layer.maxExtent = new Bounds(bounds.left, bounds.bottom, bounds.right, bounds.top);
-				layer.generateResolutions(maxZoomLevel, 4.001953125);
+
+				amsLayer = buildLayer(amsParams);
+			}
+
+			private function buildLayer(wmsParams:WMSParams):WMSC {
+				var layer:WMSC = new WMSC(name, "http://localhost:8080/geoserver/" + "wms", wmsParams.layers, false, true, wmsParams.srs);
+				layer.params = wmsParams;
+				layer.maxExtent = map.maxExtent;
+				layer.generateResolutions(maxZoomLevel, 32.61198437499843);
 				return layer;
+			
+			}
+			
+			private function setGenericParameters(params:WMSParams):void {
+				params.srs = "EPSG:900913";
+				params.format = "image/png";
+				params.tiled = true;
+				params.transparent = false;
+				params.exceptions = "application/vnd.ogc.se_inimage";
+			}
+			
+			private function onMapTypeComboBoxChange():void {
+				AMSParameters(amsLayer.params).interpolationStrategy = mapTypeComboBox.selectedItem.data;
+				amsLayer.redraw(true);
+			}
+			
+			private function onServiceTypeComboBoxChange():void {
+				if(serviceTypeComboBox.selectedItem.data =="WMS"){
+					wmsLayer.visible = true;
+					amsLayer.visible = false;
+					wmsLayer.redraw(true);
+				} else {
+					wmsLayer.visible = false;
+					amsLayer.visible = true;
+					amsLayer.redraw(true);
+				}
 			}
 			
 			private function createIntervals():Array {
@@ -111,11 +148,11 @@
 			}
 			
 			private function createIntervalsColors():Array {
-			    var colors:Array = new Array([0x20, 0x20, 0x20, 0x30,
-					    					0xFF, 0x00, 0x00, 0xFF,
-					    					0xFF, 0xFF, 0x00, 0xFF,
-					    					0x00, 0xFF, 0x00, 0xFF,
-					    					0x00, 0x00, 0xFF, 0xFF]);
+			    var colors:Array = new Array([0x20, 0x20, 0x20, 0x0,
+					    					0xFF, 0x00, 0x00, 0x30,
+					    					0xFF, 0xFF, 0x00, 0x30,
+					    					0x00, 0xFF, 0x00, 0x30,
+					    					0x00, 0x00, 0xFF, 0x30]);
 			    return colors; 
 			}
 		]]>

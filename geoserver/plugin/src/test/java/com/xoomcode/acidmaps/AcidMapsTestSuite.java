@@ -4,7 +4,6 @@
 package com.xoomcode.acidmaps;
 
 import junit.framework.Test;
-import junit.framework.TestSuite;
 
 /**
  * @date 09/11/2010
