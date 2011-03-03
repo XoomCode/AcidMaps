@@ -13,10 +13,11 @@ namespace acid_maps {
  * @brief List of available simplification methods
  */
 enum SimplifyMethod {
-  COPY = 0,             /// Copy the first values
-  GRID = 1,             /// Uniform distributed grid
-  RANDOM = 2,           /// Random samples
-  EXTREMES = 3          /// Highest and lowest values
+  NONE = 0,            /// Returns the complete dataset
+  COPY = 1,             /// Copy the first values
+  GRID = 2,             /// Uniform distributed grid
+  SAMPLING = 3,         /// Random samples
+  EXTREMES = 4          /// Highest and lowest values
 };
 
 };  // namespace acid_maps

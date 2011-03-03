@@ -2,10 +2,10 @@
 #include "../../source/constants/constants.h"
 #include "../../source/core/point.h"
 #include "../../source/simplify/simplifier.h"
-#include "../../source/simplify/random_simplifier.h"
+#include "../../source/simplify/sampling_simplifier.h"
 
-class RandomSimplifierTest : public CppUnit::TestFixture {
-  CPPUNIT_TEST_SUITE(RandomSimplifierTest);
+class SamplingSimplifierTest : public CppUnit::TestFixture {
+  CPPUNIT_TEST_SUITE(SamplingSimplifierTest);
   CPPUNIT_TEST( singlePointDataset );
   CPPUNIT_TEST( multiPointDataset );
   CPPUNIT_TEST( emptyDataset );
@@ -14,7 +14,7 @@ class RandomSimplifierTest : public CppUnit::TestFixture {
 public:
   void setUp() {
     dataset = create_dataset();
-    simplifier = new acid_maps::RandomSimplifier();
+    simplifier = new acid_maps::SamplingSimplifier();
   }
   
   void tearDown() {
@@ -96,4 +96,4 @@ private:
   
 };
 
-CPPUNIT_TEST_SUITE_REGISTRATION( RandomSimplifierTest );
+CPPUNIT_TEST_SUITE_REGISTRATION( SamplingSimplifierTest );
