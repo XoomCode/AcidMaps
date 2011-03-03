@@ -9,6 +9,13 @@ import com.xoomcode.acidmaps.core.Configuration;
 public class JCAdapter {
 	
 	/**
+	 * 
+	 */
+	public JCAdapter() {
+		// TODO Auto-generated constructor stub
+	}
+	
+	/**
 	 * Interpolate c.
 	 *
 	 * @param configuration the configuration

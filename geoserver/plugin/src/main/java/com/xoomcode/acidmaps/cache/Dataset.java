@@ -5,6 +5,8 @@ package com.xoomcode.acidmaps.cache;
 
 import java.util.Date;
 
+import com.xoomcode.acidmaps.core.Point;
+
 /**
  * @date 11/11/2010
  * @author cfarina
@@ -12,7 +14,7 @@ import java.util.Date;
  */
 public class Dataset {
 
-	private float[] dataset;
+	private Point[] dataset;
 	
 	private Date date = new Date();
 
@@ -20,7 +22,7 @@ public class Dataset {
 	 * @param timer
 	 * @param dataset
 	 */
-	public Dataset(float[] dataset) {
+	public Dataset(Point[] dataset) {
 		this.dataset = dataset;
 	}
 	
@@ -41,14 +43,14 @@ public class Dataset {
 	/**
 	 * @return the dataset
 	 */
-	public float[] getDataset() {
+	public Point[] getDataset() {
 		return dataset;
 	}
 
 	/**
 	 * @param dataset the dataset to set
 	 */
-	public void setDataset(float[] dataset) {
+	public void setDataset(Point[] dataset) {
 		this.dataset = dataset;
 	}
 

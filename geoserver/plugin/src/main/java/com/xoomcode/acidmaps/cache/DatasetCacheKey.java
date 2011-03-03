@@ -13,14 +13,34 @@ public class DatasetCacheKey {
 
 	private String layer;
 	
+	private String filter;
+	
+	private int filterHash;
+	
 	/**
 	 * @param layer
 	 */
-	public DatasetCacheKey(String layer) {
+	public DatasetCacheKey(String layer, String filter) {
 		super();
 		this.layer = layer;
+		this.filter = filter;
+		filterHash = filter.hashCode();
 	}
 
+	/**
+	 * @return the filter
+	 */
+	public String getFilter() {
+		return filter;
+	}
+	
+	/**
+	 * @param filter the filter to set
+	 */
+	public void setFilter(String filter) {
+		this.filter = filter;
+	}
+	
 	/**
 	 * @return the layer
 	 */
@@ -42,6 +62,7 @@ public class DatasetCacheKey {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + filterHash;
 		result = prime * result + ((layer == null) ? 0 : layer.hashCode());
 		return result;
 	}
@@ -58,6 +79,8 @@ public class DatasetCacheKey {
 		if (getClass() != obj.getClass())
 			return false;
 		DatasetCacheKey other = (DatasetCacheKey) obj;
+		if (filterHash != other.filterHash)
+			return false;
 		if (layer == null) {
 			if (other.layer != null)
 				return false;

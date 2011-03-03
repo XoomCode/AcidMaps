@@ -11,6 +11,8 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import com.xoomcode.acidmaps.core.Point;
+
 /**
  * @date 11/11/2010
  * @author cfarina
@@ -37,7 +39,7 @@ public class DatasetCache extends TimerTask {
 	/**
 	 * @param datasetCacheKey
 	 */
-	public float[] getDataset(DatasetCacheKey datasetCacheKey) {
+	public Point[] getDataset(DatasetCacheKey datasetCacheKey) {
 		if(cache.get(datasetCacheKey) != null){
 			//cache.get(datasetCacheKey).setDate(new Date());
 			return cache.get(datasetCacheKey).getDataset();
@@ -49,7 +51,7 @@ public class DatasetCache extends TimerTask {
 	 * @param datasetCacheKey
 	 * @param dataset
 	 */
-	public void put(DatasetCacheKey datasetCacheKey, float[] dataset) {
+	public void put(DatasetCacheKey datasetCacheKey, Point[] dataset) {
 		Dataset cachedDataset = new Dataset(dataset);
 		cache.put(datasetCacheKey, cachedDataset);
 	}

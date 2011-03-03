@@ -15,11 +15,12 @@ public class AcidMapsTestSuite {
 
 
 	public static Test suite() {
-		TestSuite suite = new TestSuite(AcidMapsTestSuite.class.getName());
+		//TestSuite suite = new TestSuite(AcidMapsTestSuite.class.getName());
 		//$JUnit-BEGIN$
-		suite.addTestSuite(JCAdapterTest.class);
+		//suite.addTestSuite(JCAdapterTest.class);
 		//$JUnit-END$
-		return suite;
+		//return suite;
+		return null;
 	}
 
 }
