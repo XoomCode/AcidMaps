@@ -118,4 +118,4 @@ private:
   }
 };
 
-CPPUNIT_TEST_SUITE_REGISTRATION( InterpolationsTest );
+//CPPUNIT_TEST_SUITE_REGISTRATION( InterpolationsTest );

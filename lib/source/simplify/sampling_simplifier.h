@@ -1,5 +1,5 @@
-#ifndef LIB_SOURCE_SIMPLIFY_RANDOM_SIMPLIFIER_H_
-#define LIB_SOURCE_SIMPLIFY_RANDOM_SIMPLIFIER_H_
+#ifndef LIB_SOURCE_SIMPLIFY_SAMPLING_SIMPLIFIER_H_
+#define LIB_SOURCE_SIMPLIFY_SAMPLING_SIMPLIFIER_H_
 /**
  * @file random_simplifier.h
  * @brief Random simplifier implementation
@@ -17,7 +17,7 @@ namespace acid_maps {
 /**
  * @brief 
  */
-class RandomSimplifier : public Simplifier {
+class SamplingSimplifier : public Simplifier {
   /**
    * @brief 
    */
@@ -26,5 +26,5 @@ class RandomSimplifier : public Simplifier {
 
 };  // namespace acid_maps
 
-#endif  // LIB_SOURCE_SIMPLIFY_RANDOM_SIMPLIFIER_H_
+#endif  // LIB_SOURCE_SIMPLIFY_SAMPLING_SIMPLIFIER_H_
 

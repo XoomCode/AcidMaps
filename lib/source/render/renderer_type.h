@@ -16,6 +16,7 @@ namespace acid_maps {
 enum RendererType {
   DENSE = 0,             /// Intervals are indexed
   SPARSE = 1,            /// Finds the right interval with a b-tree
+  GRADIENT = 2           /// Smooth color rendering
 };
 
 };  // namespace acid_maps

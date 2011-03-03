@@ -9,6 +9,7 @@
 #include "./renderer_factory.h"
 #include "./renderer_type.h"
 #include "./sparse_renderer.h"
+#include "./gradient_renderer.h"
 
 namespace acid_maps {
 
@@ -16,6 +17,9 @@ Renderer* RendererFactory::get(int type) {
   switch (type) {
     case SPARSE:
       return new SparseRenderer();
+      
+    case GRADIENT:
+      return new GradientRenderer();
   }
 }
 
