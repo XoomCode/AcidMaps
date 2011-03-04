@@ -37,7 +37,7 @@ public:
     configuration->intervals_size = 5;
     configuration->intervals = create_intervals(configuration->intervals_size);
     configuration->intervals_colors = create_intervals_colors();
-    configuration->intervals_type = ams::SPARSE;
+    configuration->intervals_type = ams::GRADIENT;
     configuration->format = ams::PNG;
   }
   
@@ -118,4 +118,4 @@ private:
   }
 };
 
-//CPPUNIT_TEST_SUITE_REGISTRATION( InterpolationsTest );
+CPPUNIT_TEST_SUITE_REGISTRATION( InterpolationsTest );

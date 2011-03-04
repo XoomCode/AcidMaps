@@ -44,7 +44,7 @@ public class JCAdapterTest extends TestCase {
 	    configuration.height = 512;
 	    configuration.intervals = createIntervals();
 	    configuration.intervalsColors = createIntervalsColors();
-	    configuration.intervalsType = RendererType.SPARSE;
+	    configuration.rendererType = RendererType.SPARSE;
 		super.setUp();
 	}
 	

@@ -209,7 +209,7 @@ public class AcidMapService {
 		int simplifySize = new Integer(rawKvp.get(AcidMapParameters.SIMPLIFY_SIZE));
 		float[] intervals = buildIntervals(rawKvp.get(AcidMapParameters.INTERVALS));
 		byte[] intervalsColors = buildIntervalsColors(rawKvp.get(AcidMapParameters.INTERVALS_COLORS));
-		int intervalsType = new Integer(rawKvp.get(AcidMapParameters.INTERVALS_TYPE));
+		int rendererType = new Integer(rawKvp.get(AcidMapParameters.RENDERER_TYPE));
 		int interpolationStrategy = new Integer(rawKvp.get(AcidMapParameters.INTERPOLATION_STRATEGY));
 		int interpolationParameter = new Integer(rawKvp.get(AcidMapParameters.INTERPOLATION_PARAMETER));
 		
@@ -229,7 +229,7 @@ public class AcidMapService {
 		
 		configuration.intervals = intervals;
 		configuration.intervalsColors = intervalsColors;
-		configuration.intervalsType = intervalsType;
+		configuration.rendererType = rendererType;
 		configuration.interpolationStrategy = interpolationStrategy;
 		configuration.interpolationParameter = interpolationParameter;
 		return configuration;

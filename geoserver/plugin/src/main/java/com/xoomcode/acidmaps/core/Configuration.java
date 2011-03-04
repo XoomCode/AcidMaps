@@ -38,7 +38,7 @@ public class Configuration {
 	
 	public int intervalsSize;
 	
-	public int intervalsType;
+	public int rendererType;
 	
 	public int format;
 

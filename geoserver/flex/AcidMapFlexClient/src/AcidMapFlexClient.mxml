@@ -43,6 +43,7 @@
 		<![CDATA[
 			import com.xoomcode.acidmaps.AMSParameters;
 			import com.xoomcode.acidmaps.interpolate.InterpolationStrategy;
+			import com.xoomcode.acidmaps.renderer.RendererType;
 			import com.xoomcode.acidmaps.simplify.SimplifyMethod;
 			import com.xoomcode.constants.Constants;
 			
@@ -96,6 +97,7 @@
 				amsParams.intervals = createIntervals();
 				amsParams.transparent = false;
 				amsParams.intervalsColors = createIntervalsColors();
+				amsParams.rendererType = RendererType.GRADIENT;
 				amsParams.simplifyMethod = SimplifyMethod.GRID;
 				amsParams.simplifySize = 20000;
 				amsParams.interpolationStrategy = InterpolationStrategy.INVERSE_DISTANCE_WEIGHTING;
