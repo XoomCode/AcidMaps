@@ -25,7 +25,7 @@
 namespace acid_maps {
 
 void generate(Configuration* configuration, unsigned char** output_buffer, unsigned int* output_size) {
-
+	
   Point* simplified_dataset = new Point[configuration->simplify_size];
   Simplifier* simplifier = SimplifierFactory::get(configuration->simplify_method);
   simplifier->simplify(configuration->dataset, configuration->dataset_size,
@@ -48,7 +48,7 @@ void generate(Configuration* configuration, unsigned char** output_buffer, unsig
   delete[] transformed_dataset;
   
   unsigned char* rgba_buffer = new unsigned char[buffer_size * RGBA];
-  Renderer* renderer = RendererFactory::get(configuration->intervals_type);
+  Renderer* renderer = RendererFactory::get(configuration->renderer_type);
   renderer->render(interpolated_bitmap, configuration->tile_size, configuration->intervals, 
     configuration->intervals_size, configuration->intervals_colors, rgba_buffer);
   delete renderer;
