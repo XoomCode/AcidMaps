@@ -57,7 +57,7 @@ struct Configuration {
   int intervals_size;
   
   /// Determines how intervals are going to be accessed in the rendering step
-  int intervals_type;
+  int renderer_type;
   
   /// Image format
   int format;

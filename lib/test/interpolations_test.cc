@@ -38,6 +38,7 @@ public:
     configuration->intervals = create_intervals(configuration->intervals_size);
     configuration->intervals_colors = create_intervals_colors();
     configuration->intervals_type = ams::GRADIENT;
+
     configuration->format = ams::PNG;
   }
   
