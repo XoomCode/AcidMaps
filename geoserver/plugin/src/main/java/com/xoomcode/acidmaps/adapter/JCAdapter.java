@@ -5,6 +5,8 @@ import com.xoomcode.acidmaps.core.Configuration;
 // TODO: Auto-generated Javadoc
 /**
  * The Class JCAdapter.
+ * @date 09/11/2010
+ * @author cfarina
  */
 public class JCAdapter {
 	

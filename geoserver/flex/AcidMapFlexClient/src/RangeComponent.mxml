@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%" creationComplete="init()"
+		 horizontalAlign="left" borderStyle="solid"
+		 paddingBottom="5" paddingLeft="5" paddingRight="5" paddingTop="5">
+	<mx:VBox id="rangeItemContainer" height="170" width="100%"/>
+	<mx:HBox width="100%">
+		<mx:Spacer width="100%"/>
+		<mx:LinkButton label="+" width="25" click="addDefaultItem()" paddingBottom="0" paddingLeft="0" paddingRight="0" paddingTop="0"/>
+	</mx:HBox>
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.utils.ColorUtil;
+			
+			import org.openscales.core.handler.feature.SelectFeaturesHandler;
+			
+			public var selectedAlpha:Number = 0x80;
+			
+			public function reset():void {
+				rangeItemContainer.removeAllChildren();
+			}
+			
+			public function addItem(value:Number, color:uint):void {
+				var newItem:RangeItem = new RangeItem();
+				newItem.initialize();
+				newItem.value = value;
+				newItem.selectedColor = color;
+				rangeItemContainer.addChild(newItem);
+			}
+			
+			
+			private function addDefaultItem():void {
+				var newItem:RangeItem = new RangeItem();
+				newItem.initialize();
+				if(rangeItemContainer.getChildren().length > 0){
+					var beforeItem:RangeItem = RangeItem(rangeItemContainer.getChildAt(rangeItemContainer.getChildren().length - 1));
+					newItem.value = beforeItem.numericStepper.value + 10;
+				}
+				rangeItemContainer.addChild(newItem);
+			}
+			
+			public function getIntervals():Array {
+				var intervals:Array = new Array();
+				for each(var item:RangeItem in rangeItemContainer.getChildren()){
+					intervals.push(item.value);
+				}
+				return intervals;
+			}
+			
+			public function getColors():Array {
+				var colors:Array = new Array();
+				for each(var item:RangeItem in rangeItemContainer.getChildren()){
+					var R:uint = item.selectedColor >> 16 & 0xFF;
+					var G:uint = item.selectedColor >> 8 & 0xFF;
+					var B:uint = item.selectedColor & 0xFF;
+					var A:uint = selectedAlpha;
+					colors.push(R);
+					colors.push(G);
+					colors.push(B);
+					colors.push(A);
+				}
+				return colors;
+				
+			}
+		]]>
+	</mx:Script>
+</mx:VBox>

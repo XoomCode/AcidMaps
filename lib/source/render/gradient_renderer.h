@@ -20,6 +20,7 @@ class GradientRenderer : public Renderer {
   int intervals_size, unsigned char intervals_colors[], unsigned char* output_buffer);
   
   int interval(float value, float intervals[], int intervals_size);
+    static const int GRADIENT_INTERVAL_SIZE = 255;
 };
 
 };  // namespace acid_maps

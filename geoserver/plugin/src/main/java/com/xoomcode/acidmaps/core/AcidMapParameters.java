@@ -20,7 +20,7 @@ public class AcidMapParameters {
 	
 	public static final String INTERVALS_COLORS = "INTERVALS_COLORS[]";
 	
-	public static final String INTERVALS_TYPE = "INTERVALS_TYPE";
+	public static final String RENDERER_TYPE = "RENDERER_TYPE";
 	
 	public static final String INTERPOLATION_STRATEGY = "INTERPOLATION_STRATEGY";
 	

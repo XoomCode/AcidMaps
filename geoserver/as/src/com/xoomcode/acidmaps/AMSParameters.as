@@ -21,7 +21,7 @@ package com.xoomcode.acidmaps
 		
 		private var _intervalsColors:Array = new Array();
 		
-		private var _intervalsType:int = RendererType.SPARSE;
+		private var _rendererType:int = RendererType.SPARSE;
 		
 		private var _interpolationStrategy:int = InterpolationStrategy.LINEAR;
 		
@@ -81,12 +81,12 @@ package com.xoomcode.acidmaps
 			return _intervalsColors;
 		}
 		
-		public function set intervalsType(value:int):void {
-			_intervalsType = value;
+		public function set rendererType(value:int):void {
+			_rendererType = value;
 		}
 		
-		public function get intervalsType():int {
-			return _intervalsType;
+		public function get rendererType():int {
+			return _rendererType;
 		}
 		
 		public function set interpolationStrategy(value:int):void {
@@ -128,7 +128,7 @@ package com.xoomcode.acidmaps
 				str += "&INTERVALS_COLORS[]=" + buildIntervalsColorsString();
 			}
 			
-			str += "&INTERVALS_TYPE=" + _intervalsType;
+			str += "&RENDERER_TYPE=" + _rendererType;
 			
 			str += "&INTERPOLATION_STRATEGY=" + _interpolationStrategy;
 			

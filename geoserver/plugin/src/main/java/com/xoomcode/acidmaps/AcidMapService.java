@@ -6,6 +6,7 @@ package com.xoomcode.acidmaps;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -47,6 +48,8 @@ import com.xoomcode.acidmaps.core.Configuration;
 
 // TODO: Auto-generated Javadoc
 /**
+ * @date 09/11/2010
+ * @author cfarina
  * The Class AcidMapService.
  */
 public class AcidMapService {
@@ -91,7 +94,8 @@ public class AcidMapService {
 				LOGGER.log(Level.WARNING, "Processing request " + request.getRawKvp().toString());
 				
 				MapLayerInfo layer = request.getLayers().get(0);
-				DatasetCacheKey datasetCacheKey = new DatasetCacheKey(layer.getName(), request.getFilter().toString());
+				
+				DatasetCacheKey datasetCacheKey = new DatasetCacheKey(layer.getName(), getStringFilter(request));
 				if(datasetCache.isCached(datasetCacheKey)){
 					return run(request, mapContext);
 				} else {
@@ -126,7 +130,8 @@ public class AcidMapService {
 		String valueColumn = rawKvp.get(AcidMapParameters.VALUE_COLUMN);
 
 		MapLayerInfo layer = request.getLayers().get(0);
-		DatasetCacheKey datasetCacheKey = new DatasetCacheKey(layer.getName(), request.getFilter().toString());
+		
+		DatasetCacheKey datasetCacheKey = new DatasetCacheKey(layer.getName(), getStringFilter(request));
 		
 		Filter layerFilter = buildLayersFilters(request.getFilter(), request.getLayers())[0];
 		
@@ -151,7 +156,7 @@ public class AcidMapService {
 				
 				Property value = f.getProperty(valueColumn);
 				if(value != null){
-					acidMapPoint.value = new Float((Double)value.getValue());
+					acidMapPoint.value = ((Number)value.getValue()).floatValue();
 				}
 				dataset [i] = acidMapPoint;
 				i++;
@@ -164,6 +169,14 @@ public class AcidMapService {
 		return run(request, mapContext);
 	}
 
+	private String getStringFilter(final GetMapRequest request) {
+		String filter = "";
+		if(request.getFilter() != null){
+			filter = request.getFilter().toString();
+		}
+		return filter;
+	}
+
 	public WebMap run(final GetMapRequest request, WMSMapContext mapContext)
 			throws ServiceException, IOException {
 
@@ -171,7 +184,7 @@ public class AcidMapService {
 		
 		MapLayerInfo layer = request.getLayers().get(0);
 		
-		DatasetCacheKey datasetCacheKey = new DatasetCacheKey(layer.getName(), request.getFilter().toString());
+		DatasetCacheKey datasetCacheKey = new DatasetCacheKey(layer.getName(), getStringFilter(request));
 		
 		configuration.dataset = datasetCache.getDataset(datasetCacheKey);
 		configuration.datasetSize = configuration.dataset.length;
@@ -180,8 +193,6 @@ public class AcidMapService {
 		byte[] outputBuffer = jCAdapter.interpolate(configuration);
 		
 		BufferedImage image=ImageIO.read(new ByteArrayInputStream(outputBuffer));
-		//File input = new File("/home/cfarina/wk/geoserver/acidmaps/src/main/java/com/xoomcode/acidmaps/landscape.png");
-		//BufferedImage image = ImageIO.read(input);
 		
         final String outputFormat = request.getFormat();
         RenderedImageMap result = new RenderedImageMap(mapContext, image, outputFormat);
@@ -200,7 +211,7 @@ public class AcidMapService {
 		int simplifySize = new Integer(rawKvp.get(AcidMapParameters.SIMPLIFY_SIZE));
 		float[] intervals = buildIntervals(rawKvp.get(AcidMapParameters.INTERVALS));
 		byte[] intervalsColors = buildIntervalsColors(rawKvp.get(AcidMapParameters.INTERVALS_COLORS));
-		int intervalsType = new Integer(rawKvp.get(AcidMapParameters.INTERVALS_TYPE));
+		int rendererType = new Integer(rawKvp.get(AcidMapParameters.RENDERER_TYPE));
 		int interpolationStrategy = new Integer(rawKvp.get(AcidMapParameters.INTERPOLATION_STRATEGY));
 		int interpolationParameter = new Integer(rawKvp.get(AcidMapParameters.INTERPOLATION_PARAMETER));
 		
@@ -220,7 +231,7 @@ public class AcidMapService {
 		
 		configuration.intervals = intervals;
 		configuration.intervalsColors = intervalsColors;
-		configuration.intervalsType = intervalsType;
+		configuration.rendererType = rendererType;
 		configuration.interpolationStrategy = interpolationStrategy;
 		configuration.interpolationParameter = interpolationParameter;
 		return configuration;

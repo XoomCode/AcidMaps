@@ -2,6 +2,8 @@ package com.xoomcode.acidmaps.core;
 
 // TODO: Auto-generated Javadoc
 /**
+ * @date 09/11/2010
+ * @author cfarina
  * The Class Configuration.
  */
 public class Configuration {
@@ -38,7 +40,7 @@ public class Configuration {
 	
 	public int intervalsSize;
 	
-	public int intervalsType;
+	public int rendererType;
 	
 	public int format;
 
