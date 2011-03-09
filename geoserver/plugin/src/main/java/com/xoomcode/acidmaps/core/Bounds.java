@@ -2,6 +2,9 @@ package com.xoomcode.acidmaps.core;
 
 // TODO: Auto-generated Javadoc
 /**
+ * @date 09/11/2010
+ * @author cfarina
+ * 
  * Bounding Box representation Instances of this class represent bounding
  * boxes. Data stored as left, bottom, right, top floats. All values are
  * initialized to 0, however, you should make sure you set them before

@@ -2,6 +2,8 @@ package com.xoomcode.acidmaps.core;
 
 // TODO: Auto-generated Javadoc
 /**
+ * @date 09/11/2010
+ * @author cfarina
  * The Class Configuration.
  */
 public class Configuration {

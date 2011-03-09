@@ -48,6 +48,8 @@ import com.xoomcode.acidmaps.core.Configuration;
 
 // TODO: Auto-generated Javadoc
 /**
+ * @date 09/11/2010
+ * @author cfarina
  * The Class AcidMapService.
  */
 public class AcidMapService {

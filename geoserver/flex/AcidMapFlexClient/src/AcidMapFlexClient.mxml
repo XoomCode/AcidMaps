@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" creationComplete="initMap()" xmlns:openscales="http://openscales.org">
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" creationComplete="initMap()" xmlns:openscales="http://openscales.org" xmlns:local="*">
 	<mx:Canvas width="100%" height="100%">
 		<openscales:Map id="fxmap" height="100%" width="100%"
 						horizontalScrollPolicy="off" 
@@ -24,12 +24,61 @@
 		<mx:ComboBox id="mapTypeComboBox" change="onMapTypeComboBoxChange()" x="{width - 120}" y="{5}" 
 					 visible="{serviceTypeComboBox.selectedItem.data == 'AMS'}"> 
 			<mx:ArrayCollection>
-				<mx:Object label="Isoline" data="{InterpolationStrategy.INVERSE_DISTANCE_WEIGHTING}"/>
-				<mx:Object label="Heatmap" data="{InterpolationStrategy.LINEAR}"/>
-				<mx:Object label="Voronoi" data="{InterpolationStrategy.NEAREST_NEIGHBOR}"/>
-				<mx:Object label="Point" data="{InterpolationStrategy.DUMMY}"/>
+				<mx:Object label="Isoline" data="isoline"/>
+				<mx:Object label="Heatmap" data="heatmap"/>
+				<mx:Object label="Voronoi" data="voronoi"/>
+				<mx:Object label="Point" data="point"/>
 			</mx:ArrayCollection>
 		</mx:ComboBox>
+		<mx:Form x="{width - 400}" y="50" 
+				 width="400" visible="{serviceTypeComboBox.selectedItem.data == 'AMS'}" 
+				 backgroundAlpha="0.75" backgroundColor="0xFFFFFF"
+				 borderStyle="solid" cornerRadius="5">
+			<mx:FormItem label="CQL Filter" width="100%">
+				<mx:TextArea id="cqlFilterText" width="100%"/>
+			</mx:FormItem>
+			<mx:FormItem label="Simplify Method" width="100%">
+				<mx:ComboBox id="simplifyMethodComboBox"> 
+					<mx:ArrayCollection>
+						<mx:Object label="Copy" data="{SimplifyMethod.COPY}"/>
+						<mx:Object label="Grid" data="{SimplifyMethod.GRID}"/>
+						<mx:Object label="Random" data="{SimplifyMethod.RANDOM}"/>
+						<mx:Object label="Extremes" data="{SimplifyMethod.EXTREMES}"/>
+					</mx:ArrayCollection>
+				</mx:ComboBox>
+			</mx:FormItem>
+			<mx:FormItem label="Simplify Size" width="100%">
+				<mx:NumericStepper id="simplifySize" minimum="0" maximum="10000" value="400"/>
+			</mx:FormItem>
+			<mx:FormItem label="Renderer Type" width="100%">
+				<mx:ComboBox id="rendererTypeComboBox"> 
+					<mx:ArrayCollection>
+						<!--mx:Object label="Dense" data="{RendererType.DENSE}"/-->
+						<mx:Object label="Gradient" data="{RendererType.GRADIENT}"/>
+						<mx:Object label="Sparse" data="{RendererType.SPARSE}"/>
+					</mx:ArrayCollection>
+				</mx:ComboBox>
+			</mx:FormItem>
+			<mx:FormItem label="Interpolaion Strategy" width="100%">
+				<mx:ComboBox id="interpolationStrategyComboBox"> 
+					<mx:ArrayCollection>
+						<mx:Object label="Inverse Distance Weighting" data="{InterpolationStrategy.INVERSE_DISTANCE_WEIGHTING}"/>
+						<mx:Object label="Linear" data="{InterpolationStrategy.LINEAR}"/>
+						<mx:Object label="Nearest Neighbor" data="{InterpolationStrategy.NEAREST_NEIGHBOR}"/>
+						<mx:Object label="Dummy" data="{InterpolationStrategy.DUMMY}"/>
+					</mx:ArrayCollection>
+				</mx:ComboBox>
+			</mx:FormItem>
+			<mx:FormItem label="Interpolation Parameter" width="100%">
+				<mx:NumericStepper id="interpolationParameterText" minimum="0" maximum="500" value="100"/>
+			</mx:FormItem>
+			<mx:FormItem label="Ranges" width="100%">
+				<local:RangeComponent id="rangeComponent" width="100%"/>
+			</mx:FormItem>
+			<mx:HBox width="100%" horizontalAlign="right">
+				<mx:Button id="updateButton" label="Update" click="updateAMSLayer()"/>
+			</mx:HBox>
+		</mx:Form>
 		<mx:VBox>
 			<openscales:ZoomComponent map="{map}"/>
 			<mx:Spacer width="100%" />
@@ -46,6 +95,8 @@
 			import com.xoomcode.acidmaps.renderer.RendererType;
 			import com.xoomcode.acidmaps.simplify.SimplifyMethod;
 			import com.xoomcode.constants.Constants;
+			
+			import mx.formatters.SwitchSymbolFormatter;
 			
 			import org.openscales.core.Map;
 			import org.openscales.core.Trace;
@@ -65,7 +116,7 @@
 			
 			private var intervalsSize:int = 5;
 			
-			private var amsLayer:WMSC; 
+			[Bindable] private var amsLayer:WMSC; 
 			
 			private var wmsLayer:WMSC; 
 			
@@ -90,19 +141,35 @@
 			}
 			
 			public function buildAMSLayer():void {
-
 				var amsParams:AMSParameters = new AMSParameters(overlayLayerName, "value");
 				setGenericParameters(amsParams);
-
-				amsParams.intervals = createIntervals();
-				amsParams.transparent = false;
-				amsParams.intervalsColors = createIntervalsColors();
-				amsParams.rendererType = RendererType.GRADIENT;
-				amsParams.simplifyMethod = SimplifyMethod.GRID;
-				amsParams.simplifySize = 20000;
-				amsParams.interpolationStrategy = InterpolationStrategy.INVERSE_DISTANCE_WEIGHTING;
+				addRangeColors();
+				applyAMSConfiguration(amsParams);
 
 				amsLayer = buildLayer(amsParams);
+			}
+			
+			private function updateAMSLayer():void {
+				var amsParams:AMSParameters = new AMSParameters(overlayLayerName, "value");
+				setGenericParameters(amsParams);
+				applyAMSConfiguration(amsParams);
+				amsLayer.params = amsParams;
+				amsLayer.redraw(true);
+			}
+			
+			private function applyAMSConfiguration(amsParams:AMSParameters):void {
+				amsParams.intervals = rangeComponent.getIntervals();
+				amsParams.transparent = false;
+				amsParams.filter = null;
+				if(cqlFilterText.text != null && cqlFilterText.text != ""){
+					amsParams.filter = cqlFilterText.text;
+				}
+				amsParams.intervalsColors = rangeComponent.getColors();
+				amsParams.simplifySize = simplifySize.value;
+				amsParams.simplifyMethod = simplifyMethodComboBox.selectedItem.data;
+				amsParams.rendererType = rendererTypeComboBox.selectedItem.data;
+				amsParams.interpolationStrategy = interpolationStrategyComboBox.selectedItem.data;
+				amsParams.interpolationParameter = interpolationParameterText.value;
 			}
 
 			private function buildLayer(wmsParams:WMSParams):WMSC {
@@ -122,11 +189,6 @@
 				params.exceptions = "application/vnd.ogc.se_inimage";
 			}
 			
-			private function onMapTypeComboBoxChange():void {
-				AMSParameters(amsLayer.params).interpolationStrategy = mapTypeComboBox.selectedItem.data;
-				amsLayer.redraw(true);
-			}
-			
 			private function onServiceTypeComboBoxChange():void {
 				if(serviceTypeComboBox.selectedItem.data =="WMS"){
 					wmsLayer.visible = true;
@@ -139,23 +201,96 @@
 				}
 			}
 			
-			private function createIntervals():Array {
-				var intervals:Array = new Array(intervalsSize);
-				intervals[0] = 10;
-				intervals[1] = 22;
-				intervals[2] = 45;
-				intervals[3] = 70;
-				intervals[4] = 100;
-				return intervals;
+			private function onMapTypeComboBoxChange():void {
+				switch (mapTypeComboBox.selectedItem.data)
+				{
+					case "isoline":
+						showIsoline();
+						break;
+					case "heatmap":
+						showHeatmap();
+						break;
+					case "voronoi":
+						showVoronoi();
+						break;
+					case "point":
+						showPoint();
+						break;
+				}
 			}
 			
-			private function createIntervalsColors():Array {
-			    var colors:Array = new Array([0x20, 0x20, 0x20, 0x0,
-					    					0xFF, 0x00, 0x00, 0x30,
-					    					0xFF, 0xFF, 0x00, 0x30,
-					    					0x00, 0xFF, 0x00, 0x30,
-					    					0x00, 0x00, 0xFF, 0x30]);
-			    return colors; 
+			private function updateAfterTimer():void {
+				var timer:Timer = new Timer(250, 1);
+				timer.addEventListener(TimerEvent.TIMER_COMPLETE, timerHandler);
+				timer.start();
+			}
+			
+			public function timerHandler(event:TimerEvent):void {
+				updateAMSLayer();
+			}
+			
+			private function getItemWithData(combo:ComboBox, data:Object):Object {
+				for each(var item:Object in combo.dataProvider){
+					if(item.data == data){
+						return item;
+					}
+				}
+				return null;
+			}
+			
+			private function showIsoline():void {
+				cqlFilterText.text = "";
+				simplifyMethodComboBox.selectedItem = getItemWithData(simplifyMethodComboBox, SimplifyMethod.GRID);
+				simplifySize.value = 2000
+				rendererTypeComboBox.selectedItem = getItemWithData(rendererTypeComboBox, RendererType.SPARSE);
+				interpolationStrategyComboBox.selectedItem = getItemWithData(interpolationStrategyComboBox, InterpolationStrategy.INVERSE_DISTANCE_WEIGHTING);
+				interpolationParameterText.value = 32;
+				addRangeColors();
+				updateAfterTimer();
+			}
+			
+			private function showHeatmap():void {
+				cqlFilterText.text = "";
+				simplifyMethodComboBox.selectedItem = getItemWithData(simplifyMethodComboBox, SimplifyMethod.GRID);
+				simplifySize.value = 2000
+				rendererTypeComboBox.selectedItem = getItemWithData(rendererTypeComboBox, RendererType.GRADIENT);
+				interpolationStrategyComboBox.selectedItem = getItemWithData(interpolationStrategyComboBox, InterpolationStrategy.LINEAR);
+				interpolationParameterText.value = 32;
+				addRangeColors();
+				updateAfterTimer();
+				
+			}
+			
+			private function showVoronoi():void {
+				cqlFilterText.text = "";
+				simplifyMethodComboBox.selectedItem = getItemWithData(simplifyMethodComboBox, SimplifyMethod.GRID);
+				simplifySize.value = 2000
+				rendererTypeComboBox.selectedItem = getItemWithData(rendererTypeComboBox, RendererType.SPARSE);
+				interpolationStrategyComboBox.selectedItem = getItemWithData(interpolationStrategyComboBox, InterpolationStrategy.NEAREST_NEIGHBOR);
+				interpolationParameterText.value = 32;
+				addRangeColors();
+				updateAfterTimer();
+				
+			}
+			
+			private function showPoint():void {
+				cqlFilterText.text = "";
+				simplifyMethodComboBox.selectedItem = getItemWithData(simplifyMethodComboBox, SimplifyMethod.GRID);
+				simplifySize.value = 2000
+				rendererTypeComboBox.selectedItem = getItemWithData(rendererTypeComboBox, RendererType.SPARSE);
+				interpolationStrategyComboBox.selectedItem = getItemWithData(interpolationStrategyComboBox, InterpolationStrategy.DUMMY);
+				interpolationParameterText.value = 32;
+				rangeComponent.reset();
+				updateAfterTimer();
+			}
+			
+			private function addRangeColors():void {
+				rangeComponent.reset();
+				rangeComponent.addItem(10, 0xFFFFFF);
+				rangeComponent.addItem(20, 0xFF0000);
+				rangeComponent.addItem(45, 0xFFFF00);
+				rangeComponent.addItem(70, 0x00FF00);
+				rangeComponent.addItem(100, 0x0000FF);
 			}
 		]]>
 	</mx:Script>
