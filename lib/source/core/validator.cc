@@ -9,6 +9,8 @@
 #include "./validator.h"
 #include "./configuration.h"
 
+#include <cstddef>
+
 namespace acid_maps {
 
 int Validator::validate(Configuration* cfg) {
