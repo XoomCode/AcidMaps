@@ -11,6 +11,7 @@
 #include "constants/constants.h"
 #include "core/configuration.h"
 #include "core/pixel.h"
+#include "core/validator.h"
 #include "simplify/simplifier.h"
 #include "simplify/simplifier_factory.h"
 #include "transform/transformer.h"
@@ -24,7 +25,10 @@
 
 namespace acid_maps {
 
-void generate(Configuration* configuration, unsigned char** output_buffer, unsigned int* output_size) {
+int generate(Configuration* configuration, unsigned char** output_buffer, unsigned int* output_size) {
+	Validator validator;
+	int error = validator.validate(configuration);
+	if(error) return error;
 	
   Point* simplified_dataset = new Point[configuration->simplify_size];
   Simplifier* simplifier = SimplifierFactory::get(configuration->simplify_method);
@@ -58,6 +62,8 @@ void generate(Configuration* configuration, unsigned char** output_buffer, unsig
   encoder->encode(configuration->tile_size, rgba_buffer, output_buffer, output_size);
   delete encoder;
   delete[] rgba_buffer;
+  
+  return 0;
 }
 
 };  // namespace acid_maps
