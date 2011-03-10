@@ -59,13 +59,13 @@ public class AcidMapService {
 	private static DatasetCache datasetCache = new DatasetCache();
 	
 	/** The filter fac. */
-	private FilterFactory filterFac;
+	private FilterFactory filterFactory;
 	
 	/**
 	 * Instantiates a new acid map service.
 	 */
 	public AcidMapService() {
-		this.filterFac = CommonFactoryFinder.getFilterFactory(GeoTools.getDefaultHints());
+		this.filterFactory = CommonFactoryFinder.getFilterFactory(GeoTools.getDefaultHints());
 	}
 	
 	/**
@@ -74,7 +74,7 @@ public class AcidMapService {
 	 * @param filterFactory the new filter factory
 	 */
 	public void setFilterFactory(final FilterFactory filterFactory) {
-        this.filterFac = filterFactory;
+        this.filterFactory = filterFactory;
     }
 
 	/**
@@ -309,7 +309,7 @@ public class AcidMapService {
                 if (layerDefinitionFilter == null) {
                     layerDefinitionFilter = Filter.INCLUDE;
                 }
-                combined = filterFac.and(layerDefinitionFilter, userRequestedFilter);
+                combined = filterFactory.and(layerDefinitionFilter, userRequestedFilter);
                 //combined = filterFac.and(combined, OrImpl.);
                 FeatureTypeConstraint[] featureTypeConstraints = layer.getLayerFeatureConstraints();
                 if (featureTypeConstraints != null) {
@@ -318,7 +318,7 @@ public class AcidMapService {
                         FeatureTypeConstraint featureTypeConstraint = featureTypeConstraints[j];
                         filters.add(featureTypeConstraint.getFilter());
                     }
-                    combined = filterFac.and(combined, filterFac.and(filters));
+                    combined = filterFactory.and(combined, filterFactory.and(filters));
                 }
                 combinedList[i] = combined;
             }

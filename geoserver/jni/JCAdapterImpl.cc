@@ -194,7 +194,7 @@ ams::Configuration* buildConfiguration(JNIEnv* env, jobject jconfiguration){
 	return configuration;
 }
 
-JNIEXPORT jbyteArray JNICALL Java_com_xoomcode_acidmaps_adapter_JCAdapter_interpolateC
+JNIEXPORT jobject JNICALL Java_com_xoomcode_acidmaps_adapter_JCAdapter_interpolateC
   (JNIEnv* env, jobject obj, jobject jconfiguration)
 {
 	ams::Configuration* configuration = buildConfiguration(env, jconfiguration);
