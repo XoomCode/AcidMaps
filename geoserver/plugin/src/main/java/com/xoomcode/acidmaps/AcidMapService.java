@@ -255,7 +255,8 @@ public class AcidMapService {
 		
 		for (int i = 0; i < intervalsColor.length; i++) {
 			String hexaNumber = split[i].toUpperCase().split("X")[1];
-			long colorValue = (long)Long.parseLong(hexaNumber, 16);
+			int colorValue = (int)Long.parseLong(hexaNumber, 16);
+			String hexString = Integer.toHexString(colorValue);
 			byte r = (byte) (colorValue >> 24 & 0xFF);
 			byte g = (byte) (colorValue >> 16 & 0xFF);
 			byte b = (byte) (colorValue >> 8 & 0xFF);

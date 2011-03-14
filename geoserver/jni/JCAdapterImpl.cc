@@ -59,6 +59,13 @@ int getIntField(JNIEnv* env, jclass configurationClass, jobject jconfiguration, 
 	return value;
 }
 
+char getByteField(JNIEnv* env, jclass configurationClass, jobject jconfiguration, const char* id) {
+	jfieldID fieldId = env->GetFieldID(configurationClass, id, "B");
+	char value = env->GetIntField(jconfiguration, fieldId);
+	//printf("%s: %d\n", id, value);
+	return value;
+}
+
 float getFloatField(JNIEnv* env, jclass configurationClass, jobject jconfiguration, const char* id) {
 	jfieldID fieldId = env->GetFieldID(configurationClass, id, "F");
 	float value = env->GetFloatField(jconfiguration, fieldId);
@@ -151,24 +158,20 @@ ams::Color* getColorArrayField(JNIEnv* env, jclass configurationClass, jobject j
 	jobjectArray value = (jobjectArray)env->GetObjectField(jconfiguration, fieldId);
 	jclass colorClass = env->FindClass("com/xoomcode/acidmaps/core/Color");
 	if(value){
-		ams::Point* pointArray = new ams::Point[size];
+		ams::Color* colorArray = new ams::Color[size];
 
-		ams::Point* point= new ams::Point();
+		ams::Color* color= new ams::Color();
 		for (int i = 0; i < size; ++i) {
-			jobject jpoint = (jobject)env->GetObjectArrayElement(value, i);
-			point->x = getFloatField(env, pointClass, jpoint, "x");
-			point->y = getFloatField(env, pointClass, jpoint, "y");
-			point->value = getFloatField(env, pointClass, jpoint, "value");
-			memcpy(pointArray + i, point, sizeof(ams::Point));
+			jobject jcolor = (jobject)env->GetObjectArrayElement(value, i);
+			color->r = getByteField(env, colorClass, jcolor, "r");
+			color->g = getByteField(env, colorClass, jcolor, "g");
+			color->b = getByteField(env, colorClass, jcolor, "b");
+			color->a = getByteField(env, colorClass, jcolor, "a");
+			printf("ACAAAAAAAAAAAA %d, %d, %d, %d \n", color->r, color->g, color->b, color->a);
+			memcpy(colorArray + i, color, sizeof(ams::Color));
 		}
-		delete point;
-//
-//		/*printf("%s: [ ", id);
-//		for (int i = 0; i < size; ++i) {
-//			printf("%c, ", charArray[i]);
-//		}
-//		printf(" ]\n");*/
-		return pointArray;
+		delete color;
+		return colorArray;
     } else {
 		return NULL;
 	}
