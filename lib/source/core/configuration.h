@@ -11,6 +11,7 @@
  * 
  */
 
+#include "./color.h"
 #include "./point.h"
 #include "./bounds.h"
 #include "./size.h"
@@ -51,7 +52,7 @@ struct Configuration {
   float* intervals;
   
   /// Intervals array
-  unsigned char* intervals_colors;
+  Color* intervals_colors;
   
   /// Size of the itervals array
   int intervals_size;

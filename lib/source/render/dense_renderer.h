@@ -1,10 +1,10 @@
-#ifndef LIB_SOURCE_RENDER_SPARSE_RENDERER_H_
-#define LIB_SOURCE_RENDER_SPARSE_RENDERER_H_
+#ifndef LIB_SOURCE_RENDER_DENSE_RENDERER_H_
+#define LIB_SOURCE_RENDER_DENSE_RENDERER_H_
 /**
- * @file sparse_renderer.h
- * @brief Sparse renderer definition
+ * @file dense_renderer.h
+ * @brief Dense renderer definition
  *
- * @date 2010-11-03
+ * @date 2011-03-14
  * @authors Fabio R. Panettieri
  */
 
@@ -13,15 +13,15 @@
 namespace acid_maps {
 
 /**
- * @brief Used to render sparse intervals
+ * @brief Renderer optimized for direct access
  */
-class SparseRenderer : public Renderer {
+class DenseRenderer : public Renderer {
   void render(float interpolated_bitmap[], Size* tile_size, float intervals[],
   	int intervals_size, Color* intervals_colors, unsigned char* output_buffer);
-  
+  	
   int interval(float value, float intervals[], int intervals_size);
 };
 
 };  // namespace acid_maps
 
-#endif  // LIB_SOURCE_RENDER_SPARSE_RENDERER_H_
+#endif  // LIB_SOURCE_RENDER_DENSE_RENDERER_H_
