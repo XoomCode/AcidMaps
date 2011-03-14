@@ -146,6 +146,34 @@ ams::Point* getPointArrayField(JNIEnv* env, jclass configurationClass, jobject j
 	}
 }
 
+ams::Color* getColorArrayField(JNIEnv* env, jclass configurationClass, jobject jconfiguration, const char* id, int size) {
+	jfieldID fieldId = env->GetFieldID(configurationClass, id, "[Lcom/xoomcode/acidmaps/core/Color;");
+	jobjectArray value = (jobjectArray)env->GetObjectField(jconfiguration, fieldId);
+	jclass colorClass = env->FindClass("com/xoomcode/acidmaps/core/Color");
+	if(value){
+		ams::Point* pointArray = new ams::Point[size];
+
+		ams::Point* point= new ams::Point();
+		for (int i = 0; i < size; ++i) {
+			jobject jpoint = (jobject)env->GetObjectArrayElement(value, i);
+			point->x = getFloatField(env, pointClass, jpoint, "x");
+			point->y = getFloatField(env, pointClass, jpoint, "y");
+			point->value = getFloatField(env, pointClass, jpoint, "value");
+			memcpy(pointArray + i, point, sizeof(ams::Point));
+		}
+		delete point;
+//
+//		/*printf("%s: [ ", id);
+//		for (int i = 0; i < size; ++i) {
+//			printf("%c, ", charArray[i]);
+//		}
+//		printf(" ]\n");*/
+		return pointArray;
+    } else {
+		return NULL;
+	}
+}
+
 ams::Bounds* getBoundField(JNIEnv* env, jclass configurationClass, jobject jconfiguration, const char* id) {
 	jclass boundClass = env->FindClass("com/xoomcode/acidmaps/core/Bounds");
 
@@ -185,8 +213,8 @@ ams::Configuration* buildConfiguration(JNIEnv* env, jobject jconfiguration){
  	configuration->tile_size = tile_size;
 
  	configuration->intervals = getFloatArrayField(env, configurationClass, jconfiguration, "intervals");
- 	configuration->intervals_colors = getCharArrayField(env, configurationClass, jconfiguration, "intervalsColors");
- 	configuration->intervals_size = getCharArrayLength(env, configurationClass, jconfiguration, "intervalsColors") / ams::RGBA;
+ 	configuration->intervals_size = getFloatArrayLength(env, configurationClass, jconfiguration, "intervals");
+ 	configuration->intervals_colors = getColorArrayField(env, configurationClass, jconfiguration, "intervalsColors", configuration->intervals_size);
  	configuration->renderer_type = getIntField(env, configurationClass, jconfiguration, "rendererType");
  	configuration->interpolation_parameter = getIntField(env, configurationClass, jconfiguration, "interpolationParameter");
  	configuration->format = getIntField(env, configurationClass, jconfiguration, "format");
@@ -201,13 +229,28 @@ JNIEXPORT jobject JNICALL Java_com_xoomcode_acidmaps_adapter_JCAdapter_interpola
 
 	unsigned char* charOut;
 	unsigned int charOutSize;
-	ams::generate(configuration, &charOut, &charOutSize);
+	jint error = ams::generate(configuration, &charOut, &charOutSize);
+ 	if(error != 0){
+ 		jclass configurationClass = env->FindClass("com/xoomcode/acidmaps/core/Configuration");
+ 		jfieldID fieldId = env->GetFieldID(configurationClass, "error", "I");
+ 		env->SetIntField(jconfiguration, fieldId, error);
+
+ 		delete[] configuration->dataset;
+		delete configuration->bounds;
+		delete configuration->tile_size;
+		delete[] configuration->intervals;
+		delete[] configuration->intervals_colors;
+		delete configuration;
+
+ 		return NULL;
+ 	}
  	jbyte* joutpt = new jbyte[charOutSize];
 
  	memcpy(joutpt, charOut, charOutSize * sizeof(unsigned char));
 
  	jbyteArray out = env->NewByteArray(charOutSize);
-	env->SetByteArrayRegion(out, 0, charOutSize, joutpt);
+
+ 	env->SetByteArrayRegion(out, 0, charOutSize, joutpt);
 
 	delete[] configuration->dataset;
 	delete configuration->bounds;

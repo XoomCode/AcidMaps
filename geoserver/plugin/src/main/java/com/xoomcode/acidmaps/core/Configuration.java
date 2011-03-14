@@ -36,13 +36,15 @@ public class Configuration {
 	
 	public float[] intervals;
 	
-	public byte[] intervalsColors;
+	public Color[] intervalsColors;
 	
 	public int intervalsSize;
 	
 	public int rendererType;
 	
 	public int format;
+	
+	public int error;
 
 	/**
 	 * Instantiates a new configuration.

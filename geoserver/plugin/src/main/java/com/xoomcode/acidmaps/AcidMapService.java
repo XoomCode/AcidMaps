@@ -44,7 +44,9 @@ import com.xoomcode.acidmaps.cache.DatasetCache;
 import com.xoomcode.acidmaps.cache.DatasetCacheKey;
 import com.xoomcode.acidmaps.core.AcidMapParameters;
 import com.xoomcode.acidmaps.core.Bounds;
+import com.xoomcode.acidmaps.core.Color;
 import com.xoomcode.acidmaps.core.Configuration;
+import com.xoomcode.acidmaps.error.AcidMapException;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -84,9 +86,10 @@ public class AcidMapService {
 	 * @return the web map
 	 * @throws ServletException the servlet exception
 	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws AcidMapException 
 	 */
 	public WebMap GetMap(GetMapRequest request) throws ServletException,
-			IOException {
+			IOException, AcidMapException {
 		WMSMapContext mapContext = new WMSMapContext(request);
 		try {
 			if (request.getLayers() != null && request.getLayers().size() > 0) {
@@ -109,6 +112,9 @@ public class AcidMapService {
 		} catch (RuntimeException e) {
 			mapContext.dispose();
 			throw (RuntimeException) e;
+		} catch (AcidMapException e) {
+			mapContext.dispose();
+			throw (AcidMapException) e;
 		} catch (Exception e) {
 			mapContext.dispose();
 			throw new ServiceException("Internal error ", e);
@@ -123,9 +129,10 @@ public class AcidMapService {
 	 * @return the web map
 	 * @throws ServiceException the service exception
 	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws AcidMapException 
 	 */
 	
-	public synchronized WebMap synchronizedRun(final GetMapRequest request, WMSMapContext mapContext) throws ServiceException, IOException {
+	public synchronized WebMap synchronizedRun(final GetMapRequest request, WMSMapContext mapContext) throws ServiceException, IOException, AcidMapException {
 		Map<String, String> rawKvp = request.getRawKvp();
 		String valueColumn = rawKvp.get(AcidMapParameters.VALUE_COLUMN);
 
@@ -178,7 +185,7 @@ public class AcidMapService {
 	}
 
 	public WebMap run(final GetMapRequest request, WMSMapContext mapContext)
-			throws ServiceException, IOException {
+			throws ServiceException, IOException, AcidMapException {
 
 		Configuration configuration = buildConfiguration(request);
 		
@@ -210,7 +217,7 @@ public class AcidMapService {
 		int simplifyMethod = new Integer(rawKvp.get(AcidMapParameters.SIMPLIFY_METHOD));
 		int simplifySize = new Integer(rawKvp.get(AcidMapParameters.SIMPLIFY_SIZE));
 		float[] intervals = buildIntervals(rawKvp.get(AcidMapParameters.INTERVALS));
-		byte[] intervalsColors = buildIntervalsColors(rawKvp.get(AcidMapParameters.INTERVALS_COLORS));
+		Color[] intervalsColors = buildIntervalsColors(rawKvp.get(AcidMapParameters.INTERVALS_COLORS));
 		int rendererType = new Integer(rawKvp.get(AcidMapParameters.RENDERER_TYPE));
 		int interpolationStrategy = new Integer(rawKvp.get(AcidMapParameters.INTERPOLATION_STRATEGY));
 		int interpolationParameter = new Integer(rawKvp.get(AcidMapParameters.INTERPOLATION_PARAMETER));
@@ -241,13 +248,20 @@ public class AcidMapService {
 	 * @param string
 	 * @return
 	 */
-	private byte[] buildIntervalsColors(String intervalsColorStr) {
+	private Color[] buildIntervalsColors(String intervalsColorStr) {
 		String[] split = intervalsColorStr.split(",");
 		
-		byte [] intervalsColor = new byte[split.length];	
+		Color[] intervalsColor = new Color[split.length];	
 		
 		for (int i = 0; i < intervalsColor.length; i++) {
-			intervalsColor[i] = (byte)(int)new Integer(split[i]);
+			String hexaNumber = split[i].toUpperCase().split("X")[1];
+			long colorValue = (long)Long.parseLong(hexaNumber, 16);
+			byte r = (byte) (colorValue >> 24 & 0xFF);
+			byte g = (byte) (colorValue >> 16 & 0xFF);
+			byte b = (byte) (colorValue >> 8 & 0xFF);
+			byte a = (byte) (colorValue & 0xFF);
+			
+			intervalsColor[i] = new Color(r, g, b, a);
 		}
 		return intervalsColor;
 	}
