@@ -1,5 +1,6 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include "../source/core/configuration.h"
+#include "../source/core/color.h"
 #include "../source/constants/constants.h"
 #include "../source/simplify/simplify_method.h"
 #include "../source/interpolate/interpolation_strategy.h"
@@ -108,13 +109,24 @@ private:
     return intervals;
   }
   
-  unsigned char* create_intervals_colors() {
-    unsigned char* colors = new unsigned char[5 * ams::RGBA];
-    colors[0] = 0x20; colors[1] = 0x20; colors[2] = 0x20; colors[3] = 0xFF;
-    colors[4] = 0xFF; colors[5] = 0x00; colors[6] = 0x00; colors[7] = 0xFF;
-    colors[8] = 0xFF; colors[9] = 0xFF; colors[10] = 0x00; colors[11] = 0xFF;
-    colors[12] = 0x00; colors[13] = 0xFF; colors[14] = 0x00; colors[15] = 0xFF;
-    colors[16] = 0x00; colors[17] = 0x00; colors[18] = 0xFF; colors[19] = 0xFF;
+  ams::Color* create_intervals_colors() {
+    ams::Color* color;
+    ams::Color* colors = new ams::Color[5];
+    
+    color = colors;
+    color->r = 0x20; color->g = 0x20; color->b = 0x20; color->a = 0xFF;
+    
+    color = colors + 1;
+    color->r = 0xFF; color->g = 0x00; color->b = 0x00; color->a = 0xFF;
+    
+    color = colors + 2;
+    color->r = 0xFF; color->g = 0xFF; color->b = 0x00; color->a = 0xFF;
+    
+    color = colors + 3;
+    color->r = 0x00; color->g = 0xFF; color->b = 0x00; color->a = 0xFF;
+    
+    color = colors + 4;
+    color->r = 0x00; color->g = 0x00; color->b = 0xFF; color->a = 0xFF;
     return colors; 
   }
 };

@@ -14,6 +14,7 @@ namespace acid_maps {
  * Forward declaration
  */
 struct Size;
+struct Color;
 
 /**
  * @brief Renders the raw image
@@ -29,7 +30,7 @@ public:
    * an image that represents that bitmap
    */
   virtual void render(float interpolated_bitmap[], Size* tile_size, float intervals[],
-    int intervals_size, unsigned char intervals_colors[], unsigned char* output_buffer) = 0;
+    int intervals_size, Color* intervals_colors, unsigned char* output_buffer) = 0;
   
   virtual int interval(float value, float intervals[], int intervals_size) = 0;
 };
