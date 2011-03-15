@@ -50,17 +50,24 @@ import com.xoomcode.acidmaps.error.AcidMapException;
 
 // TODO: Auto-generated Javadoc
 /**
+ * The Class AcidMapService.
+ * 
+ * This class process the Acid Map Service request and
+ * return the map
+ *
  * @date 09/11/2010
  * @author cfarina
  * The Class AcidMapService.
  */
 public class AcidMapService {
 	
+	/** The Constant LOGGER. */
 	private final static Logger LOGGER = Logging.getLogger(AcidMapService.class.toString());
 	
+	/** The dataset cache. */
 	private static DatasetCache datasetCache = new DatasetCache();
 	
-	/** The filter fac. */
+	/** The filter factory. */
 	private FilterFactory filterFactory;
 	
 	/**
@@ -86,7 +93,7 @@ public class AcidMapService {
 	 * @return the web map
 	 * @throws ServletException the servlet exception
 	 * @throws IOException Signals that an I/O exception has occurred.
-	 * @throws AcidMapException 
+	 * @throws AcidMapException the acid map exception
 	 */
 	public WebMap GetMap(GetMapRequest request) throws ServletException,
 			IOException, AcidMapException {
@@ -99,6 +106,11 @@ public class AcidMapService {
 				MapLayerInfo layer = request.getLayers().get(0);
 				
 				DatasetCacheKey datasetCacheKey = new DatasetCacheKey(layer.getName(), getStringFilter(request));
+				/*
+				 * In order to avoid to get all the points for each tile a synchronized method is 
+				 * invoked. Once that the first execution of synchronizedRun has been executed
+				 * the data is cached, and the next time this method is invoked, it uses the cached data.
+				 */
 				if(datasetCache.isCached(datasetCacheKey)){
 					return run(request, mapContext);
 				} else {
@@ -122,14 +134,18 @@ public class AcidMapService {
 	}
 
 	/**
-	 * Run.
+	 * When the data to be interpolated are not cached, this method is invoked.
+	 * Because of this method is synchronized, all invocations of this will be glued.
+	 * The first invocation of this method caches the data. Next glued invocations
+	 * will use the cached data.
+	 * Return the map.
 	 *
 	 * @param request the request
 	 * @param mapContext the map context
 	 * @return the web map
 	 * @throws ServiceException the service exception
 	 * @throws IOException Signals that an I/O exception has occurred.
-	 * @throws AcidMapException 
+	 * @throws AcidMapException the acid map exception
 	 */
 	
 	public synchronized WebMap synchronizedRun(final GetMapRequest request, WMSMapContext mapContext) throws ServiceException, IOException, AcidMapException {
@@ -149,6 +165,8 @@ public class AcidMapService {
 		com.xoomcode.acidmaps.core.Point[] dataset = null;
 		if(!datasetCache.isCached(datasetCacheKey)){
 			LOGGER.log(Level.WARNING, "Cache missed");
+			
+			//Get the features
 			FeatureCollection<? extends FeatureType, ? extends Feature> features = source.getFeatures(layerFilter);
 			FeatureIterator<? extends Feature> featureIterator = features.features();
 			dataset = new com.xoomcode.acidmaps.core.Point[features.size()];
@@ -176,6 +194,13 @@ public class AcidMapService {
 		return run(request, mapContext);
 	}
 
+	
+	/**
+	 * Build the string filter.
+	 *
+	 * @param request the request
+	 * @return the string filter
+	 */
 	private String getStringFilter(final GetMapRequest request) {
 		String filter = "";
 		if(request.getFilter() != null){
@@ -184,6 +209,16 @@ public class AcidMapService {
 		return filter;
 	}
 
+	/**
+	 * Get the data from cache, build the image and return that.
+	 *
+	 * @param request the request
+	 * @param mapContext the map context
+	 * @return the web map
+	 * @throws ServiceException the service exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws AcidMapException the acid map exception
+	 */
 	public WebMap run(final GetMapRequest request, WMSMapContext mapContext)
 			throws ServiceException, IOException, AcidMapException {
 
@@ -208,11 +243,13 @@ public class AcidMapService {
 	}
 	
 	/**
-	 * @param request
-	 * @param rawKvp
-	 * @return
+	 * Builds the configuration.
+	 *
+	 * @param request the request
+	 * @return the configuration
+	 * @throws AcidMapException the acid map exception
 	 */
-	private Configuration buildConfiguration(final GetMapRequest request) {
+	private Configuration buildConfiguration(final GetMapRequest request) throws AcidMapException {
 		Map<String, String> rawKvp = request.getRawKvp();
 		int simplifyMethod = new Integer(rawKvp.get(AcidMapParameters.SIMPLIFY_METHOD));
 		int simplifySize = new Integer(rawKvp.get(AcidMapParameters.SIMPLIFY_SIZE));
@@ -245,16 +282,26 @@ public class AcidMapService {
 	}
 	
 	/**
-	 * @param string
-	 * @return
+	 * Builds the intervals colors.
+	 *
+	 * @param intervalsColorStr the intervals color str
+	 * @return the color[]
+	 * @throws AcidMapException the acid map exception
 	 */
-	private Color[] buildIntervalsColors(String intervalsColorStr) {
+	private Color[] buildIntervalsColors(String intervalsColorStr) throws AcidMapException {
 		String[] split = intervalsColorStr.split(",");
 		
 		Color[] intervalsColor = new Color[split.length];	
 		
 		for (int i = 0; i < intervalsColor.length; i++) {
-			String hexaNumber = split[i].toUpperCase().split("X")[1];
+			String hexaNumber = split[i].toUpperCase();
+			if(hexaNumber.contains("#")){
+				hexaNumber = hexaNumber.split("#")[1];
+			} else if(hexaNumber.contains("X")){
+				hexaNumber = hexaNumber.split("X")[1];
+			} else {
+				throw new AcidMapException("Malformed Color hexa number ");
+			}
 			int colorValue = (int)Long.parseLong(hexaNumber, 16);
 			String hexString = Integer.toHexString(colorValue);
 			byte r = (byte) (colorValue >> 24 & 0xFF);
@@ -268,8 +315,10 @@ public class AcidMapService {
 	}
 
 	/**
-	 * @param string
-	 * @return
+	 * Builds the intervals.
+	 *
+	 * @param intervalsStr the intervals str
+	 * @return the float[]
 	 */
 	private float[] buildIntervals(String intervalsStr) {
 		String[] split = intervalsStr.split(",");

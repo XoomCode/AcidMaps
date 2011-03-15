@@ -21,7 +21,6 @@ int getFloatArrayLength(JNIEnv* env, jclass configurationClass, jobject jconfigu
 	jarray value = (jarray)env->GetObjectField(jconfiguration, fieldId);
 	if(value){
 		int length = env->GetArrayLength(value);
-		//printf("%s size: %d\n", id, length);
 		return length;
 	} else {
 		return 0;
@@ -33,7 +32,6 @@ int getCharArrayLength(JNIEnv* env, jclass configurationClass, jobject jconfigur
 	jarray value = (jarray)env->GetObjectField(jconfiguration, fieldId);
 	if(value){
 		int length = env->GetArrayLength(value);
-		//printf("%s size: %d\n", id, length);
 		return length;
 	} else {
 		return 0;
@@ -45,7 +43,6 @@ int getIntArrayLength(JNIEnv* env, jclass configurationClass, jobject jconfigura
 	jarray value = (jarray)env->GetObjectField(jconfiguration, fieldId);
 	if(value){
 		int length = env->GetArrayLength(value);
-		//printf("%s size: %d\n", id, length);
 		return length;
 	} else {
 		return 0;
@@ -55,21 +52,18 @@ int getIntArrayLength(JNIEnv* env, jclass configurationClass, jobject jconfigura
 int getIntField(JNIEnv* env, jclass configurationClass, jobject jconfiguration, const char* id) {
 	jfieldID fieldId = env->GetFieldID(configurationClass, id, "I");
 	int value = env->GetIntField(jconfiguration, fieldId);
-	//printf("%s: %d\n", id, value);
 	return value;
 }
 
 char getByteField(JNIEnv* env, jclass configurationClass, jobject jconfiguration, const char* id) {
 	jfieldID fieldId = env->GetFieldID(configurationClass, id, "B");
 	char value = env->GetIntField(jconfiguration, fieldId);
-	//printf("%s: %d\n", id, value);
 	return value;
 }
 
 float getFloatField(JNIEnv* env, jclass configurationClass, jobject jconfiguration, const char* id) {
 	jfieldID fieldId = env->GetFieldID(configurationClass, id, "F");
 	float value = env->GetFloatField(jconfiguration, fieldId);
-	//printf("%s: %f\n", id, value);
 	return value;
 }
 
@@ -80,11 +74,6 @@ float* getFloatArrayField(JNIEnv* env, jclass configurationClass, jobject jconfi
 
 	if(value){
 		float* floatArray = env->GetFloatArrayElements(value, NULL);
-		/*printf("%s: [ ", id);
-		for (int i = 0; i < size; ++i) {
-			printf("%f, ", floatArray[i]);
-		}
-		printf(" ]\n");*/
 		return floatArray;
 	} else {
 		return NULL;
@@ -97,11 +86,6 @@ int* getIntArrayField(JNIEnv* env, jclass configurationClass, jobject jconfigura
 	int size = getIntArrayLength(env, configurationClass, jconfiguration, id);
 	if(value){
 		int* intArray = env->GetIntArrayElements(value, NULL);
-		/*printf("%s: [ ", id);
-		for (int i = 0; i < size; ++i) {
-			printf("%d, ", intArray[i]);
-		}
-		printf(" ]\n");*/
 		return intArray;
 	} else {
 		return NULL;
@@ -114,11 +98,6 @@ unsigned char* getCharArrayField(JNIEnv* env, jclass configurationClass, jobject
 	int size = getCharArrayLength(env, configurationClass, jconfiguration, id);
 	if(value){
 		unsigned char* charArray = (unsigned char*)env->GetByteArrayElements(value, NULL);
-		/*printf("%s: [ ", id);
-		for (int i = 0; i < size; ++i) {
-			printf("%c, ", charArray[i]);
-		}
-		printf(" ]\n");*/
 		return charArray;
 	} else {
 		return NULL;
@@ -141,12 +120,6 @@ ams::Point* getPointArrayField(JNIEnv* env, jclass configurationClass, jobject j
 			memcpy(pointArray + i, point, sizeof(ams::Point));
 		}
 		delete point;
-//
-//		/*printf("%s: [ ", id);
-//		for (int i = 0; i < size; ++i) {
-//			printf("%c, ", charArray[i]);
-//		}
-//		printf(" ]\n");*/
 		return pointArray;
     } else {
 		return NULL;
@@ -167,7 +140,6 @@ ams::Color* getColorArrayField(JNIEnv* env, jclass configurationClass, jobject j
 			color->g = getByteField(env, colorClass, jcolor, "g");
 			color->b = getByteField(env, colorClass, jcolor, "b");
 			color->a = getByteField(env, colorClass, jcolor, "a");
-			printf("ACAAAAAAAAAAAA %d, %d, %d, %d \n", color->r, color->g, color->b, color->a);
 			memcpy(colorArray + i, color, sizeof(ams::Color));
 		}
 		delete color;
@@ -203,8 +175,6 @@ ams::Configuration* buildConfiguration(JNIEnv* env, jobject jconfiguration){
 	configuration->bounds = getBoundField(env, configurationClass, jconfiguration, "bounds");
  	configuration->dataset_size = getIntField(env, configurationClass, jconfiguration, "datasetSize");
  	configuration->dataset = getPointArrayField(env, configurationClass, jconfiguration, "dataset", configuration->dataset_size);
-
- 	// FIXME: get Point array
 
 	configuration->simplify_method = getIntField(env, configurationClass, jconfiguration, "simplifyMethod");
 	configuration->simplify_size = getIntField(env, configurationClass, jconfiguration, "simplifySize");

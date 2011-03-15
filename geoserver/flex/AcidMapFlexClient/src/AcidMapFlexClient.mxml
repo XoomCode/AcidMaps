@@ -56,9 +56,9 @@
 				<mx:NumericStepper id="simplifySize" minimum="0" maximum="10000" value="400"/>
 			</mx:FormItem>
 			<mx:FormItem label="Renderer Type" width="100%">
-				<mx:ComboBox id="rendererTypeComboBox"> 
+				<mx:ComboBox id="rendererTypeComboBox" selectedIndex="1"> 
 					<mx:ArrayCollection>
-						<!--mx:Object label="Dense" data="{RendererType.DENSE}"/-->
+						<mx:Object label="Dense" data="{RendererType.DENSE}"/>
 						<mx:Object label="Gradient" data="{RendererType.GRADIENT}"/>
 						<mx:Object label="Sparse" data="{RendererType.SPARSE}"/>
 					</mx:ArrayCollection>

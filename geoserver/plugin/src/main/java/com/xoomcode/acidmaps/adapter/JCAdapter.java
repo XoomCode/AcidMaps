@@ -6,7 +6,10 @@ import com.xoomcode.acidmaps.error.AcidMapException;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Class JCAdapter.
+ * 
+ * This class allows communication between geoserver plugin and 
+ * acid map library, which is developed in C++.
+ * 
  * @date 09/11/2010
  * @author cfarina
  */

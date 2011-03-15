@@ -8,9 +8,11 @@ import java.util.Date;
 import com.xoomcode.acidmaps.core.Point;
 
 /**
+ * 
  * @date 11/11/2010
  * @author cfarina
  *	
+ * It Saves the points cached by DatasetCache.
  */
 public class Dataset {
 
@@ -27,7 +29,8 @@ public class Dataset {
 	}
 	
 	/**
-	 * @param date the date to set
+	 * @param date This property is used to invalidate
+	 * the dataset when is cached.
 	 */
 	public void setDate(Date date) {
 		this.date = date;

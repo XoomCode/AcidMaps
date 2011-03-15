@@ -4,7 +4,7 @@ package com.xoomcode.acidmaps.core;
 /**
  * @date 09/11/2010
  * @author cfarina
- * The Class Configuration.
+ * Configuration is used to send AMS parameters to the C++ AMS library.
  */
 public class Configuration {
 
