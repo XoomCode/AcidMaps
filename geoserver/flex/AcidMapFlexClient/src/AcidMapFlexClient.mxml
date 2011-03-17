@@ -16,7 +16,7 @@
 			<openscales:ScaleLine x="{width - 120}" y="{height - 100}" />
 		</openscales:Map>
 		<mx:HBox right="10" top="5">
-			<mx:TextInput id="serverTextInput" text="http://localhost:8080/geoserver/" width="200" toolTip="Server"/>
+			<mx:TextInput id="serverTextInput" text="http://ams:8080/geoserver/" width="200" toolTip="Server"/>
 			<mx:TextInput id="layerTextInput" text="acidmaps:points" toolTip="WMS layer"/>
 			<mx:ComboBox id="serviceTypeComboBox" change="onServiceTypeComboBoxChange()" toolTip="Service type"> 
 				<mx:ArrayCollection>
@@ -157,6 +157,7 @@
 				setGenericParameters(amsParams);
 				applyAMSConfiguration(amsParams);
 				amsLayer.params = amsParams;
+				amsLayer.url = serverTextInput.text + "wms";
 				amsLayer.redraw(true);
 			}
 			

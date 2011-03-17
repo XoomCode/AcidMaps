@@ -326,7 +326,6 @@ public class AcidMapService {
 				throw new AcidMapException("Malformed Color hexa number ");
 			}
 			int colorValue = (int)Long.parseLong(hexaNumber, 16);
-			String hexString = Integer.toHexString(colorValue);
 			byte r = (byte) (colorValue >> 24 & 0xFF);
 			byte g = (byte) (colorValue >> 16 & 0xFF);
 			byte b = (byte) (colorValue >> 8 & 0xFF);
