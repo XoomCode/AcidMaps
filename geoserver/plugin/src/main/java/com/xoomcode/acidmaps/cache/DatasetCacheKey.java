@@ -7,7 +7,9 @@ package com.xoomcode.acidmaps.cache;
 /**
  * @date 11/11/2010
  * @author cfarina
- *	
+ *
+ * Every cached data is identify by an unique key. This key is
+ * formed by the layer name and the CQLFilter.
  */
 public class DatasetCacheKey {
 

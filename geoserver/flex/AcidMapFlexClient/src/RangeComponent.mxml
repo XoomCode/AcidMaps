@@ -50,14 +50,7 @@
 			public function getColors():Array {
 				var colors:Array = new Array();
 				for each(var item:RangeItem in rangeItemContainer.getChildren()){
-					var R:uint = item.selectedColor >> 16 & 0xFF;
-					var G:uint = item.selectedColor >> 8 & 0xFF;
-					var B:uint = item.selectedColor & 0xFF;
-					var A:uint = selectedAlpha;
-					colors.push(R);
-					colors.push(G);
-					colors.push(B);
-					colors.push(A);
+					colors.push((item.selectedColor << 8) + selectedAlpha);
 				}
 				return colors;
 				

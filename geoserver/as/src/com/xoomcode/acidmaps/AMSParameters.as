@@ -138,7 +138,11 @@ package com.xoomcode.acidmaps
 		}
 		
 		private function buildIntervalsColorsString():String {
-			return buildArrayString(intervalsColors);
+			var hexaIntervalsColors:Array = new Array();
+			for each(var value:uint in intervalsColors){
+				hexaIntervalsColors.push("0x" + value.toString(16));
+			}
+			return buildArrayString(hexaIntervalsColors);
 		}
 		
 		private function buildIntervalsString():String {

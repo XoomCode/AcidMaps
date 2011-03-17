@@ -15,25 +15,30 @@
 			<openscales:MousePosition x="{width - 170}" y="{height - 20}"/>
 			<openscales:ScaleLine x="{width - 120}" y="{height - 100}" />
 		</openscales:Map>
-		<mx:ComboBox id="serviceTypeComboBox" change="onServiceTypeComboBoxChange()" x="{width - 200}" y="{5}"> 
-			<mx:ArrayCollection>
-				<mx:Object label="AMS" data="AMS"/>
-				<mx:Object label="WMS" data="WMS"/>
-			</mx:ArrayCollection>
-		</mx:ComboBox>
-		<mx:ComboBox id="mapTypeComboBox" change="onMapTypeComboBoxChange()" x="{width - 120}" y="{5}" 
-					 visible="{serviceTypeComboBox.selectedItem.data == 'AMS'}"> 
-			<mx:ArrayCollection>
-				<mx:Object label="Isoline" data="isoline"/>
-				<mx:Object label="Heatmap" data="heatmap"/>
-				<mx:Object label="Voronoi" data="voronoi"/>
-				<mx:Object label="Point" data="point"/>
-			</mx:ArrayCollection>
-		</mx:ComboBox>
-		<mx:Form x="{width - 400}" y="50" 
+		<mx:HBox right="10" top="5">
+			<mx:TextInput id="serverTextInput" text="http://localhost:8080/geoserver/" width="200" toolTip="Server"/>
+			<mx:TextInput id="layerTextInput" text="acidmaps:points" toolTip="WMS layer"/>
+			<mx:ComboBox id="serviceTypeComboBox" change="onServiceTypeComboBoxChange()" toolTip="Service type"> 
+				<mx:ArrayCollection>
+					<mx:Object label="AMS" data="AMS"/>
+					<mx:Object label="WMS" data="WMS"/>
+				</mx:ArrayCollection>
+			</mx:ComboBox>
+			<mx:ComboBox id="mapTypeComboBox" change="onMapTypeComboBoxChange()" 
+						 visible="{serviceTypeComboBox.selectedItem.data == 'AMS'}" toolTip="Map Type"> 
+				<mx:ArrayCollection>
+					<mx:Object label="Isoline" data="isoline"/>
+					<mx:Object label="Heatmap" data="heatmap"/>
+					<mx:Object label="Voronoi" data="voronoi"/>
+					<mx:Object label="Point" data="point"/>
+				</mx:ArrayCollection>
+			</mx:ComboBox>
+		</mx:HBox> 
+		<mx:Form right="10" top="40" 
 				 width="400" visible="{serviceTypeComboBox.selectedItem.data == 'AMS'}" 
 				 backgroundAlpha="0.75" backgroundColor="0xFFFFFF"
 				 borderStyle="solid" cornerRadius="5">
+			
 			<mx:FormItem label="CQL Filter" width="100%">
 				<mx:TextArea id="cqlFilterText" width="100%"/>
 			</mx:FormItem>
@@ -51,9 +56,9 @@
 				<mx:NumericStepper id="simplifySize" minimum="0" maximum="10000" value="400"/>
 			</mx:FormItem>
 			<mx:FormItem label="Renderer Type" width="100%">
-				<mx:ComboBox id="rendererTypeComboBox"> 
+				<mx:ComboBox id="rendererTypeComboBox" selectedIndex="1"> 
 					<mx:ArrayCollection>
-						<!--mx:Object label="Dense" data="{RendererType.DENSE}"/-->
+						<mx:Object label="Dense" data="{RendererType.DENSE}"/>
 						<mx:Object label="Gradient" data="{RendererType.GRADIENT}"/>
 						<mx:Object label="Sparse" data="{RendererType.SPARSE}"/>
 					</mx:ArrayCollection>
@@ -120,8 +125,6 @@
 			
 			private var wmsLayer:WMSC; 
 			
-			private var overlayLayerName:String = "acidmaps:points_google";
-
 			private function initMap():void {
 				Trace.useFireBugConsole = displayFirebugTrace;
 				map = fxmap.map;
@@ -134,14 +137,14 @@
 			}
 			
 			private function buildWMSLayer():void {
-				var wmsParams:WMSParams = new WMSParams(overlayLayerName);
+				var wmsParams:WMSParams = new WMSParams(layerTextInput.text);
 				setGenericParameters(wmsParams);
 				wmsParams.transparent = true;
 				wmsLayer = buildLayer(wmsParams);
 			}
 			
 			public function buildAMSLayer():void {
-				var amsParams:AMSParameters = new AMSParameters(overlayLayerName, "value");
+				var amsParams:AMSParameters = new AMSParameters(layerTextInput.text, "value");
 				setGenericParameters(amsParams);
 				addRangeColors();
 				applyAMSConfiguration(amsParams);
@@ -150,7 +153,7 @@
 			}
 			
 			private function updateAMSLayer():void {
-				var amsParams:AMSParameters = new AMSParameters(overlayLayerName, "value");
+				var amsParams:AMSParameters = new AMSParameters(layerTextInput.text, "value");
 				setGenericParameters(amsParams);
 				applyAMSConfiguration(amsParams);
 				amsLayer.params = amsParams;
@@ -173,7 +176,7 @@
 			}
 
 			private function buildLayer(wmsParams:WMSParams):WMSC {
-				var layer:WMSC = new WMSC(name, "http://localhost:8080/geoserver/" + "wms", wmsParams.layers, false, true, wmsParams.srs);
+				var layer:WMSC = new WMSC(name, serverTextInput.text + "wms", wmsParams.layers, false, true, wmsParams.srs);
 				layer.params = wmsParams;
 				layer.maxExtent = map.maxExtent;
 				layer.generateResolutions(maxZoomLevel, 32.61198437499843);

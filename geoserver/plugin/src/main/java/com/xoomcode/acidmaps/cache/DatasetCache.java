@@ -17,6 +17,8 @@ import com.xoomcode.acidmaps.core.Point;
  * @date 11/11/2010
  * @author cfarina
  *	
+ * Caches the data for a layer and a filter for a given time. When
+ * the cached data is older than that given time, those data are removed.
  */
 public class DatasetCache extends TimerTask {
 
@@ -25,6 +27,7 @@ public class DatasetCache extends TimerTask {
 	private Timer timer = new Timer();
 	
 	public DatasetCache() {
+		//Every a given time, the cache is cleaned
 		timer.scheduleAtFixedRate(this, 0, 60000);
 	}
 	
@@ -67,6 +70,8 @@ public class DatasetCache extends TimerTask {
 			Dataset dataset = cache.get(datasetCacheKey);
 			long delay = now.getTime() - dataset.getDate().getTime();
 			if(delay > 10000){
+				//if the cached data is older than the given limit time
+				//this is removed
 				datasetCacheKeyForRemove.add(datasetCacheKey);
 			}
 		}

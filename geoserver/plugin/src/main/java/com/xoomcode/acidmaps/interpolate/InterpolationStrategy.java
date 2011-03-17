@@ -1,12 +1,10 @@
-/**
- * 
- */
 package com.xoomcode.acidmaps.interpolate;
 
 /**
  * @date 10/11/2010
  * @author cfarina
- *	
+ * 
+ * It defines the interpolate methods
  */
 public class InterpolationStrategy {
 

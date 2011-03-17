@@ -25,7 +25,6 @@ public class Bounds {
 	public float maxY;
 
 	public Bounds() {
-		// TODO Auto-generated constructor stub
 	}
 
 	/**

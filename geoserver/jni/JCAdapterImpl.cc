@@ -21,7 +21,6 @@ int getFloatArrayLength(JNIEnv* env, jclass configurationClass, jobject jconfigu
 	jarray value = (jarray)env->GetObjectField(jconfiguration, fieldId);
 	if(value){
 		int length = env->GetArrayLength(value);
-		//printf("%s size: %d\n", id, length);
 		return length;
 	} else {
 		return 0;
@@ -33,7 +32,6 @@ int getCharArrayLength(JNIEnv* env, jclass configurationClass, jobject jconfigur
 	jarray value = (jarray)env->GetObjectField(jconfiguration, fieldId);
 	if(value){
 		int length = env->GetArrayLength(value);
-		//printf("%s size: %d\n", id, length);
 		return length;
 	} else {
 		return 0;
@@ -45,7 +43,6 @@ int getIntArrayLength(JNIEnv* env, jclass configurationClass, jobject jconfigura
 	jarray value = (jarray)env->GetObjectField(jconfiguration, fieldId);
 	if(value){
 		int length = env->GetArrayLength(value);
-		//printf("%s size: %d\n", id, length);
 		return length;
 	} else {
 		return 0;
@@ -55,14 +52,18 @@ int getIntArrayLength(JNIEnv* env, jclass configurationClass, jobject jconfigura
 int getIntField(JNIEnv* env, jclass configurationClass, jobject jconfiguration, const char* id) {
 	jfieldID fieldId = env->GetFieldID(configurationClass, id, "I");
 	int value = env->GetIntField(jconfiguration, fieldId);
-	//printf("%s: %d\n", id, value);
+	return value;
+}
+
+char getByteField(JNIEnv* env, jclass configurationClass, jobject jconfiguration, const char* id) {
+	jfieldID fieldId = env->GetFieldID(configurationClass, id, "B");
+	char value = env->GetIntField(jconfiguration, fieldId);
 	return value;
 }
 
 float getFloatField(JNIEnv* env, jclass configurationClass, jobject jconfiguration, const char* id) {
 	jfieldID fieldId = env->GetFieldID(configurationClass, id, "F");
 	float value = env->GetFloatField(jconfiguration, fieldId);
-	//printf("%s: %f\n", id, value);
 	return value;
 }
 
@@ -73,11 +74,6 @@ float* getFloatArrayField(JNIEnv* env, jclass configurationClass, jobject jconfi
 
 	if(value){
 		float* floatArray = env->GetFloatArrayElements(value, NULL);
-		/*printf("%s: [ ", id);
-		for (int i = 0; i < size; ++i) {
-			printf("%f, ", floatArray[i]);
-		}
-		printf(" ]\n");*/
 		return floatArray;
 	} else {
 		return NULL;
@@ -90,11 +86,6 @@ int* getIntArrayField(JNIEnv* env, jclass configurationClass, jobject jconfigura
 	int size = getIntArrayLength(env, configurationClass, jconfiguration, id);
 	if(value){
 		int* intArray = env->GetIntArrayElements(value, NULL);
-		/*printf("%s: [ ", id);
-		for (int i = 0; i < size; ++i) {
-			printf("%d, ", intArray[i]);
-		}
-		printf(" ]\n");*/
 		return intArray;
 	} else {
 		return NULL;
@@ -107,11 +98,6 @@ unsigned char* getCharArrayField(JNIEnv* env, jclass configurationClass, jobject
 	int size = getCharArrayLength(env, configurationClass, jconfiguration, id);
 	if(value){
 		unsigned char* charArray = (unsigned char*)env->GetByteArrayElements(value, NULL);
-		/*printf("%s: [ ", id);
-		for (int i = 0; i < size; ++i) {
-			printf("%c, ", charArray[i]);
-		}
-		printf(" ]\n");*/
 		return charArray;
 	} else {
 		return NULL;
@@ -134,13 +120,30 @@ ams::Point* getPointArrayField(JNIEnv* env, jclass configurationClass, jobject j
 			memcpy(pointArray + i, point, sizeof(ams::Point));
 		}
 		delete point;
-//
-//		/*printf("%s: [ ", id);
-//		for (int i = 0; i < size; ++i) {
-//			printf("%c, ", charArray[i]);
-//		}
-//		printf(" ]\n");*/
 		return pointArray;
+    } else {
+		return NULL;
+	}
+}
+
+ams::Color* getColorArrayField(JNIEnv* env, jclass configurationClass, jobject jconfiguration, const char* id, int size) {
+	jfieldID fieldId = env->GetFieldID(configurationClass, id, "[Lcom/xoomcode/acidmaps/core/Color;");
+	jobjectArray value = (jobjectArray)env->GetObjectField(jconfiguration, fieldId);
+	jclass colorClass = env->FindClass("com/xoomcode/acidmaps/core/Color");
+	if(value){
+		ams::Color* colorArray = new ams::Color[size];
+
+		ams::Color* color= new ams::Color();
+		for (int i = 0; i < size; ++i) {
+			jobject jcolor = (jobject)env->GetObjectArrayElement(value, i);
+			color->r = getByteField(env, colorClass, jcolor, "r");
+			color->g = getByteField(env, colorClass, jcolor, "g");
+			color->b = getByteField(env, colorClass, jcolor, "b");
+			color->a = getByteField(env, colorClass, jcolor, "a");
+			memcpy(colorArray + i, color, sizeof(ams::Color));
+		}
+		delete color;
+		return colorArray;
     } else {
 		return NULL;
 	}
@@ -173,8 +176,6 @@ ams::Configuration* buildConfiguration(JNIEnv* env, jobject jconfiguration){
  	configuration->dataset_size = getIntField(env, configurationClass, jconfiguration, "datasetSize");
  	configuration->dataset = getPointArrayField(env, configurationClass, jconfiguration, "dataset", configuration->dataset_size);
 
- 	// FIXME: get Point array
-
 	configuration->simplify_method = getIntField(env, configurationClass, jconfiguration, "simplifyMethod");
 	configuration->simplify_size = getIntField(env, configurationClass, jconfiguration, "simplifySize");
  	configuration->interpolation_strategy = getIntField(env, configurationClass, jconfiguration, "interpolationStrategy");
@@ -185,8 +186,8 @@ ams::Configuration* buildConfiguration(JNIEnv* env, jobject jconfiguration){
  	configuration->tile_size = tile_size;
 
  	configuration->intervals = getFloatArrayField(env, configurationClass, jconfiguration, "intervals");
- 	configuration->intervals_colors = getCharArrayField(env, configurationClass, jconfiguration, "intervalsColors");
- 	configuration->intervals_size = getCharArrayLength(env, configurationClass, jconfiguration, "intervalsColors") / ams::RGBA;
+ 	configuration->intervals_size = getFloatArrayLength(env, configurationClass, jconfiguration, "intervals");
+ 	configuration->intervals_colors = getColorArrayField(env, configurationClass, jconfiguration, "intervalsColors", configuration->intervals_size);
  	configuration->renderer_type = getIntField(env, configurationClass, jconfiguration, "rendererType");
  	configuration->interpolation_parameter = getIntField(env, configurationClass, jconfiguration, "interpolationParameter");
  	configuration->format = getIntField(env, configurationClass, jconfiguration, "format");
@@ -194,20 +195,35 @@ ams::Configuration* buildConfiguration(JNIEnv* env, jobject jconfiguration){
 	return configuration;
 }
 
-JNIEXPORT jbyteArray JNICALL Java_com_xoomcode_acidmaps_adapter_JCAdapter_interpolateC
+JNIEXPORT jobject JNICALL Java_com_xoomcode_acidmaps_adapter_JCAdapter_interpolateC
   (JNIEnv* env, jobject obj, jobject jconfiguration)
 {
 	ams::Configuration* configuration = buildConfiguration(env, jconfiguration);
 
 	unsigned char* charOut;
 	unsigned int charOutSize;
-	ams::generate(configuration, &charOut, &charOutSize);
+	jint error = ams::generate(configuration, &charOut, &charOutSize);
+ 	if(error != 0){
+ 		jclass configurationClass = env->FindClass("com/xoomcode/acidmaps/core/Configuration");
+ 		jfieldID fieldId = env->GetFieldID(configurationClass, "error", "I");
+ 		env->SetIntField(jconfiguration, fieldId, error);
+
+ 		delete[] configuration->dataset;
+		delete configuration->bounds;
+		delete configuration->tile_size;
+		delete[] configuration->intervals;
+		delete[] configuration->intervals_colors;
+		delete configuration;
+
+ 		return NULL;
+ 	}
  	jbyte* joutpt = new jbyte[charOutSize];
 
  	memcpy(joutpt, charOut, charOutSize * sizeof(unsigned char));
 
  	jbyteArray out = env->NewByteArray(charOutSize);
-	env->SetByteArrayRegion(out, 0, charOutSize, joutpt);
+
+ 	env->SetByteArrayRegion(out, 0, charOutSize, joutpt);
 
 	delete[] configuration->dataset;
 	delete configuration->bounds;
