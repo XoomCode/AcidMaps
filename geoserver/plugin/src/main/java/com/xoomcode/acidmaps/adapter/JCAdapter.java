@@ -47,7 +47,7 @@ public class JCAdapter {
 		Object interpolateC = interpolateC(configuration);
 
 		if(interpolateC == null){
-			throw new AcidMapException("Error in acidMapsLibrary. Code: " + ErrorConstants.getErrorString(configuration.error));
+			throw new AcidMapException("Opaaa. Error in acidMapsLibrary. " + ErrorConstants.getErrorString(configuration.error));
 		}
 		
 		if(interpolateC instanceof byte[]){

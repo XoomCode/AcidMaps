@@ -74,8 +74,8 @@
 					</mx:ArrayCollection>
 				</mx:ComboBox>
 			</mx:FormItem>
-			<mx:FormItem label="Interpolation Parameter" width="100%">
-				<mx:NumericStepper id="interpolationParameterText" minimum="0" maximum="500" value="100"/>
+			<mx:FormItem label="Radius" width="100%">
+				<mx:NumericStepper id="radiusText" minimum="0" maximum="500" value="100"/>
 			</mx:FormItem>
 			<mx:FormItem label="Ranges" width="100%">
 				<local:RangeComponent id="rangeComponent" width="100%"/>
@@ -172,7 +172,7 @@
 				amsParams.simplifyMethod = simplifyMethodComboBox.selectedItem.data;
 				amsParams.rendererType = rendererTypeComboBox.selectedItem.data;
 				amsParams.interpolationStrategy = interpolationStrategyComboBox.selectedItem.data;
-				amsParams.interpolationParameter = interpolationParameterText.value;
+				amsParams.radius = radiusText.value;
 			}
 
 			private function buildLayer(wmsParams:WMSParams):WMSC {
@@ -247,7 +247,7 @@
 				simplifySize.value = 2000
 				rendererTypeComboBox.selectedItem = getItemWithData(rendererTypeComboBox, RendererType.SPARSE);
 				interpolationStrategyComboBox.selectedItem = getItemWithData(interpolationStrategyComboBox, InterpolationStrategy.INVERSE_DISTANCE_WEIGHTING);
-				interpolationParameterText.value = 32;
+				radiusText.value = 32;
 				addRangeColors();
 				updateAfterTimer();
 			}
@@ -258,7 +258,7 @@
 				simplifySize.value = 2000
 				rendererTypeComboBox.selectedItem = getItemWithData(rendererTypeComboBox, RendererType.GRADIENT);
 				interpolationStrategyComboBox.selectedItem = getItemWithData(interpolationStrategyComboBox, InterpolationStrategy.LINEAR);
-				interpolationParameterText.value = 32;
+				radiusText.value = 32;
 				addRangeColors();
 				updateAfterTimer();
 				
@@ -270,7 +270,7 @@
 				simplifySize.value = 2000
 				rendererTypeComboBox.selectedItem = getItemWithData(rendererTypeComboBox, RendererType.SPARSE);
 				interpolationStrategyComboBox.selectedItem = getItemWithData(interpolationStrategyComboBox, InterpolationStrategy.NEAREST_NEIGHBOR);
-				interpolationParameterText.value = 32;
+				radiusText.value = 32;
 				addRangeColors();
 				updateAfterTimer();
 				
@@ -282,7 +282,7 @@
 				simplifySize.value = 2000
 				rendererTypeComboBox.selectedItem = getItemWithData(rendererTypeComboBox, RendererType.SPARSE);
 				interpolationStrategyComboBox.selectedItem = getItemWithData(interpolationStrategyComboBox, InterpolationStrategy.DUMMY);
-				interpolationParameterText.value = 32;
+				radiusText.value = 32;
 				rangeComponent.reset();
 				updateAfterTimer();
 			}

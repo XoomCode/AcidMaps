@@ -31,8 +31,8 @@ public class Configuration {
 	/** Output image height. */
 	public int height;
 
-	/** Interpolation parameter for every interpolation type. */
-	public int interpolationParameter;
+	/** Radius for every interpolation type. */
+	public int radius;
 	
 	public float[] intervals;
 	
