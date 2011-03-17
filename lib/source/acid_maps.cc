@@ -47,7 +47,7 @@ int generate(Configuration* configuration, unsigned char** output_buffer, unsign
   float* interpolated_bitmap = new float[buffer_size];
   Interpolation* interpolation = InterpolationFactory::get(configuration->interpolation_strategy);
   interpolation->interpolate(configuration->tile_size, transformed_dataset, configuration->simplify_size, 
-    configuration->interpolation_parameter, interpolated_bitmap);
+    configuration->radius, interpolated_bitmap);
   delete interpolation;
   delete[] transformed_dataset;
   
