@@ -42,8 +42,8 @@ struct Configuration {
   /// Strategy used to interpolate missing values
   int interpolation_strategy;
   
-  /// Strategy used to interpolate missing values
-  int interpolation_parameter;
+  /// Radius
+  int radius;
   
   /// Output image size
   Size* tile_size;

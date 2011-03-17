@@ -45,14 +45,14 @@ public:
   
   void dummyInterpolation () {
     configuration->interpolation_strategy = ams::DUMMY;
-    configuration->interpolation_parameter = 32;
+    configuration->radius = 32;
     ams::generate(configuration, &output_buffer, &output_size);
     file = std::fopen("dummy.png", "wb");
   }
   
   void linearInterpolation () {
     configuration->interpolation_strategy = ams::LINEAR;
-    configuration->interpolation_parameter = 64;
+    configuration->radius = 64;
     ams::generate(configuration, &output_buffer, &output_size);
     file = std::fopen("linear.png", "wb");
   }
