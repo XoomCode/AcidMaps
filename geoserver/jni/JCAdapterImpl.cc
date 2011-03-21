@@ -201,7 +201,7 @@ JNIEXPORT jobject JNICALL Java_com_xoomcode_acidmaps_adapter_JCAdapter_interpola
 	ams::Configuration* configuration = buildConfiguration(env, jconfiguration);
 
 	unsigned char* charOut;
-	unsigned int charOutSize;
+	size_t charOutSize;
 	jint error = ams::generate(configuration, &charOut, &charOutSize);
  	if(error != 0){
  		jclass configurationClass = env->FindClass("com/xoomcode/acidmaps/core/Configuration");
@@ -219,7 +219,7 @@ JNIEXPORT jobject JNICALL Java_com_xoomcode_acidmaps_adapter_JCAdapter_interpola
  	}
  	jbyte* joutpt = new jbyte[charOutSize];
 
- 	memcpy(joutpt, charOut, charOutSize * sizeof(unsigned char));
+ 	memcpy(joutpt, charOut, charOutSize * sizeof(charOut));
 
  	jbyteArray out = env->NewByteArray(charOutSize);
 
