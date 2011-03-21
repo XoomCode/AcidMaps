@@ -16,8 +16,8 @@
 			<openscales:ScaleLine x="{width - 120}" y="{height - 100}" />
 		</openscales:Map>
 		<mx:HBox right="10" top="5">
-			<mx:TextInput id="serverTextInput" text="http://ams:8080/geoserver/" width="200" toolTip="Server"/>
-			<mx:TextInput id="layerTextInput" text="acidmaps:points" toolTip="WMS layer"/>
+			<mx:TextInput id="serverTextInput" text="http://ams.xoomcode.com/acid2" width="200" toolTip="Server" change="onServerChange()"/>
+			<mx:TextInput id="layerTextInput" text="acidmaps:points" toolTip="WMS layer" change="onLayerChange()"/>
 			<mx:ComboBox id="serviceTypeComboBox" change="onServiceTypeComboBoxChange()" toolTip="Service type"> 
 				<mx:ArrayCollection>
 					<mx:Object label="AMS" data="AMS"/>
@@ -81,7 +81,7 @@
 				<local:RangeComponent id="rangeComponent" width="100%"/>
 			</mx:FormItem>
 			<mx:HBox width="100%" horizontalAlign="right">
-				<mx:Button id="updateButton" label="Update" click="updateAMSLayer()"/>
+				<mx:Button id="updateButton" label="Update" click="update()"/>
 			</mx:HBox>
 		</mx:Form>
 		<mx:VBox>
@@ -125,6 +125,10 @@
 			
 			private var wmsLayer:WMSC; 
 			
+			private var serverChange:Boolean = false;
+			
+			private var layerChange:Boolean = false;
+			
 			private function initMap():void {
 				Trace.useFireBugConsole = displayFirebugTrace;
 				map = fxmap.map;
@@ -152,12 +156,36 @@
 				amsLayer = buildLayer(amsParams);
 			}
 			
+			private function update():void {
+				if(serverChange || layerChange){
+					if(wmsLayer != null){
+						map.removeLayer(wmsLayer);
+					}
+					if(amsLayer != null){
+						map.removeLayer(amsLayer);
+					}
+					
+					buildWMSLayer();
+					buildAMSLayer();
+					if(serviceTypeComboBox.selectedItem.data == "AMS"){
+						wmsLayer.visible = false;
+					} else {
+						amsLayer.visible = false;
+					}
+					map.addLayer(amsLayer);
+					map.addLayer(wmsLayer);
+					serverChange = false;
+					layerChange = false;
+				} else {
+					updateAMSLayer();
+				}
+			}
+			
 			private function updateAMSLayer():void {
 				var amsParams:AMSParameters = new AMSParameters(layerTextInput.text, "value");
 				setGenericParameters(amsParams);
 				applyAMSConfiguration(amsParams);
 				amsLayer.params = amsParams;
-				amsLayer.url = serverTextInput.text + "wms";
 				amsLayer.redraw(true);
 			}
 			
@@ -177,7 +205,7 @@
 			}
 
 			private function buildLayer(wmsParams:WMSParams):WMSC {
-				var layer:WMSC = new WMSC(name, serverTextInput.text + "wms", wmsParams.layers, false, true, wmsParams.srs);
+				var layer:WMSC = new WMSC(name, serverTextInput.text + "/wms", wmsParams.layers, false, true, wmsParams.srs);
 				layer.params = wmsParams;
 				layer.maxExtent = map.maxExtent;
 				layer.generateResolutions(maxZoomLevel, 32.61198437499843);
@@ -245,7 +273,7 @@
 			private function showIsoline():void {
 				cqlFilterText.text = "";
 				simplifyMethodComboBox.selectedItem = getItemWithData(simplifyMethodComboBox, SimplifyMethod.GRID);
-				simplifySize.value = 2000
+				simplifySize.value = 400;
 				rendererTypeComboBox.selectedItem = getItemWithData(rendererTypeComboBox, RendererType.SPARSE);
 				interpolationStrategyComboBox.selectedItem = getItemWithData(interpolationStrategyComboBox, InterpolationStrategy.INVERSE_DISTANCE_WEIGHTING);
 				radiusText.value = 32;
@@ -256,7 +284,7 @@
 			private function showHeatmap():void {
 				cqlFilterText.text = "";
 				simplifyMethodComboBox.selectedItem = getItemWithData(simplifyMethodComboBox, SimplifyMethod.GRID);
-				simplifySize.value = 2000
+				simplifySize.value = 400
 				rendererTypeComboBox.selectedItem = getItemWithData(rendererTypeComboBox, RendererType.GRADIENT);
 				interpolationStrategyComboBox.selectedItem = getItemWithData(interpolationStrategyComboBox, InterpolationStrategy.LINEAR);
 				radiusText.value = 32;
@@ -268,7 +296,7 @@
 			private function showVoronoi():void {
 				cqlFilterText.text = "";
 				simplifyMethodComboBox.selectedItem = getItemWithData(simplifyMethodComboBox, SimplifyMethod.GRID);
-				simplifySize.value = 2000
+				simplifySize.value = 400
 				rendererTypeComboBox.selectedItem = getItemWithData(rendererTypeComboBox, RendererType.SPARSE);
 				interpolationStrategyComboBox.selectedItem = getItemWithData(interpolationStrategyComboBox, InterpolationStrategy.NEAREST_NEIGHBOR);
 				radiusText.value = 32;
@@ -280,11 +308,11 @@
 			private function showPoint():void {
 				cqlFilterText.text = "";
 				simplifyMethodComboBox.selectedItem = getItemWithData(simplifyMethodComboBox, SimplifyMethod.GRID);
-				simplifySize.value = 2000
+				simplifySize.value = 400
 				rendererTypeComboBox.selectedItem = getItemWithData(rendererTypeComboBox, RendererType.SPARSE);
 				interpolationStrategyComboBox.selectedItem = getItemWithData(interpolationStrategyComboBox, InterpolationStrategy.DUMMY);
-				radiusText.value = 32;
-				rangeComponent.reset();
+				radiusText.value = 5;
+				addRangeColors();
 				updateAfterTimer();
 			}
 			
@@ -295,6 +323,14 @@
 				rangeComponent.addItem(45, 0xFFFF00);
 				rangeComponent.addItem(70, 0x00FF00);
 				rangeComponent.addItem(100, 0x0000FF);
+			}
+			
+			private function onServerChange():void {
+				serverChange = true;
+			}
+			
+			private function onLayerChange():void {
+				layerChange = true;
 			}
 		]]>
 	</mx:Script>
