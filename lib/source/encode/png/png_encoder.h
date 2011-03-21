@@ -20,7 +20,7 @@ namespace acid_maps {
 class PngEncoder : public Encoder {
   /**
    */
-  void encode(Size* tile_size, unsigned char* rgba_buffer, unsigned char** output_buffer, unsigned int* output_size);
+  void encode(Size* tile_size, unsigned char* rgba_buffer, unsigned char** output_buffer, size_t* output_size);
 };
 
 };  // namespace acid_maps
