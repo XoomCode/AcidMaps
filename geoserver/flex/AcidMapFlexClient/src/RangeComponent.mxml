@@ -14,8 +14,6 @@
 			
 			import org.openscales.core.handler.feature.SelectFeaturesHandler;
 			
-			public var selectedAlpha:Number = 0x80;
-			
 			public function reset():void {
 				rangeItemContainer.removeAllChildren();
 			}
@@ -50,7 +48,8 @@
 			public function getColors():Array {
 				var colors:Array = new Array();
 				for each(var item:RangeItem in rangeItemContainer.getChildren()){
-					colors.push((item.selectedColor << 8) + selectedAlpha);
+					var hexaNumber:uint = item.selectedAlpha * 0xFF;
+					colors.push((item.selectedColor << 8) + hexaNumber);
 				}
 				return colors;
 				

@@ -3,10 +3,12 @@
  */
 package com.xoomcode.acidmaps;
 
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -42,11 +44,14 @@ import com.vividsolutions.jts.geom.Point;
 import com.xoomcode.acidmaps.adapter.JCAdapter;
 import com.xoomcode.acidmaps.cache.DatasetCache;
 import com.xoomcode.acidmaps.cache.DatasetCacheKey;
+import com.xoomcode.acidmaps.constants.ErrorConstants;
 import com.xoomcode.acidmaps.core.AcidMapParameters;
 import com.xoomcode.acidmaps.core.Bounds;
 import com.xoomcode.acidmaps.core.Color;
 import com.xoomcode.acidmaps.core.Configuration;
 import com.xoomcode.acidmaps.error.AcidMapException;
+import com.xoomcode.acidmaps.error.ErrorImageFactory;
+import com.xoomcode.acidmaps.error.Validator;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -69,6 +74,8 @@ public class AcidMapService {
 	
 	/** The filter factory. */
 	private FilterFactory filterFactory;
+	
+	private ErrorImageFactory errorImageFactory = new ErrorImageFactory();
 	
 	/**
 	 * Instantiates a new acid map service.
@@ -120,17 +127,21 @@ public class AcidMapService {
 			return null;
 		} catch (ServiceException e) {
 			mapContext.dispose();
-			throw e;
+			LOGGER.log(Level.SEVERE, e.getMessage(), e);
+			return buildErrorImage(request, mapContext, e);
 		} catch (RuntimeException e) {
 			mapContext.dispose();
-			throw (RuntimeException) e;
+			LOGGER.log(Level.SEVERE, e.getMessage(), e);
+			return buildErrorImage(request, mapContext, e);
 		} catch (AcidMapException e) {
 			mapContext.dispose();
-			throw (AcidMapException) e;
+			LOGGER.log(Level.SEVERE, e.getMessage(), e);
+			return buildErrorImage(request, mapContext, e);
 		} catch (Exception e) {
 			mapContext.dispose();
-			throw new ServiceException("Internal error ", e);
-		}
+			LOGGER.log(Level.SEVERE, e.getMessage(), e);
+			return buildErrorImage(request, mapContext, e);
+		} 
 	}
 
 	/**
@@ -231,6 +242,11 @@ public class AcidMapService {
 		configuration.dataset = datasetCache.getDataset(datasetCacheKey);
 		configuration.datasetSize = configuration.dataset.length;
 		
+		int error = Validator.validate(configuration);
+		if(error != 0){
+			throw new AcidMapException("Opaaa. Error in acidMapsLibrary. " + ErrorConstants.getErrorString(error));
+		}
+		
 		JCAdapter jCAdapter = new JCAdapter();
 		byte[] outputBuffer = jCAdapter.interpolate(configuration);
 		
@@ -257,17 +273,20 @@ public class AcidMapService {
 		Color[] intervalsColors = buildIntervalsColors(rawKvp.get(AcidMapParameters.INTERVALS_COLORS));
 		int rendererType = new Integer(rawKvp.get(AcidMapParameters.RENDERER_TYPE));
 		int interpolationStrategy = new Integer(rawKvp.get(AcidMapParameters.INTERPOLATION_STRATEGY));
-		int interpolationParameter = new Integer(rawKvp.get(AcidMapParameters.INTERPOLATION_PARAMETER));
+		int radius = new Integer(rawKvp.get(AcidMapParameters.RADIUS));
 		
 		Configuration configuration = new Configuration();
 		configuration.simplifyMethod = simplifyMethod;
 		configuration.simplifySize = simplifySize;
 
-		Bounds bounds = new Bounds();
-		bounds.minY = (float)request.getBbox().getMinY();
-		bounds.minX = (float)request.getBbox().getMinX();
-		bounds.maxY = (float)request.getBbox().getMaxY();
-		bounds.maxX = (float)request.getBbox().getMaxX();
+		Bounds bounds = null;
+		if(request.getBbox() != null){
+			bounds = new Bounds();
+			bounds.minY = (float)request.getBbox().getMinY();
+			bounds.minX = (float)request.getBbox().getMinX();
+			bounds.maxY = (float)request.getBbox().getMaxY();
+			bounds.maxX = (float)request.getBbox().getMaxX();
+		}
 		configuration.bounds = bounds;
 		
 		configuration.width = request.getWidth();
@@ -277,7 +296,8 @@ public class AcidMapService {
 		configuration.intervalsColors = intervalsColors;
 		configuration.rendererType = rendererType;
 		configuration.interpolationStrategy = interpolationStrategy;
-		configuration.interpolationParameter = interpolationParameter;
+		configuration.radius = radius;
+		
 		return configuration;
 	}
 	
@@ -289,6 +309,9 @@ public class AcidMapService {
 	 * @throws AcidMapException the acid map exception
 	 */
 	private Color[] buildIntervalsColors(String intervalsColorStr) throws AcidMapException {
+		if(intervalsColorStr == "" || intervalsColorStr == null){
+			return null;
+		}
 		String[] split = intervalsColorStr.split(",");
 		
 		Color[] intervalsColor = new Color[split.length];	
@@ -303,7 +326,6 @@ public class AcidMapService {
 				throw new AcidMapException("Malformed Color hexa number ");
 			}
 			int colorValue = (int)Long.parseLong(hexaNumber, 16);
-			String hexString = Integer.toHexString(colorValue);
 			byte r = (byte) (colorValue >> 24 & 0xFF);
 			byte g = (byte) (colorValue >> 16 & 0xFF);
 			byte b = (byte) (colorValue >> 8 & 0xFF);
@@ -321,6 +343,9 @@ public class AcidMapService {
 	 * @return the float[]
 	 */
 	private float[] buildIntervals(String intervalsStr) {
+		if(intervalsStr == "" || intervalsStr == null){
+			return null;
+		}
 		String[] split = intervalsStr.split(",");
 		
 		float [] intervals = new float[split.length];	
@@ -389,4 +414,19 @@ public class AcidMapService {
         }
         return combinedList;
     }
+    
+    private WebMap buildErrorImage(GetMapRequest request, WMSMapContext mapContext, Exception e) {
+		String message = e.getMessage();
+		if(message == null){
+			message = "Acid Map Server Error";
+		}
+		BufferedImage errorImage = errorImageFactory.getErrorImage(request.getWidth(), request.getHeight(), message);
+		return buildRendererImageMap(errorImage, request.getFormat(), mapContext);
+	}
+	
+	private WebMap buildRendererImageMap(BufferedImage image, String format, WMSMapContext mapContext){
+		final String outputFormat = format;
+		RenderedImageMap result = new RenderedImageMap(mapContext, image, outputFormat);
+		return result;
+	}
 }

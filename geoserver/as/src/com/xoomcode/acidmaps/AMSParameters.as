@@ -25,7 +25,7 @@ package com.xoomcode.acidmaps
 		
 		private var _interpolationStrategy:int = InterpolationStrategy.LINEAR;
 		
-		private var _interpolationParameter:int = 32;
+		private var _radius:int = 32;
 		
 		public function AMSParameters(layers:String, valueColumn:String) {
 			super(layers);
@@ -97,12 +97,12 @@ package com.xoomcode.acidmaps
 			return _interpolationStrategy;
 		}
 		
-		public function set interpolationParameter(value:int):void {
-			_interpolationParameter = value;
+		public function set radius(value:int):void {
+			_radius = value;
 		}
 		
-		public function get interpolationParameter():int {
-			return _interpolationParameter;
+		public function get radius():int {
+			return _radius;
 		}
 		
 		override public function toGETString():String {
@@ -132,7 +132,7 @@ package com.xoomcode.acidmaps
 			
 			str += "&INTERPOLATION_STRATEGY=" + _interpolationStrategy;
 			
-			str += "&INTERPOLATION_PARAMETER=" + _interpolationParameter;
+			str += "&RADIUS=" + _radius;
 			
 			return str;	
 		}
