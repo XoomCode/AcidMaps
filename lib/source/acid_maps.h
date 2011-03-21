@@ -45,7 +45,7 @@ struct Configuration;
  * @param configuration Configuration 
  * @param output_buffer char* a 32bits raw image will stored here
  */
-int generate(Configuration* configuration, unsigned char** output_buffer, unsigned int* output_size);
+int generate(Configuration* configuration, unsigned char** output_buffer, size_t* output_size);
 
 };  // namespace acid_maps
 

@@ -25,7 +25,7 @@
 
 namespace acid_maps {
 
-int generate(Configuration* configuration, unsigned char** output_buffer, unsigned int* output_size) {
+int generate(Configuration* configuration, unsigned char** output_buffer, size_t* output_size) {
 	Validator validator;
 	int error = validator.validate(configuration);
 	if(error) return error;
