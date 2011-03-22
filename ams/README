@@ -1,10 +1,10 @@
 DON'T EVER DO THIS.
-cd lib  # DON'T
+cd ams  # DON'T
 cmake . # DO
 make    # THIS
 
 INSTEAD
-cd lib/build     # YOU SHOULD
+cd ams/build     # YOU SHOULD
 cmake ../source  # DO
 make             # THIS
 

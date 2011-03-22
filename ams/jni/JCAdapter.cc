@@ -1,17 +1,17 @@
 /* The JCAdapter.c file, which implements the native function */
 
-#include <jni.h>      /* Java Native Interface headers */
-#include <string.h>      /* Java Native Interface headers */
+#include "JCAdapter.h" /* Auto-generated header created by javah -jni */
+
+#include <jni.h>       /* Java Native Interface headers */
+#include <string.h>    /* Java Native Interface headers */
 #include <stdlib.h> 
-#include "JCAdapter.h"   /* Auto-generated header created by javah -jni */
+#include <math.h>      /* Include math.h for the prototype of function y0 */
 
-#include <math.h>     /* Include math.h for the prototype of function y0 */
-
-#include "../../lib/source/core/configuration.h"
-#include "../../lib/source/core/size.h"
-#include "../../lib/source/acid_maps.h"
-#include "../../lib/source/render/renderer_type.h"
-#include "../../lib/source/constants/constants.h"
+#include "../src/core/configuration.h"
+#include "../src/core/size.h"
+#include "../src/acid_maps.h"
+#include "../src/render/renderer_type.h"
+#include "../src/constants/constants.h"
 
 /* Our C definition of the function bessely0 declared in Bessel.java */
 namespace ams = acid_maps;
