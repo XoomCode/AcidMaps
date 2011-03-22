@@ -18,3 +18,4 @@ JNIEXPORT jobject JNICALL Java_com_xoomcode_acidmaps_adapter_JCAdapter_interpola
 }
 #endif
 #endif
+

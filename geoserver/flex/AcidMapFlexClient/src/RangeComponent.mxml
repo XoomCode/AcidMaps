@@ -18,11 +18,12 @@
 				rangeItemContainer.removeAllChildren();
 			}
 			
-			public function addItem(value:Number, color:uint):void {
+			public function addItem(value:Number, color:uint, alpha:Number):void {
 				var newItem:RangeItem = new RangeItem();
 				newItem.initialize();
 				newItem.value = value;
 				newItem.selectedColor = color;
+				newItem.selectedAlpha = alpha;
 				rangeItemContainer.addChild(newItem);
 			}
 			

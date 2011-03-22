@@ -16,7 +16,7 @@
 			<openscales:ScaleLine x="{width - 120}" y="{height - 100}" />
 		</openscales:Map>
 		<mx:HBox right="10" top="5">
-			<mx:TextInput id="serverTextInput" text="http://ams.xoomcode.com/acid2" width="200" toolTip="Server" change="onServerChange()"/>
+			<mx:TextInput id="serverTextInput" text="http://ams.xoomcode.com/geoserver" width="200" toolTip="Server" change="onServerChange()"/>
 			<mx:TextInput id="layerTextInput" text="acidmaps:points" toolTip="WMS layer" change="onLayerChange()"/>
 			<mx:ComboBox id="serviceTypeComboBox" change="onServiceTypeComboBoxChange()" toolTip="Service type"> 
 				<mx:ArrayCollection>
@@ -25,7 +25,8 @@
 				</mx:ArrayCollection>
 			</mx:ComboBox>
 			<mx:ComboBox id="mapTypeComboBox" change="onMapTypeComboBoxChange()" 
-						 visible="{serviceTypeComboBox.selectedItem.data == 'AMS'}" toolTip="Map Type"> 
+						 visible="{serviceTypeComboBox.selectedItem.data == 'AMS'}" toolTip="Set as default"
+						 selectedIndex="1"> 
 				<mx:ArrayCollection>
 					<mx:Object label="Isoline" data="isoline"/>
 					<mx:Object label="Heatmap" data="heatmap"/>
@@ -43,7 +44,7 @@
 				<mx:TextArea id="cqlFilterText" width="100%"/>
 			</mx:FormItem>
 			<mx:FormItem label="Simplify Method" width="100%">
-				<mx:ComboBox id="simplifyMethodComboBox"> 
+				<mx:ComboBox id="simplifyMethodComboBox" selectedIndex="1"> 
 					<mx:ArrayCollection>
 						<mx:Object label="Copy" data="{SimplifyMethod.COPY}"/>
 						<mx:Object label="Grid" data="{SimplifyMethod.GRID}"/>
@@ -135,9 +136,11 @@
 				
 				buildWMSLayer();
 				buildAMSLayer();
+				amsLayer.visible = false;
 				map.addLayer(amsLayer);
 				wmsLayer.visible = false;
 				map.addLayer(wmsLayer);
+				showHeatmap();
 			}
 			
 			private function buildWMSLayer():void {
@@ -150,7 +153,7 @@
 			public function buildAMSLayer():void {
 				var amsParams:AMSParameters = new AMSParameters(layerTextInput.text, "value");
 				setGenericParameters(amsParams);
-				addRangeColors();
+				addRangeColors(0.7);
 				applyAMSConfiguration(amsParams);
 
 				amsLayer = buildLayer(amsParams);
@@ -210,7 +213,6 @@
 				layer.maxExtent = map.maxExtent;
 				layer.generateResolutions(maxZoomLevel, 32.61198437499843);
 				return layer;
-			
 			}
 			
 			private function setGenericParameters(params:WMSParams):void {
@@ -259,6 +261,8 @@
 			
 			public function timerHandler(event:TimerEvent):void {
 				updateAMSLayer();
+				amsLayer.visible = true;
+				amsLayer.redraw(true);
 			}
 			
 			private function getItemWithData(combo:ComboBox, data:Object):Object {
@@ -277,7 +281,7 @@
 				rendererTypeComboBox.selectedItem = getItemWithData(rendererTypeComboBox, RendererType.SPARSE);
 				interpolationStrategyComboBox.selectedItem = getItemWithData(interpolationStrategyComboBox, InterpolationStrategy.INVERSE_DISTANCE_WEIGHTING);
 				radiusText.value = 32;
-				addRangeColors();
+				addRangeColors(0.7);
 				updateAfterTimer();
 			}
 			
@@ -288,7 +292,7 @@
 				rendererTypeComboBox.selectedItem = getItemWithData(rendererTypeComboBox, RendererType.GRADIENT);
 				interpolationStrategyComboBox.selectedItem = getItemWithData(interpolationStrategyComboBox, InterpolationStrategy.LINEAR);
 				radiusText.value = 32;
-				addRangeColors();
+				addRangeColors(0);
 				updateAfterTimer();
 				
 			}
@@ -300,7 +304,7 @@
 				rendererTypeComboBox.selectedItem = getItemWithData(rendererTypeComboBox, RendererType.SPARSE);
 				interpolationStrategyComboBox.selectedItem = getItemWithData(interpolationStrategyComboBox, InterpolationStrategy.NEAREST_NEIGHBOR);
 				radiusText.value = 32;
-				addRangeColors();
+				addRangeColors(0.7);
 				updateAfterTimer();
 				
 			}
@@ -312,17 +316,17 @@
 				rendererTypeComboBox.selectedItem = getItemWithData(rendererTypeComboBox, RendererType.SPARSE);
 				interpolationStrategyComboBox.selectedItem = getItemWithData(interpolationStrategyComboBox, InterpolationStrategy.DUMMY);
 				radiusText.value = 5;
-				addRangeColors();
+				addRangeColors(0.7);
 				updateAfterTimer();
 			}
 			
-			private function addRangeColors():void {
+			private function addRangeColors(firstItemAlpha:Number):void {
 				rangeComponent.reset();
-				rangeComponent.addItem(10, 0xFFFFFF);
-				rangeComponent.addItem(20, 0xFF0000);
-				rangeComponent.addItem(45, 0xFFFF00);
-				rangeComponent.addItem(70, 0x00FF00);
-				rangeComponent.addItem(100, 0x0000FF);
+				rangeComponent.addItem(10, 0xFFFFFF, firstItemAlpha);
+				rangeComponent.addItem(20, 0x0000FF, 0.7);
+				rangeComponent.addItem(45, 0x00FF00, 0.7);
+				rangeComponent.addItem(70, 0xFFFF00, 0.7);
+				rangeComponent.addItem(100, 0xFF0000, 0.7);
 			}
 			
 			private function onServerChange():void {

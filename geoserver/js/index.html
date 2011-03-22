@@ -4,7 +4,7 @@
     <head>
         <title>OpenLayers map preview</title>
         <!-- Import OL CSS, auto import does not work with our minified OL.js build -->
-        <link rel="stylesheet" type="text/css" href="http://localhost:8080/geoserver/openlayers/theme/default/style.css"/>
+        <link rel="stylesheet" type="text/css" href="http://ams.xoomcode.com/geoserver/openlayers/theme/default/style.css"/>
         <!-- Basic CSS definitions -->
         <style type="text/css">
             /* General settings */
@@ -106,7 +106,7 @@
         </style>
 
         <!-- Import OpenLayers, reduced, wms read only version -->
-        <script src="http://localhost:8080/geoserver/openlayers/OpenLayers.js" type="text/javascript">
+        <script src="http://ams.xoomcode.com/geoserver/openlayers/OpenLayers.js" type="text/javascript">
         </script>
         <script defer="defer" type="text/javascript">
             var map;
@@ -147,7 +147,7 @@
             
                 // setup tiled layer
                 tiled = new OpenLayers.Layer.WMS(
-                    "sf:bugsites - Tiled", "http://localhost:8080/geoserver/wms",
+                    "sf:bugsites - Tiled", "http://ams.xoomcode.com/geoserver/wms",
                     {
                         LAYERS: 'sf:bugsites',
                         STYLES: '',
@@ -160,8 +160,8 @@
 			'INTERVALS[]':"10,20,45,70,100",
 			'INTERVALS_COLORS[]':"0xffffffcc,0xff0000cc,0xffff00cc,0xff00cc,0xffcc",
 			RENDERER_TYPE:2,
-			INTERPOLATION_STRATEGY:1,
-			INTERPOLATION_PARAMETER:40,
+			INTERPOLATION_STRATEGY:2,
+			RADIUS:40,
 			SERVICE:"AMS"
                     },
                     {
@@ -172,7 +172,7 @@
             
                 // setup single tiled layer
                 untiled = new OpenLayers.Layer.WMS(
-                    "sf:bugsites - Untiled", "http://localhost:8080/geoserver/wms",
+                    "sf:bugsites - Untiled", "http://ams.xoomcode.com/geoserver/wms",
                     {
                         LAYERS: 'sf:bugsites',
                         STYLES: '',
@@ -183,8 +183,8 @@
 			'INTERVALS[]':"10,20,45,70,100",
 			'INTERVALS_COLORS[]':"0xffffffcc,0xff0000cc,0xffff00cc,0xff00cc,0xffcc",
 			RENDERER_TYPE:2,
-			INTERPOLATION_STRATEGY:1,
-			INTERPOLATION_PARAMETER:40,
+			INTERPOLATION_STRATEGY:2,
+			RADIUS:40,
 			SERVICE:"AMS"
                     },
                     {singleTile: true, ratio: 1} 
@@ -225,7 +225,7 @@
                         HEIGHT: map.size.h,
                         format: format,
                         srs: map.layers[0].params.SRS};
-                    OpenLayers.loadURL("http://localhost:8080/geoserver/wms", params, this, setHTML, setHTML);
+                    OpenLayers.loadURL("http://ams.xoomcode.com/geoserver/wms", params, this, setHTML, setHTML);
                     OpenLayers.Event.stop(e);
                 });
             }
@@ -511,13 +511,13 @@
 
                     </select>
                     <input type="text" size="80" id="filter"/>
-                    <img id="updateFilterButton" src="http://localhost:8080/geoserver/openlayers/img/east-mini.png" onClick="updateFilter()" title="Apply filter"/>
-                    <img id="resetFilterButton" src="http://localhost:8080/geoserver/openlayers/img/cancel.png" onClick="resetFilter()" title="Reset filter"/>
+                    <img id="updateFilterButton" src="http://ams.xoomcode.com/geoserver/openlayers/img/east-mini.png" onClick="updateFilter()" title="Apply filter"/>
+                    <img id="resetFilterButton" src="http://ams.xoomcode.com/geoserver/openlayers/img/cancel.png" onClick="resetFilter()" title="Reset filter"/>
                 </li>
             </ul>
         </div>
         <div id="map">
-            <img id="options" title="Toggle options toolbar" src="http://localhost:8080/geoserver/options.png"/>
+            <img id="options" title="Toggle options toolbar" src="http://ams.xoomcode.com/geoserver/options.png"/>
 
         </div>
         <div id="wrapper">
