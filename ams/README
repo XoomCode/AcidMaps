@@ -5,7 +5,7 @@ make    # THIS
 
 INSTEAD
 cd ams/build     # YOU SHOULD
-cmake ../source  # DO
+cmake ../src 	 # DO
 make             # THIS
 
 Or you will fill your source dir with intermediate files generated with cmake.
