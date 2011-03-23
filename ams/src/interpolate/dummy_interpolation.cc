@@ -34,8 +34,8 @@ void DummyInterpolation::interpolate(Size* tile_size, Pixel* dataset, int datase
     
     for (int y = bounds.min_y; y < bounds.max_y; y++) {
       for (int x = bounds.min_x; x < bounds.max_x; x++) {
-        distance_x = x - pixel->x;
-        distance_y = y - pixel->y;
+        distance_x = (float)(x - pixel->x);
+        distance_y = (float)(y - pixel->y);
         distance = std::sqrt(std::pow(distance_x, 2) + std::pow(distance_y, 2));
         
         if (distance < radius) {

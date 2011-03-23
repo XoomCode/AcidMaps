@@ -16,7 +16,7 @@
 
 namespace acid_maps {
 
-static const float MARGIN = 1.0001;
+static const float MARGIN = 1.0001f;
 
 /**
  * TODO: SIMD
@@ -26,8 +26,8 @@ void GridSimplifier::simplify(Point* dataset, int dataset_size, Point* simplifie
   if (simplify_size == 0) return;
   
   // Step 1: Get the bounding box
-  float min_x = INT_MAX;
-  float min_y = INT_MAX;
+  float min_x = (float)INT_MAX;
+  float min_y = (float)INT_MAX;
   float max_x = INT_MIN;
   float max_y = INT_MIN;
 
@@ -44,7 +44,7 @@ void GridSimplifier::simplify(Point* dataset, int dataset_size, Point* simplifie
   // Step 2: Create the NxN simplified grid
   // In order to create a NxN proportional grid that will allow us to simplify the dataset
   // we need to calculate the closest perfect square number to get N
-  int cells = (int)std::floor(std::sqrt(simplify_size));
+  int cells = (int)std::floor(std::sqrt((float)simplify_size));
   float cell_width = (max_x - min_x) * MARGIN / cells;
   float cell_height = (max_y - min_y) * MARGIN / cells;
 

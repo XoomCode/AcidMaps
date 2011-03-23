@@ -57,7 +57,7 @@ int getIntField(JNIEnv* env, jclass configurationClass, jobject jconfiguration, 
 
 char getByteField(JNIEnv* env, jclass configurationClass, jobject jconfiguration, const char* id) {
 	jfieldID fieldId = env->GetFieldID(configurationClass, id, "B");
-	char value = env->GetIntField(jconfiguration, fieldId);
+	char value = (char)env->GetIntField(jconfiguration, fieldId);
 	return value;
 }
 
@@ -85,7 +85,7 @@ int* getIntArrayField(JNIEnv* env, jclass configurationClass, jobject jconfigura
 	jintArray value = (jintArray)env->GetObjectField(jconfiguration, fieldId);
 	int size = getIntArrayLength(env, configurationClass, jconfiguration, id);
 	if(value){
-		int* intArray = env->GetIntArrayElements(value, NULL);
+		int* intArray = (int*)env->GetIntArrayElements(value, NULL);
 		return intArray;
 	} else {
 		return NULL;

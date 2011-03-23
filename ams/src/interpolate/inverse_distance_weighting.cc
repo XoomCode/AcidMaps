@@ -24,7 +24,7 @@ void InverseDistanceWeighting::interpolate(Size* tile_size, Pixel* dataset, int 
   int radius, float interpolated_bitmap[]) {
 
   Pixel* pixel;
-  float distance_x, distance_y, distance, weight, accummulated_value, accummulated_weight;
+  float distance_x, distance_y, weight, accummulated_value, accummulated_weight;
   for (int y = 0; y < tile_size->height; y++) {
     for (int x = 0; x < tile_size->width; x++) {  
     
@@ -32,13 +32,13 @@ void InverseDistanceWeighting::interpolate(Size* tile_size, Pixel* dataset, int 
       accummulated_weight = 0;
       for (int i = 0; i < dataset_size; i++) {
         pixel = dataset + i;
-        distance_x = x - pixel->x;
-        distance_y = y - pixel->y;
+        distance_x = (float)(x - pixel->x);
+        distance_y = (float)(y - pixel->y);
         
         if(distance_x == 0 && distance_y == 0){
           weight = 1;
         } else {
-          weight = 1.0 / (std::pow(distance_x, 2) + std::pow(distance_y, 2));
+          weight = 1.0f / (std::pow(distance_x, 2) + std::pow(distance_y, 2));
         }
         
         accummulated_value += pixel->value  * weight;
