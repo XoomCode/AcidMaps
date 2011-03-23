@@ -39,7 +39,7 @@ void GradientRenderer::render(float interpolated_bitmap[], Size* tile_size, floa
   Color* interpolated_color = new Color();
 
   // Number of colors in the current range
-  float color_steps;
+  unsigned int color_steps;
 
   // Gradient offset acummulator. Used to store the offset between multiple interpolations
   unsigned int offset = 0;
@@ -53,7 +53,7 @@ void GradientRenderer::render(float interpolated_bitmap[], Size* tile_size, floa
 
   for (unsigned int i = 0; i < (intervals_size - 1); i++) {
     local_range = intervals[i + 1] - intervals[i];
-    color_steps = std::abs(GRADIENT_INTERVAL_SIZE * (local_range / global_range));
+    color_steps = (unsigned int)std::abs(GRADIENT_INTERVAL_SIZE * (local_range / global_range));
     interval_step = (intervals[i + 1] - intervals[i]) / color_steps;
 
     start_color = intervals_colors + i;
@@ -65,10 +65,10 @@ void GradientRenderer::render(float interpolated_bitmap[], Size* tile_size, floa
       interpolated_interval = intervals[i] + interval_step * k;
       std::memcpy(gradient + offset + k, &interpolated_interval, sizeof(interpolated_interval));
 
-      interpolated_color->r = end_color->r * coefficient + start_color->r * (1 - coefficient);
-      interpolated_color->g = end_color->g * coefficient + start_color->g * (1 - coefficient);
-      interpolated_color->b = end_color->b * coefficient + start_color->b * (1 - coefficient);
-      interpolated_color->a = end_color->a * coefficient + start_color->a * (1 - coefficient);
+      interpolated_color->r = (unsigned char)(end_color->r * coefficient + start_color->r * (1 - coefficient));
+      interpolated_color->g = (unsigned char)(end_color->g * coefficient + start_color->g * (1 - coefficient));
+      interpolated_color->b = (unsigned char)(end_color->b * coefficient + start_color->b * (1 - coefficient));
+      interpolated_color->a = (unsigned char)(end_color->a * coefficient + start_color->a * (1 - coefficient));
 
       std::memcpy(gradient_colors + offset + k, interpolated_color, sizeof(Color));
     }

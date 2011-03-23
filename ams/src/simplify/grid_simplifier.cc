@@ -49,7 +49,7 @@ void GridSimplifier::simplify(Point* dataset, int dataset_size, Point* simplifie
   float cell_height = (max_y - min_y) * MARGIN / cells;
 
   // Create the grid
-  int grid_size = std::pow(cells, 2);
+  int grid_size = cells * cells;
   Point* grid = new Point[grid_size];
   std::memset(grid, 0, grid_size * sizeof(grid[0]));
 

@@ -31,7 +31,7 @@ void DenseRenderer::render(float interpolated_bitmap[], Size* tile_size, float i
 int DenseRenderer::interval(float value, float intervals[], int intervals_size) {
   if(value < 0) return 0;
   if(value >= intervals_size) return intervals_size - 1;
-  return value;
+  return (int)value;
 }
 
 

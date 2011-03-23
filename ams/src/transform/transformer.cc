@@ -33,8 +33,8 @@ void Transformer::transform(Bounds* bounds, Size* tile_size, Point dataset[],
     point = dataset + i;
     pixel = transformed_dataset + i;
     
-    pixel->x = (point->x - bounds->min_x) / horizontal_resolution;
-    pixel->y = (bounds->max_y - point->y) / vertical_resolution;
+    pixel->x = (int)((point->x - bounds->min_x) / horizontal_resolution);
+    pixel->y = (int)((bounds->max_y - point->y) / vertical_resolution);
     pixel->value = point->value;
   }
 }
