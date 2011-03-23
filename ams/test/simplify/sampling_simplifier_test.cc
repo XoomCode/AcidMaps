@@ -1,8 +1,8 @@
 #include <cppunit/extensions/HelperMacros.h>
-#include "../../source/constants/constants.h"
-#include "../../source/core/point.h"
-#include "../../source/simplify/simplifier.h"
-#include "../../source/simplify/sampling_simplifier.h"
+#include "../../src/constants/constants.h"
+#include "../../src/core/point.h"
+#include "../../src/simplify/simplifier.h"
+#include "../../src/simplify/sampling_simplifier.h"
 
 class SamplingSimplifierTest : public CppUnit::TestFixture {
   CPPUNIT_TEST_SUITE(SamplingSimplifierTest);

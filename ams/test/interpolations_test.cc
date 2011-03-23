@@ -1,12 +1,12 @@
 #include <cppunit/extensions/HelperMacros.h>
-#include "../source/core/configuration.h"
-#include "../source/core/color.h"
-#include "../source/constants/constants.h"
-#include "../source/simplify/simplify_method.h"
-#include "../source/interpolate/interpolation_strategy.h"
-#include "../source/render/renderer_type.h"
-#include "../source/encode/encoding_format.h"
-#include "../source/acid_maps.h"
+#include "../src/core/configuration.h"
+#include "../src/core/color.h"
+#include "../src/constants/constants.h"
+#include "../src/simplify/simplify_method.h"
+#include "../src/interpolate/interpolation_strategy.h"
+#include "../src/render/renderer_type.h"
+#include "../src/encode/encoding_format.h"
+#include "../src/acid_maps.h"
 
 #include <cstring>
 #include <cstdlib>
@@ -101,7 +101,7 @@ private:
   
   float* create_intervals(int intervals_size) {
     float* intervals = new float[intervals_size];
-    std::memset(intervals, 0.0f, intervals_size * sizeof(intervals[0]));
+    std::memset(intervals, 0, intervals_size * sizeof(intervals));
     
     for (int i = 0; i < intervals_size; i++) {
       intervals[i] = (i + 1 ) * 20;

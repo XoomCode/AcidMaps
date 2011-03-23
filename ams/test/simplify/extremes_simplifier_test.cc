@@ -1,8 +1,8 @@
 #include <cppunit/extensions/HelperMacros.h>
-#include "../../source/constants/constants.h"
-#include "../../source/core/point.h"
-#include "../../source/simplify/simplifier.h"
-#include "../../source/simplify/extremes_simplifier.h"
+#include "../../src/constants/constants.h"
+#include "../../src/core/point.h"
+#include "../../src/simplify/simplifier.h"
+#include "../../src/simplify/extremes_simplifier.h"
 
 class ExtremesSimplifierTest : public CppUnit::TestFixture {
   CPPUNIT_TEST_SUITE(ExtremesSimplifierTest);

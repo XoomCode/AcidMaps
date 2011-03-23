@@ -1,10 +1,10 @@
 #include <cppunit/extensions/HelperMacros.h>
-#include "../../source/core/configuration.h"
-#include "../../source/core/bounds.h"
-#include "../../source/core/point.h"
-#include "../../source/core/pixel.h"
-#include "../../source/core/size.h"
-#include "../../source/transform/transformer.h"
+#include "../../src/core/configuration.h"
+#include "../../src/core/bounds.h"
+#include "../../src/core/point.h"
+#include "../../src/core/pixel.h"
+#include "../../src/core/size.h"
+#include "../../src/transform/transformer.h"
 
 class TransformerTest : public CppUnit::TestFixture {
   CPPUNIT_TEST_SUITE(TransformerTest);

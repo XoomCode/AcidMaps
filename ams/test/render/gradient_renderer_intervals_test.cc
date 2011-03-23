@@ -1,7 +1,8 @@
 #include <cppunit/extensions/HelperMacros.h>
-#include "../../source/render/gradient_renderer.h"
 #include <cstdlib>
 #include <ctime>
+
+#include "../../src/render/gradient_renderer.h"
 
 class GradientRendererIntervalsTest : public CppUnit::TestFixture {
   CPPUNIT_TEST_SUITE(GradientRendererIntervalsTest);

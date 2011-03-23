@@ -1,7 +1,8 @@
 #include <cppunit/extensions/HelperMacros.h>
-#include "../../source/render/sparse_renderer.h"
 #include <cstdlib>
 #include <ctime>
+
+#include "../../src/render/sparse_renderer.h"
 
 class SparseRendererIntervalsTest : public CppUnit::TestFixture {
   CPPUNIT_TEST_SUITE(SparseRendererIntervalsTest);
@@ -68,7 +69,7 @@ public:
     int validations = std::rand() % 80 + 20;
     for (int i = 0; i < validations; i++) {
       value = std::rand() % (intervals_size * 10) - 20;
-      interval = value <= 0 ? 0 : (value - 1) / 10;
+      interval = value <= 0 ? 0 : (int)((value - 1) / 10);
       CPPUNIT_ASSERT_EQUAL(interval, renderer->interval(value, intervals, intervals_size));
     }
   }
