@@ -9,11 +9,11 @@
 
 #include "../src/core/configuration.h"
 #include "../src/core/size.h"
+#include "../src/core/color.h"
 #include "../src/acid_maps.h"
 #include "../src/render/renderer_type.h"
 #include "../src/constants/constants.h"
 
-/* Our C definition of the function bessely0 declared in Bessel.java */
 namespace ams = acid_maps;
 
 int getFloatArrayLength(JNIEnv* env, jclass configurationClass, jobject jconfiguration, const char* id) {
@@ -57,7 +57,7 @@ int getIntField(JNIEnv* env, jclass configurationClass, jobject jconfiguration, 
 
 char getByteField(JNIEnv* env, jclass configurationClass, jobject jconfiguration, const char* id) {
 	jfieldID fieldId = env->GetFieldID(configurationClass, id, "B");
-	char value = (char)env->GetIntField(jconfiguration, fieldId);
+	char value = (char)env->GetByteField(jconfiguration, fieldId);
 	return value;
 }
 
@@ -85,7 +85,7 @@ int* getIntArrayField(JNIEnv* env, jclass configurationClass, jobject jconfigura
 	jintArray value = (jintArray)env->GetObjectField(jconfiguration, fieldId);
 	int size = getIntArrayLength(env, configurationClass, jconfiguration, id);
 	if(value){
-		int* intArray = (int*)env->GetIntArrayElements(value, NULL);
+		int* intArray = env->GetIntArrayElements(value, NULL);
 		return intArray;
 	} else {
 		return NULL;
@@ -127,49 +127,46 @@ ams::Point* getPointArrayField(JNIEnv* env, jclass configurationClass, jobject j
 }
 
 ams::Color* getColorArrayField(JNIEnv* env, jclass configurationClass, jobject jconfiguration, const char* id, int size) {
+  int position = 0;
 	jfieldID fieldId = env->GetFieldID(configurationClass, id, "[Lcom/xoomcode/acidmaps/core/Color;");
 	jobjectArray value = (jobjectArray)env->GetObjectField(jconfiguration, fieldId);
 	jclass colorClass = env->FindClass("com/xoomcode/acidmaps/core/Color");
+	
+	ams::Color* colorArray = NULL;
+	
 	if(value){
-		ams::Color* colorArray = new ams::Color[size];
-
-		ams::Color* color= new ams::Color();
-		for (int i = 0; i < size; ++i) {
+    colorArray = new ams::Color[size];
+  
+	  ams::Color* color;
+		for (int i = 0; i < size; i++) {
 			jobject jcolor = (jobject)env->GetObjectArrayElement(value, i);
+		  color = colorArray + i;
 			color->r = getByteField(env, colorClass, jcolor, "r");
 			color->g = getByteField(env, colorClass, jcolor, "g");
 			color->b = getByteField(env, colorClass, jcolor, "b");
 			color->a = getByteField(env, colorClass, jcolor, "a");
-			memcpy(colorArray + i, color, sizeof(ams::Color));
 		}
-		delete color;
-		return colorArray;
-    } else {
-		return NULL;
-	}
+  }
+  
+	return colorArray;
 }
 
 ams::Bounds* getBoundField(JNIEnv* env, jclass configurationClass, jobject jconfiguration, const char* id) {
+	ams::Bounds* bound = NULL;
 	jclass boundClass = env->FindClass("com/xoomcode/acidmaps/core/Bounds");
-
 	jfieldID fieldId = env->GetFieldID(configurationClass, id, "Lcom/xoomcode/acidmaps/core/Bounds;");
 	jobject jbounds = (jobject)env->GetObjectField(jconfiguration, fieldId);
-
 	if(jbounds){
-		ams::Bounds* bound= new ams::Bounds();
+		bound = new ams::Bounds();
 		bound->min_x = getFloatField(env, boundClass, jbounds, "minX");
 		bound->min_y = getFloatField(env, boundClass, jbounds, "minY");
 		bound->max_x = getFloatField(env, boundClass, jbounds, "maxX");
 		bound->max_y = getFloatField(env, boundClass, jbounds, "maxY");
-		return bound;
-	} else {
-		return NULL;
 	}
+	return bound;
 }
 
-ams::Configuration* buildConfiguration(JNIEnv* env, jobject jconfiguration){
-	ams::Configuration* configuration = new ams::Configuration();
-
+ams::Configuration* buildConfiguration(JNIEnv* env, jobject jconfiguration, ams::Configuration* configuration){
 	jclass configurationClass = env->FindClass("com/xoomcode/acidmaps/core/Configuration");
 
 	configuration->bounds = getBoundField(env, configurationClass, jconfiguration, "bounds");
@@ -188,51 +185,44 @@ ams::Configuration* buildConfiguration(JNIEnv* env, jobject jconfiguration){
  	configuration->intervals = getFloatArrayField(env, configurationClass, jconfiguration, "intervals");
  	configuration->intervals_size = getFloatArrayLength(env, configurationClass, jconfiguration, "intervals");
  	configuration->intervals_colors = getColorArrayField(env, configurationClass, jconfiguration, "intervalsColors", configuration->intervals_size);
+ 	
  	configuration->renderer_type = getIntField(env, configurationClass, jconfiguration, "rendererType");
  	configuration->radius = getIntField(env, configurationClass, jconfiguration, "radius");
  	configuration->format = getIntField(env, configurationClass, jconfiguration, "format");
-
-	return configuration;
 }
 
 JNIEXPORT jobject JNICALL Java_com_xoomcode_acidmaps_adapter_JCAdapter_interpolateC
   (JNIEnv* env, jobject obj, jobject jconfiguration)
 {
-	ams::Configuration* configuration = buildConfiguration(env, jconfiguration);
+	ams::Configuration* configuration = new ams::Configuration();
+	buildConfiguration(env, jconfiguration, configuration);
 
 	unsigned char* charOut;
 	size_t charOutSize;
-	jint error = ams::generate(configuration, &charOut, &charOutSize);
+
+	int error = ams::generate(configuration, &charOut, &charOutSize);
+	
+	jbyteArray out = NULL;
+ 	
  	if(error != 0){
  		jclass configurationClass = env->FindClass("com/xoomcode/acidmaps/core/Configuration");
  		jfieldID fieldId = env->GetFieldID(configurationClass, "error", "I");
  		env->SetIntField(jconfiguration, fieldId, error);
-
- 		delete[] configuration->dataset;
-		delete configuration->bounds;
-		delete configuration->tile_size;
-		delete[] configuration->intervals;
-		delete[] configuration->intervals_colors;
-		delete configuration;
-
- 		return NULL;
- 	}
- 	jbyte* joutpt = new jbyte[charOutSize];
-
- 	memcpy(joutpt, charOut, charOutSize * sizeof(charOut));
-
- 	jbyteArray out = env->NewByteArray(charOutSize);
-
- 	env->SetByteArrayRegion(out, 0, charOutSize, joutpt);
-
+ 	} else {
+   	jbyte* joutpt = new jbyte[charOutSize];
+   	memcpy(joutpt, charOut, charOutSize * sizeof(charOut));
+   	out = env->NewByteArray(charOutSize);
+   	env->SetByteArrayRegion(out, 0, charOutSize, joutpt);
+ 		free(charOut);
+ 		delete[] joutpt;
+  }
+  
 	delete[] configuration->dataset;
 	delete configuration->bounds;
 	delete configuration->tile_size;
 	delete[] configuration->intervals;
 	delete[] configuration->intervals_colors;
 	delete configuration;
-	delete[] joutpt;
-	free(charOut);
 
 	return out;
 }
