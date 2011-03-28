@@ -36,7 +36,7 @@ void DummyInterpolation::interpolate(Size* tile_size, Pixel* dataset, int datase
       for (int x = bounds.min_x; x < bounds.max_x; x++) {
         distance_x = (float)(x - pixel->x);
         distance_y = (float)(y - pixel->y);
-        distance = std::sqrt(std::pow(distance_x, 2) + std::pow(distance_y, 2));
+        distance = std::sqrt(std::pow(distance_x, 2.0f) + std::pow(distance_y, 2.0f));
         
         if (distance < radius) {
           interpolated_bitmap[y * tile_size->width + x] = pixel->value;

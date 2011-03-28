@@ -50,7 +50,7 @@ int generate(Configuration* configuration, unsigned char** output_buffer, size_t
     configuration->radius, interpolated_bitmap);
   delete interpolation;
   delete[] transformed_dataset;
-  
+
   unsigned char* rgba_buffer = new unsigned char[buffer_size * RGBA];
   Renderer* renderer = RendererFactory::get(configuration->renderer_type);
   renderer->render(interpolated_bitmap, configuration->tile_size, configuration->intervals, 
