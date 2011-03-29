@@ -198,7 +198,7 @@ JNIEXPORT jobject JNICALL Java_com_xoomcode_acidmaps_adapter_JCAdapter_interpola
 	buildConfiguration(env, jconfiguration, configuration);
 
 	unsigned char* charOut;
-	size_t charOutSize;
+	unsigned int charOutSize;
 
 	int error = ams::generate(configuration, &charOut, &charOutSize);
 	
@@ -210,7 +210,7 @@ JNIEXPORT jobject JNICALL Java_com_xoomcode_acidmaps_adapter_JCAdapter_interpola
  		env->SetIntField(jconfiguration, fieldId, error);
  	} else {
    	jbyte* joutpt = new jbyte[charOutSize];
-   	memcpy(joutpt, charOut, charOutSize * sizeof(charOut));
+   	memcpy(joutpt, charOut, charOutSize * sizeof(unsigned char));
    	out = env->NewByteArray(charOutSize);
    	env->SetByteArrayRegion(out, 0, charOutSize, joutpt);
  		free(charOut);

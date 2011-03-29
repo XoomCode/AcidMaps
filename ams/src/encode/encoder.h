@@ -7,9 +7,6 @@
  * @date 2010-11-10
  * @authors Fabio R. Panettieri
  */
-
-#include <cstddef>
-
 namespace acid_maps {
 
 /**
@@ -29,7 +26,7 @@ public:
     /**
      * @todo brief
      */
-  virtual void encode(Size* tile_size, unsigned char* rgba_buffer, unsigned char** output_buffer, size_t* output_size) = 0;
+  virtual void encode(Size* tile_size, unsigned char* rgba_buffer, unsigned char** output_buffer, unsigned int* output_size) = 0;
 };
 
 };  // namespace acid_maps
