@@ -1,2 +1,0 @@
-PUSH = "PUSH"
-POP = "POP"

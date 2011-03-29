@@ -1,25 +1,45 @@
 Acid Maps
 
 SYNOPSIS
+AMS (Acid Map Server) is basically a web server that generates interpolated images from a set of valued points in real time. This means that you can use your existing datasets (e.g.: sales, temperature, etc...) to generate advanced visualizations: heatmaps, isolines and Voronoi diagrams.
 
-  Acid Maps it's a web server that generates interpolated
-  images from a set of valued points.
+Using the plugin of Acid Map for Geoserver, you can use a WMS layer of points to generate an AMS layer. You only need to add some additional parameters to WMS request.
 
+QUICK START
+	
+	Copy AcidMaps library for to your system library path. For example, in linux, copy libacid-maps-jni.so to /usr/lib/	
+	Copy Geoserver acidmaps-*.jar to WEB-INF/lib of deployed
 
-DEPENDENCIES
+	Now, you can use any WMS layer in Geoserver whose geographic data is a point and has a Numeric column to be interpolated. You only need to add some parameters to WMS request 	and Geoserver will return an AMS map. An example of AMS request with OpenLayers:
 
-  System
-    python (Recomended >= 2.6.0)
-    psyco  (Recomended >= 1.6.0)
+	wms = new OpenLayers.Layer.WMS(
+		"sf:bugsites - Untiled", "http://ams.xoomcode.com/geoserver/wms",
+		{
+			LAYERS: 'sf:bugsites',
+			STYLES: '',
+			format: format,
+			VALUE_COLUMN:"cat",
+			SIMPLIFY_METHOD: 3,
+			SIMPLIFY_SIZE:90,
+			'INTERVALS[]':"10,20,45,70,100",
+			'INTERVALS_COLORS[]':"0xffffffcc,0xff0000cc,0xffff00cc,0xff00cc,0xffcc",
+			RENDERER_TYPE:2,
+			INTERPOLATION_STRATEGY:2,
+			RADIUS:40,
+			SERVICE:"AMS"
+		},
+		{singleTile: true, ratio: 1} 
+	);
 
+	For more information visits https://github.com/XoomCode/AcidMaps/wiki/AcidMaps-Reference
 
 LICENSE
 
-  Acid Maps is released under LGPL.
+  AcidMaps is released under LGPL.
   Copyright © 2010, XoomCode. All rights reserved.
 
-
 BUGS
+
   If you find a bug, please report it at 
   http://github.com/XoomCode/AcidMaps/issues
 

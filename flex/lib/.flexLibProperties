@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<flexLibProperties version="1">
+  <includeClasses>
+    <classEntry path="com.xoomcode.acidmaps.AMSParameters"/>
+    <classEntry path="com.xoomcode.acidmaps.interpolate.InterpolationStrategy"/>
+    <classEntry path="com.xoomcode.acidmaps.renderer.RendererType"/>
+    <classEntry path="com.xoomcode.acidmaps.simplify.SimplifyMethod"/>
+    <classEntry path="com.xoomcode.constants.Constants"/>
+  </includeClasses>
+  <includeResources/>
+  <namespaceManifests/>
+</flexLibProperties>

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+
+  <!-- set parent pom to community pom -->
+  <parent>
+    <groupId>org.geoserver</groupId>
+    <artifactId>geoserver</artifactId>
+    <version>2.2-SNAPSHOT</version>
+  </parent>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.geoserver</groupId>
+      <artifactId>wms</artifactId>
+      <version>2.2-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>org.geoserver</groupId>
+      <artifactId>main</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.geotools</groupId>
+      <artifactId>gt-render</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.geotools</groupId>
+      <artifactId>gt-svg</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.h2database</groupId>
+      <artifactId>h2</artifactId> 
+    </dependency>
+    <dependency>
+      <groupId>org.geoserver</groupId>
+      <artifactId>main</artifactId>
+      <classifier>tests</classifier>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>xmlunit</groupId>
+      <artifactId>xmlunit</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+  
+   <build>
+    <testResources>
+      <testResource>
+        <directory>src/test/resources</directory>
+      </testResource>     
+    </testResources>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>cobertura-maven-plugin</artifactId>
+        <configuration>
+          <instrumentation>
+            <!-- ignores>
+             <ignore>**/*Exception.class</ignore>
+            </ignores-->
+            <excludes>
+              <exclude>**/*Exception.class</exclude>
+            </excludes>
+            <!-- includes>
+              <include>**/*Test.class</include>
+            </includes-->
+          </instrumentation>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  <groupId>org.geoserver</groupId>
+  <artifactId>acidmaps</artifactId>
+  <packaging>jar</packaging>
+  <version>1.0</version>
+  <name>Acid Map Service Module</name>
+
+  <repositories>
+    <repository>
+       <id>codehaus</id>
+       <name>codehaus</name>
+       <url>http://repository.codehaus.org/</url>
+    </repository>
+    <repository>
+       <id>refractions</id>
+       <name>refractions</name>
+       <url>http://lists.refractions.net/m2</url>
+    </repository>
+
+  </repositories>
+  
+</project>

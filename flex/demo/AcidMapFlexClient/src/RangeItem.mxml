@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" borderSides="bottom" borderStyle="solid" paddingBottom="3">
+	<mx:NumericStepper id="numericStepper" minimum="-100" maximum="200"/>
+	<mx:ColorPicker id="coloPìcker"/>
+	<mx:NumericStepper id="alphaComponent" toolTip="Alpha" value="0.8" minimum="0" maximum="1" stepSize="0.1"/>
+	<mx:Spacer width="100%"/>
+	<mx:LinkButton label="-" width="25" click="onRemove()" paddingBottom="0" paddingLeft="0" paddingRight="0" paddingTop="0"/>
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			import mx.events.ListEvent;
+			
+			private function onRemove():void {
+				parent.removeChild(this);
+			}
+			
+			public function set value(value:Number):void {
+				numericStepper.value = value;
+			}
+			
+			public function get value():Number {
+				return numericStepper.value;
+			}
+			
+			public function set selectedAlpha(value:Number):void {
+				alphaComponent.value = value;
+			}
+			
+			public function get selectedAlpha():Number {
+				return alphaComponent.value;
+			}
+			
+			public function set selectedColor(color:uint):void {
+				coloPìcker.selectedColor = color;
+			}
+			
+			public function get selectedColor():uint {
+				return coloPìcker.selectedColor;
+			}
+			
+			
+		]]>
+	</mx:Script>
+</mx:HBox>
