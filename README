@@ -1,16 +1,50 @@
-Acid Maps
+AcidMaps
 
 SYNOPSIS
-AMS (Acid Map Server) is basically a web server that generates interpolated images from a set of valued points in real time. This means that you can use your existing datasets (e.g.: sales, temperature, etc...) to generate advanced visualizations: heatmaps, isolines and Voronoi diagrams.
 
-Using the plugin of Acid Map for Geoserver, you can use a WMS layer of points to generate an AMS layer. You only need to add some additional parameters to WMS request.
+  AcidMaps is an open source library that generates interpolated images from a
+  set of valued points in real time.
+  
+  It's can be used to generate advanced visualizations with point datasets:
+  (e.g.: sales, temperature, atmospheric pressure, population, etc...)
 
+  
+USAGE
+
+  AcidMaps is compiled as a shared library. 
+  You can use it from C/C++ programs, Python (through CTypes), Java (through
+  JNI), and any other system that can access a native library.
+  
+  Also in the downloads page you can find some pre-compiled AcidMaps packages
+  which should cover common uses. We'll see how to use it with geoserver in the
+  following quick start.
+
+  
 QUICK START
-	
-	Copy AcidMaps library for to your system library path. For example, in linux, copy libacid-maps-jni.so to /usr/lib/	
-	Copy Geoserver acidmaps-*.jar to WEB-INF/lib of deployed
 
-	Now, you can use any WMS layer in Geoserver whose geographic data is a point and has a Numeric column to be interpolated. You only need to add some parameters to WMS request 	and Geoserver will return an AMS map. An example of AMS request with OpenLayers:
+  Using the plugin of AcidMaps for Geoserver, you can use existent layers
+  to generate interpolated maps.
+
+  1. Download Geoserver plugin from downloads page
+     (https://github.com/XoomCode/AcidMaps/downloads)
+  
+  2. Extract and copy acidmaps-x.x.jar to geoserver/WEB-INF/lib
+  
+  3. Download a version AcidMaps JNI adapter that suits your environment.
+     OS and architecture. e.g.: Ubuntu_Maverick_Meerkat_x86.tar.gz
+  
+  4. Copy AcidMaps JNI adapter to your system library path.
+	   e.g.: In linux, you should copy libacid-maps-jni.so to /usr/lib/	
+
+  5. Start geoserver
+
+  Now, you can use any WMS layer in Geoserver whose geographic data is a point 
+  and has a Numeric column to be interpolated. 
+  
+  You only need to add some parameters to WMS request and Geoserver will return 
+  an AMS interpolated map. 
+  
+  An example of AMS request with OpenLayers:
 
 	wms = new OpenLayers.Layer.WMS(
 		"sf:bugsites - Untiled", "http://ams.xoomcode.com/geoserver/wms",
@@ -31,12 +65,14 @@ QUICK START
 		{singleTile: true, ratio: 1} 
 	);
 
-	For more information visits https://github.com/XoomCode/AcidMaps/wiki/AcidMaps-Reference
+	More information: https://github.com/XoomCode/AcidMaps/wiki/AcidMaps-Reference
+
 
 LICENSE
 
   AcidMaps is released under LGPL.
   Copyright © 2010, XoomCode. All rights reserved.
+
 
 BUGS
 
