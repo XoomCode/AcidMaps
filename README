@@ -16,14 +16,18 @@ USAGE
   JNI), and any other system that can access a native library.
   
   Also in the downloads page you can find some pre-compiled AcidMaps packages
-  which should cover common uses. We'll see how to use it with geoserver in the
+  which should cover common uses. We'll see how to use it with Geoserver (>= 2.1) in the
   following quick start.
 
   
 QUICK START
 
-  Using the plugin of AcidMaps for Geoserver, you can use existent layers
+  The geoserver plugin of AcidMaps allows you to use existent layers
   to generate interpolated maps.
+
+  (NOTE: This plugin relies on functionality added on Geoserver 2.1,
+  previous versions are not supported)
+
 
   1. Download Geoserver plugin from downloads page
      (https://github.com/XoomCode/AcidMaps/downloads)
@@ -39,10 +43,10 @@ QUICK START
   5. Start geoserver
 
   Now, you can use any WMS layer in Geoserver whose geographic data is a point 
-  and has a Numeric column to be interpolated. 
+  and has a Numeric column to be interpolated.
   
   You only need to add some parameters to WMS request and Geoserver will return 
-  an AMS interpolated map. 
+  an AMS interpolated map.
   
   An example of AMS request with OpenLayers:
 
