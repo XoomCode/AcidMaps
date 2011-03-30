@@ -28,19 +28,16 @@ QUICK START
   (NOTE: This plugin relies on functionality added on GeoServer 2.1,
   previous versions are not supported)
 
+  1. Download JNI adapter (http://goo.gl/HwJQ4) and extract to your system library path.
+     (e.g.: /usr/lib/libacidmaps-jni.so)
 
-  1. Download GeoServer plugin (AcidMaps_x.x_GeoServer_Plugin.tar.gz) from downloads page
-     (https://github.com/XoomCode/AcidMaps/downloads)
+  2. Download GeoServer plugin (http://goo.gl/0qb7a) and extract to Geoserver lib directory. 
+     (e.g.: geoserver/WEB-INF/lib/acidmaps-2.0.jar)
   
-  2. Extract and copy acidmaps-x.x.jar to geoserver/WEB-INF/lib
-  
-  3. Download a version AcidMaps JNI adapter that suits your environment.
-     OS and architecture. e.g.: AcidMaps_x.x_JNI_Linux.tar.gz
-  
-  4. Copy AcidMaps JNI adapter to your system library path.
-     e.g.: In linux, you should copy libacid-maps-jni.so to /usr/lib/  
+  3. Start GeoServer and try this
+     http://localhost:8080/geoserver/wms?service=AMS&version=1.1.0&request=GetMap&layers=sf:bugsites&styles=&bbox=590223.4382724703,4914107.882513998,608462.4604629107,4920523.89081033&width=938&height=330&srs=EPSG:26713&format=image/png&VALUE_COLUMN=cat&SIMPLIFY_METHOD=3&SIMPLIFY_SIZE=90&INTERVALS[]=10,20,45,70,100&INTERVALS_COLORS[]=0xffffff80,0xff000080,0xffff0080,0x00ff0080,0x0000ff80&RENDERER_TYPE=2&INTERPOLATION_STRATEGY=2&radius=40
 
-  5. Start geoserver
+  4. Opaaaa!
 
   Now, you can use any WMS layer in GeoServer whose geographic data is a point 
   and has a Numeric column to be interpolated.
