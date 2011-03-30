@@ -16,21 +16,20 @@ USAGE
   JNI), and any other system that can access a native library.
   
   Also in the downloads page you can find some pre-compiled AcidMaps packages
-  which should cover common uses. We'll see how to use it with Geoserver (>= 2.1) in the
+  which should cover common uses. We'll see how to use it with GeoServer (>= 2.1) in the
   following quick start.
 
   
 QUICK START
 
-  The geoserver plugin of AcidMaps allows you to use existent layers
+  The GeoServer plugin of AcidMaps allows you to use existent layers
   to generate interpolated maps.
 
-  (NOTE: This plugin relies on functionality added on Geoserver 2.1,
+  (NOTE: This plugin relies on functionality added on GeoServer 2.1,
   previous versions are not supported)
 
 
-  1. Download Geoserver plugin from downloads page
-     AcidMaps_x.x_Geoserver_Plugin.tar.gz
+  1. Download GeoServer plugin (AcidMaps_x.x_GeoServer_Plugin.tar.gz) from downloads page
      (https://github.com/XoomCode/AcidMaps/downloads)
   
   2. Extract and copy acidmaps-x.x.jar to geoserver/WEB-INF/lib
@@ -39,38 +38,38 @@ QUICK START
      OS and architecture. e.g.: AcidMaps_x.x_JNI_Linux.tar.gz
   
   4. Copy AcidMaps JNI adapter to your system library path.
-	   e.g.: In linux, you should copy libacid-maps-jni.so to /usr/lib/	
+     e.g.: In linux, you should copy libacid-maps-jni.so to /usr/lib/  
 
   5. Start geoserver
 
-  Now, you can use any WMS layer in Geoserver whose geographic data is a point 
+  Now, you can use any WMS layer in GeoServer whose geographic data is a point 
   and has a Numeric column to be interpolated.
   
-  You only need to add some parameters to WMS request and Geoserver will return 
+  You only need to add some parameters to WMS request and GeoServer will return 
   an AMS interpolated map.
   
   An example of AMS request with OpenLayers:
 
-	wms = new OpenLayers.Layer.WMS(
-		"sf:bugsites - Untiled", "http://ams.xoomcode.com/geoserver/wms",
-		{
-			LAYERS: 'sf:bugsites',
-			STYLES: '',
-			format: format,
-			VALUE_COLUMN:"cat",
-			SIMPLIFY_METHOD: 3,
-			SIMPLIFY_SIZE:90,
-			'INTERVALS[]':"10,20,45,70,100",
-			'INTERVALS_COLORS[]':"0xffffffcc,0xff0000cc,0xffff00cc,0xff00cc,0xffcc",
-			RENDERER_TYPE:2,
-			INTERPOLATION_STRATEGY:2,
-			RADIUS:40,
-			SERVICE:"AMS"
-		},
-		{singleTile: true, ratio: 1} 
-	);
+  wms = new OpenLayers.Layer.WMS(
+    "sf:bugsites - Untiled", "http://ams.xoomcode.com/geoserver/wms",
+    {
+      LAYERS: 'sf:bugsites',
+      STYLES: '',
+      format: format,
+      VALUE_COLUMN:"cat",
+      SIMPLIFY_METHOD: 3,
+      SIMPLIFY_SIZE:90,
+      'INTERVALS[]':"10,20,45,70,100",
+      'INTERVALS_COLORS[]':"0xffffffcc,0xff0000cc,0xffff00cc,0xff00cc,0xffcc",
+      RENDERER_TYPE:2,
+      INTERPOLATION_STRATEGY:2,
+      RADIUS:40,
+      SERVICE:"AMS"
+    },
+    {singleTile: true, ratio: 1} 
+  );
 
-	More information: https://github.com/XoomCode/AcidMaps/wiki/AcidMaps-Reference
+  More information: https://github.com/XoomCode/AcidMaps/wiki/AcidMaps-Reference
 
 
 LICENSE
