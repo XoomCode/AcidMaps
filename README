@@ -6,7 +6,7 @@ SYNOPSIS
   set of valued points in real time.
   
   It's can be used to generate advanced visualizations with point datasets:
-  (e.g.: sales, temperature, atmospheric pressure, population, etc...)
+  (e.g.: sales, temperature, atmospheric pressure, population)
 
   
 USAGE
@@ -30,12 +30,13 @@ QUICK START
 
 
   1. Download Geoserver plugin from downloads page
+     AcidMaps_x.x_Geoserver_Plugin.tar.gz
      (https://github.com/XoomCode/AcidMaps/downloads)
   
   2. Extract and copy acidmaps-x.x.jar to geoserver/WEB-INF/lib
   
   3. Download a version AcidMaps JNI adapter that suits your environment.
-     OS and architecture. e.g.: Ubuntu_Maverick_Meerkat_x86.tar.gz
+     OS and architecture. e.g.: AcidMaps_x.x_JNI_Linux.tar.gz
   
   4. Copy AcidMaps JNI adapter to your system library path.
 	   e.g.: In linux, you should copy libacid-maps-jni.so to /usr/lib/	
@@ -75,7 +76,7 @@ QUICK START
 LICENSE
 
   AcidMaps is released under LGPL.
-  Copyright © 2010, XoomCode. All rights reserved.
+  Copyright © 2011, XoomCode. All rights reserved.
 
 
 BUGS
