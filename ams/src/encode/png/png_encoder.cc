@@ -6,12 +6,10 @@
  * @authors Fabio R. Panettieri
  */
 
-#include "../../constants/constants.h"
-#include "../../core/size.h"
 #include "./png_encoder.h"
-#include "lodepng.h"
 
-#include <cstring>
+#include "lodepng.h"
+#include "../../core/size.h"
 
 namespace acid_maps {
 

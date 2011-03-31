@@ -3,7 +3,7 @@
 /**
  * @file encoding_format.h
  * 
- * @date 2010-11-10
+ * @date 2011-03-31
  * @authors Fabio R. Panettieri
  */
 
@@ -13,7 +13,8 @@ namespace acid_maps {
  * @brief List of available simplification methods
  */
 enum EncodingFormat {
-  PNG = 0
+  RAW = 0,
+  PNG = 1
 };
 
 };  // namespace acid_maps

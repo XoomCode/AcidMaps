@@ -8,6 +8,8 @@
  * @authors Fabio R. Panettieri
  */
 
+#include "./encoder.h"
+
 namespace acid_maps {
 
 /**

@@ -40,7 +40,7 @@ public:
     configuration->intervals_colors = create_intervals_colors();
     configuration->renderer_type = ams::GRADIENT;
 
-    configuration->format = ams::PNG;
+    configuration->format = ams::RAW;
   }
   
   void dummyInterpolation () {

@@ -15,7 +15,7 @@
 namespace acid_maps {
 
 /**
- * @brief Keeps the dataset untouched
+ * @brief 
  */
 class PngEncoder : public Encoder {
   /**

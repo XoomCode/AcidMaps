@@ -27,7 +27,7 @@ int Validator::validate(Configuration* cfg) {
 	if(cfg->intervals_colors == NULL) return 10;
 	if(cfg->intervals_size <= 0) return 11;
 	if(cfg->renderer_type < 0 || cfg->renderer_type > 3) return 12;
-	if(cfg->format < 0 || cfg->format > 0) return 13;
+	if(cfg->format < 0 || cfg->format > 1) return 13;
 	for(int i = 0; i < cfg->intervals_size - 1; i++){
 		if(cfg->intervals[i] >= cfg->intervals[i + 1]) return 14;
 	}
