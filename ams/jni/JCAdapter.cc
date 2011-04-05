@@ -80,12 +80,12 @@ float* getFloatArrayField(JNIEnv* env, jclass configurationClass, jobject jconfi
 	}
 }
 
-int* getIntArrayField(JNIEnv* env, jclass configurationClass, jobject jconfiguration, const char* id) {
+jint* getIntArrayField(JNIEnv* env, jclass configurationClass, jobject jconfiguration, const char* id) {
 	jfieldID fieldId = env->GetFieldID(configurationClass, id, "[I");
 	jintArray value = (jintArray)env->GetObjectField(jconfiguration, fieldId);
 	int size = getIntArrayLength(env, configurationClass, jconfiguration, id);
 	if(value){
-		int* intArray = env->GetIntArrayElements(value, NULL);
+		jint* intArray = env->GetIntArrayElements(value, NULL);
 		return intArray;
 	} else {
 		return NULL;
@@ -166,7 +166,7 @@ ams::Bounds* getBoundField(JNIEnv* env, jclass configurationClass, jobject jconf
 	return bound;
 }
 
-ams::Configuration* buildConfiguration(JNIEnv* env, jobject jconfiguration, ams::Configuration* configuration){
+void buildConfiguration(JNIEnv* env, jobject jconfiguration, ams::Configuration* configuration){
 	jclass configurationClass = env->FindClass("com/xoomcode/acidmaps/core/Configuration");
 
 	configuration->bounds = getBoundField(env, configurationClass, jconfiguration, "bounds");
