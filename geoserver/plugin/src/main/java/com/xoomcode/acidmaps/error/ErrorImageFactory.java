@@ -17,8 +17,6 @@ public class ErrorImageFactory {
 		// Draw graphics
 		g2d.setColor(java.awt.Color.white);
 		g2d.fillRect(0, 0, width, height);
-//		g2d.setColor(java.awt.Color.gray);
-//		g2d.drawRect(0, 0, width, height);
 		g2d.setColor(java.awt.Color.black);
 		g2d.setFont(new Font("SansSerif", Font.BOLD, 12 ));
 		

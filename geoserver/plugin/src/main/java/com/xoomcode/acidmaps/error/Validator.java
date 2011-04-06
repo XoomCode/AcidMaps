@@ -16,7 +16,7 @@ public class Validator {
 		if(cfg.intervals == null || cfg.intervals.length == 0) return 9;
 		if(cfg.intervalsColors == null || cfg.intervalsColors.length == 0) return 10;
 		if(cfg.rendererType < 0 || cfg.rendererType > 3) return 12;
-		if(cfg.format < 0 || cfg.format > 0) return 13;
+		if(cfg.format < 0 || cfg.format > 1) return 13;
 		for(int i = 0; i < cfg.intervals.length - 1; i++){
 			if(cfg.intervals[i] >= cfg.intervals[i + 1]) return 14;
 		}

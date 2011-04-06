@@ -3,9 +3,6 @@
  */
 package com.xoomcode.acidmaps;
 
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -24,6 +21,7 @@ import org.geoserver.wms.GetMapRequest;
 import org.geoserver.wms.MapLayerInfo;
 import org.geoserver.wms.WMSMapContext;
 import org.geoserver.wms.WebMap;
+import org.geoserver.wms.map.RawMap;
 import org.geoserver.wms.map.RenderedImageMap;
 import org.geotools.data.FeatureSource;
 import org.geotools.factory.CommonFactoryFinder;
@@ -49,6 +47,7 @@ import com.xoomcode.acidmaps.core.AcidMapParameters;
 import com.xoomcode.acidmaps.core.Bounds;
 import com.xoomcode.acidmaps.core.Color;
 import com.xoomcode.acidmaps.core.Configuration;
+import com.xoomcode.acidmaps.encode.EncodingFormat;
 import com.xoomcode.acidmaps.error.AcidMapException;
 import com.xoomcode.acidmaps.error.ErrorImageFactory;
 import com.xoomcode.acidmaps.error.Validator;
@@ -154,12 +153,10 @@ public class AcidMapService {
 	 * @param request the request
 	 * @param mapContext the map context
 	 * @return the web map
-	 * @throws ServiceException the service exception
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 * @throws AcidMapException the acid map exception
+	 * @throws Throwable 
 	 */
 	
-	public synchronized WebMap synchronizedRun(final GetMapRequest request, WMSMapContext mapContext) throws ServiceException, IOException, AcidMapException {
+	public synchronized WebMap synchronizedRun(final GetMapRequest request, WMSMapContext mapContext) throws Exception {
 		Map<String, String> rawKvp = request.getRawKvp();
 		String valueColumn = rawKvp.get(AcidMapParameters.VALUE_COLUMN);
 
@@ -182,22 +179,28 @@ public class AcidMapService {
 			FeatureIterator<? extends Feature> featureIterator = features.features();
 			dataset = new com.xoomcode.acidmaps.core.Point[features.size()];
 			int i = 0;
-			while (featureIterator.hasNext()) {
-				SimpleFeature f = (SimpleFeature) featureIterator.next();
-				Property theGeom = f.getProperty(geometryAttribute.getName());
-				Point point = (Point)theGeom.getValue();
-				com.xoomcode.acidmaps.core.Point acidMapPoint = new com.xoomcode.acidmaps.core.Point();
-				acidMapPoint.x = (float)point.getX();
-				acidMapPoint.y = (float)point.getY();
-				
-				Property value = f.getProperty(valueColumn);
-				if(value != null){
-					acidMapPoint.value = ((Number)value.getValue()).floatValue();
-				}
-				dataset [i] = acidMapPoint;
-				i++;
-			} 
-			datasetCache.put(datasetCacheKey, dataset);
+			try{
+				while (featureIterator.hasNext()) {
+					SimpleFeature f = (SimpleFeature) featureIterator.next();
+					Property theGeom = f.getProperty(geometryAttribute.getName());
+					Point point = (Point)theGeom.getValue();
+					com.xoomcode.acidmaps.core.Point acidMapPoint = new com.xoomcode.acidmaps.core.Point();
+					acidMapPoint.x = (float)point.getX();
+					acidMapPoint.y = (float)point.getY();
+					
+					Property value = f.getProperty(valueColumn);
+					if(value != null){
+						acidMapPoint.value = ((Number)value.getValue()).floatValue();
+					}
+					dataset [i] = acidMapPoint;
+					i++;
+				} 
+				datasetCache.put(datasetCacheKey, dataset);
+			}catch(Exception e){
+				throw e;
+			}finally{
+				featureIterator.close();
+			}
 		} else {
 			LOGGER.log(Level.WARNING, "Cache hint");
 			
@@ -250,11 +253,8 @@ public class AcidMapService {
 		JCAdapter jCAdapter = new JCAdapter();
 		byte[] outputBuffer = jCAdapter.interpolate(configuration);
 		
-		BufferedImage image=ImageIO.read(new ByteArrayInputStream(outputBuffer));
-		
-        final String outputFormat = request.getFormat();
-        RenderedImageMap result = new RenderedImageMap(mapContext, image, outputFormat);
-        return result;
+		RawMap rawMap = new RawMap(mapContext, outputBuffer, "image/png");
+        return rawMap;
 		
 	}
 	
@@ -297,6 +297,8 @@ public class AcidMapService {
 		configuration.rendererType = rendererType;
 		configuration.interpolationStrategy = interpolationStrategy;
 		configuration.radius = radius;
+		
+		configuration.format = EncodingFormat.PNG;
 		
 		return configuration;
 	}
