@@ -16,55 +16,41 @@
 
 namespace ams = acid_maps;
 
+int getArrayLength(JNIEnv* env, jclass configurationClass, jobject jconfiguration, jfieldID fieldId) {
+	jarray field = (jarray)env->GetObjectField(jconfiguration, fieldId);
+	int length = 0;
+	if(field) length = env->GetArrayLength(value);
+	return length;
+}
+
 int getFloatArrayLength(JNIEnv* env, jclass configurationClass, jobject jconfiguration, const char* id) {
 	jfieldID fieldId = env->GetFieldID(configurationClass, id, "[F");
-	jarray value = (jarray)env->GetObjectField(jconfiguration, fieldId);
-	if(value){
-		int length = env->GetArrayLength(value);
-		return length;
-	} else {
-		return 0;
-	}
+	return getArrayLength(env, configurationClass, jconfiguration, fieldId);
 }
 
 int getCharArrayLength(JNIEnv* env, jclass configurationClass, jobject jconfiguration, const char* id) {
 	jfieldID fieldId = env->GetFieldID(configurationClass, id, "[B");
-	jarray value = (jarray)env->GetObjectField(jconfiguration, fieldId);
-	if(value){
-		int length = env->GetArrayLength(value);
-		return length;
-	} else {
-		return 0;
-	}
+	return getArrayLength(env, configurationClass, jconfiguration, fieldId);
 }
 
 int getIntArrayLength(JNIEnv* env, jclass configurationClass, jobject jconfiguration, const char* id) {
 	jfieldID fieldId = env->GetFieldID(configurationClass, id, "[I");
-	jarray value = (jarray)env->GetObjectField(jconfiguration, fieldId);
-	if(value){
-		int length = env->GetArrayLength(value);
-		return length;
-	} else {
-		return 0;
-	}
+	return getArrayLength(env, configurationClass, jconfiguration, fieldId);
 }
 
 int getIntField(JNIEnv* env, jclass configurationClass, jobject jconfiguration, const char* id) {
 	jfieldID fieldId = env->GetFieldID(configurationClass, id, "I");
-	int value = env->GetIntField(jconfiguration, fieldId);
-	return value;
+	return env->GetIntField(jconfiguration, fieldId);
 }
 
 char getByteField(JNIEnv* env, jclass configurationClass, jobject jconfiguration, const char* id) {
 	jfieldID fieldId = env->GetFieldID(configurationClass, id, "B");
-	char value = (char)env->GetByteField(jconfiguration, fieldId);
-	return value;
+	return env->GetByteField(jconfiguration, fieldId);
 }
 
 float getFloatField(JNIEnv* env, jclass configurationClass, jobject jconfiguration, const char* id) {
 	jfieldID fieldId = env->GetFieldID(configurationClass, id, "F");
-	float value = env->GetFloatField(jconfiguration, fieldId);
-	return value;
+	return env->GetFloatField(jconfiguration, fieldId);
 }
 
 float* getFloatArrayField(JNIEnv* env, jclass configurationClass, jobject jconfiguration, const char* id) {
@@ -220,7 +206,6 @@ JNIEXPORT jobject JNICALL Java_com_xoomcode_acidmaps_adapter_JCAdapter_interpola
 	delete[] configuration->dataset;
 	delete configuration->bounds;
 	delete configuration->tile_size;
-	delete[] configuration->intervals;
 	delete[] configuration->intervals_colors;
 	delete configuration;
 
