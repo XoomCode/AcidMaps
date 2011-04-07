@@ -55,39 +55,29 @@ float getFloatField(JNIEnv* env, jclass configurationClass, jobject jconfigurati
 
 float* getFloatArrayField(JNIEnv* env, jclass configurationClass, jobject jconfiguration, const char* id) {
 	jfieldID fieldId = env->GetFieldID(configurationClass, id, "[F");
-	jfloatArray value = (jfloatArray)env->GetObjectField(jconfiguration, fieldId);
-	int size = getFloatArrayLength(env, configurationClass, jconfiguration, id);
+	jfloatArray field = (jfloatArray)env->GetObjectField(jconfiguration, fieldId);
 
-	if(value){
-		float* floatArray = env->GetFloatArrayElements(value, NULL);
-		return floatArray;
-	} else {
-		return NULL;
-	}
+  float* floatArray = NULL;
+	if(field) floatArray = env->GetFloatArrayElements(field, NULL);
+	return floatArray;
 }
 
-jint* getIntArrayField(JNIEnv* env, jclass configurationClass, jobject jconfiguration, const char* id) {
+int* getIntArrayField(JNIEnv* env, jclass configurationClass, jobject jconfiguration, const char* id) {
 	jfieldID fieldId = env->GetFieldID(configurationClass, id, "[I");
-	jintArray value = (jintArray)env->GetObjectField(jconfiguration, fieldId);
-	int size = getIntArrayLength(env, configurationClass, jconfiguration, id);
-	if(value){
-		jint* intArray = env->GetIntArrayElements(value, NULL);
-		return intArray;
-	} else {
-		return NULL;
-	}
+	jintArray field = (jintArray)env->GetObjectField(jconfiguration, fieldId);
+
+  int* array = NULL;
+	if(field) array = env->GetIntArrayElements(field, NULL);
+	return array;
 }
 
 unsigned char* getCharArrayField(JNIEnv* env, jclass configurationClass, jobject jconfiguration, const char* id) {
 	jfieldID fieldId = env->GetFieldID(configurationClass, id, "[B");
-	jbyteArray value = (jbyteArray)env->GetObjectField(jconfiguration, fieldId);
-	int size = getCharArrayLength(env, configurationClass, jconfiguration, id);
-	if(value){
-		unsigned char* charArray = (unsigned char*)env->GetByteArrayElements(value, NULL);
-		return charArray;
-	} else {
-		return NULL;
-	}
+	jbyteArray field = (jbyteArray)env->GetObjectField(jconfiguration, fieldId);
+
+  unsigned char* array = NULL;
+	if(field) array = (unsigned char*)env->GetByteArrayElements(field, NULL);
+	return array;
 }
 
 ams::Point* getPointArrayField(JNIEnv* env, jclass configurationClass, jobject jconfiguration, const char* id, int size) {
@@ -165,8 +155,7 @@ void buildConfiguration(JNIEnv* env, jobject jconfiguration, ams::Configuration*
 
  	int width = getIntField(env, configurationClass, jconfiguration, "width");
  	int height = getIntField(env, configurationClass, jconfiguration, "height");
- 	ams::Size* tile_size = new ams::Size(width, height);
- 	configuration->tile_size = tile_size;
+ 	configuration->tile_size = new ams::Size(width, height);
 
  	configuration->intervals = getFloatArrayField(env, configurationClass, jconfiguration, "intervals");
  	configuration->intervals_size = getFloatArrayLength(env, configurationClass, jconfiguration, "intervals");
