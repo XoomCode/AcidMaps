@@ -19,7 +19,7 @@ namespace ams = acid_maps;
 int getArrayLength(JNIEnv* env, jclass configurationClass, jobject jconfiguration, jfieldID fieldId) {
 	jarray field = (jarray)env->GetObjectField(jconfiguration, fieldId);
 	int length = 0;
-	if(field) length = env->GetArrayLength(value);
+	if(field) length = env->GetArrayLength(field);
 	return length;
 }
 
@@ -62,11 +62,11 @@ float* getFloatArrayField(JNIEnv* env, jclass configurationClass, jobject jconfi
 	return floatArray;
 }
 
-int* getIntArrayField(JNIEnv* env, jclass configurationClass, jobject jconfiguration, const char* id) {
+jint* getIntArrayField(JNIEnv* env, jclass configurationClass, jobject jconfiguration, const char* id) {
 	jfieldID fieldId = env->GetFieldID(configurationClass, id, "[I");
 	jintArray field = (jintArray)env->GetObjectField(jconfiguration, fieldId);
 
-  int* array = NULL;
+  jint* array = NULL;
 	if(field) array = env->GetIntArrayElements(field, NULL);
 	return array;
 }
@@ -82,40 +82,42 @@ unsigned char* getCharArrayField(JNIEnv* env, jclass configurationClass, jobject
 
 ams::Point* getPointArrayField(JNIEnv* env, jclass configurationClass, jobject jconfiguration, const char* id, int size) {
 	jfieldID fieldId = env->GetFieldID(configurationClass, id, "[Lcom/xoomcode/acidmaps/core/Point;");
-	jobjectArray value = (jobjectArray)env->GetObjectField(jconfiguration, fieldId);
+	jobjectArray field = (jobjectArray)env->GetObjectField(jconfiguration, fieldId);
 	jclass pointClass = env->FindClass("com/xoomcode/acidmaps/core/Point");
-	if(value){
-		ams::Point* pointArray = new ams::Point[size];
+	
+	ams::Point* array = NULL;
 
-		ams::Point* point= new ams::Point();
+	if(field){
+		array = new ams::Point[size];
+		
+		ams::Point* point = new ams::Point();
 		for (int i = 0; i < size; ++i) {
-			jobject jpoint = (jobject)env->GetObjectArrayElement(value, i);
+			jobject jpoint = (jobject)env->GetObjectArrayElement(field, i);
 			point->x = getFloatField(env, pointClass, jpoint, "x");
 			point->y = getFloatField(env, pointClass, jpoint, "y");
 			point->value = getFloatField(env, pointClass, jpoint, "value");
 			memcpy(pointArray + i, point, sizeof(ams::Point));
 		}
 		delete point;
-		return pointArray;
-    } else {
-		return NULL;
 	}
+	
+	return array;
 }
 
 ams::Color* getColorArrayField(JNIEnv* env, jclass configurationClass, jobject jconfiguration, const char* id, int size) {
   int position = 0;
 	jfieldID fieldId = env->GetFieldID(configurationClass, id, "[Lcom/xoomcode/acidmaps/core/Color;");
-	jobjectArray value = (jobjectArray)env->GetObjectField(jconfiguration, fieldId);
+	jobjectArray field = (jobjectArray)env->GetObjectField(jconfiguration, fieldId);
 	jclass colorClass = env->FindClass("com/xoomcode/acidmaps/core/Color");
 	
 	ams::Color* colorArray = NULL;
 	
-	if(value){
+	if(field){
     colorArray = new ams::Color[size];
   
 	  ams::Color* color;
 		for (int i = 0; i < size; i++) {
-			jobject jcolor = (jobject)env->GetObjectArrayElement(value, i);
+			jobject jcolor = (jobject)env->GetObjectArrayElement(field, i);
 		  color = colorArray + i;
 			color->r = getByteField(env, colorClass, jcolor, "r");
 			color->g = getByteField(env, colorClass, jcolor, "g");
