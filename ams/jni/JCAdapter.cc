@@ -1,5 +1,3 @@
-/* The JCAdapter.c file, which implements the native function */
-
 #include "JCAdapter.h" /* Auto-generated header created by javah -jni */
 
 #include <jni.h>       /* Java Native Interface headers */
@@ -86,35 +84,29 @@ ams::Point* getPointArrayField(JNIEnv* env, jclass configurationClass, jobject j
 	jclass pointClass = env->FindClass("com/xoomcode/acidmaps/core/Point");
 	
 	ams::Point* array = NULL;
-
 	if(field){
 		array = new ams::Point[size];
-		
 		ams::Point* point = new ams::Point();
 		for (int i = 0; i < size; ++i) {
 			jobject jpoint = (jobject)env->GetObjectArrayElement(field, i);
 			point->x = getFloatField(env, pointClass, jpoint, "x");
 			point->y = getFloatField(env, pointClass, jpoint, "y");
 			point->value = getFloatField(env, pointClass, jpoint, "value");
-			memcpy(pointArray + i, point, sizeof(ams::Point));
+			memcpy(array + i, point, sizeof(ams::Point));
 		}
 		delete point;
 	}
-	
 	return array;
 }
 
 ams::Color* getColorArrayField(JNIEnv* env, jclass configurationClass, jobject jconfiguration, const char* id, int size) {
-  int position = 0;
 	jfieldID fieldId = env->GetFieldID(configurationClass, id, "[Lcom/xoomcode/acidmaps/core/Color;");
 	jobjectArray field = (jobjectArray)env->GetObjectField(jconfiguration, fieldId);
 	jclass colorClass = env->FindClass("com/xoomcode/acidmaps/core/Color");
 	
 	ams::Color* colorArray = NULL;
-	
 	if(field){
     colorArray = new ams::Color[size];
-  
 	  ams::Color* color;
 		for (int i = 0; i < size; i++) {
 			jobject jcolor = (jobject)env->GetObjectArrayElement(field, i);
@@ -125,15 +117,15 @@ ams::Color* getColorArrayField(JNIEnv* env, jclass configurationClass, jobject j
 			color->a = getByteField(env, colorClass, jcolor, "a");
 		}
   }
-  
 	return colorArray;
 }
 
 ams::Bounds* getBoundField(JNIEnv* env, jclass configurationClass, jobject jconfiguration, const char* id) {
-	ams::Bounds* bound = NULL;
 	jclass boundClass = env->FindClass("com/xoomcode/acidmaps/core/Bounds");
 	jfieldID fieldId = env->GetFieldID(configurationClass, id, "Lcom/xoomcode/acidmaps/core/Bounds;");
 	jobject jbounds = (jobject)env->GetObjectField(jconfiguration, fieldId);
+	
+	ams::Bounds* bound = NULL;
 	if(jbounds){
 		bound = new ams::Bounds();
 		bound->min_x = getFloatField(env, boundClass, jbounds, "minX");
@@ -202,5 +194,4 @@ JNIEXPORT jobject JNICALL Java_com_xoomcode_acidmaps_adapter_JCAdapter_interpola
 
 	return out;
 }
-
 
