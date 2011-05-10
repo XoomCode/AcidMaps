@@ -8,7 +8,7 @@ public class Validator {
 		if(cfg.dataset == null || cfg.dataset.length == 0) return 1;
 		if(cfg.datasetSize < 0) return 2;
 		if(cfg.simplifyMethod < 0 || cfg.simplifyMethod > 3) return 3;	
-		if(cfg.simplifySize < 0 || cfg.simplifySize > cfg.datasetSize ) return 4;
+		if(cfg.simplifySize < 0) return 4;
 		if(cfg.bounds == null) return 5;
 		if(cfg.interpolationStrategy < 0 || cfg.interpolationStrategy > 3) return 6;
 		if(cfg.radius < 0) return 7;

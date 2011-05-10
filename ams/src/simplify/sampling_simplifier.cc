@@ -15,7 +15,6 @@
 namespace acid_maps {
 
 void SamplingSimplifier::simplify(Point* dataset, int dataset_size, Point* simplified_dataset, int& simplify_size) {
-  if (dataset_size < simplify_size) simplify_size = dataset_size;
   if (simplify_size == 0) return;
   
   int step = dataset_size / simplify_size;

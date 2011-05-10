@@ -18,7 +18,7 @@ int Validator::validate(Configuration* cfg) {
 	if(cfg->dataset == NULL) return 1;
 	if(cfg->dataset_size < 0) return 2;
 	if(cfg->simplify_method < 0 || cfg->simplify_method > 3) return 3;	
-	if(cfg->simplify_size < 0 || cfg->simplify_size > cfg->dataset_size) return 4;
+	if(cfg->simplify_size < 0) return 4;
 	if(cfg->bounds == NULL) return 5;
 	if(cfg->interpolation_strategy < 0 || cfg->interpolation_strategy > 3) return 6;
 	if(cfg->radius < 0) return 7;

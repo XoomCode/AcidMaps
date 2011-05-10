@@ -30,6 +30,10 @@ int generate(Configuration* configuration, unsigned char** output_buffer, unsign
 	int error = validator.validate(configuration);
 	if(error) return error;
 	
+	if (configuration->dataset_size < configuration->simplify_size) {
+	  configuration->simplify_size = configuration->dataset_size;
+  }
+  
   Point* simplified_dataset = new Point[configuration->simplify_size];
   Simplifier* simplifier = SimplifierFactory::get(configuration->simplify_method);
   simplifier->simplify(configuration->dataset, configuration->dataset_size,

@@ -18,8 +18,6 @@
 namespace acid_maps {
 
 void ExtremesSimplifier::simplify(Point* dataset, int dataset_size, Point* simplified_dataset, int& simplify_size) {
-  if (dataset_size < simplify_size) simplify_size = dataset_size;
-  
   int min_limit = INT_MIN;
   int max_limit = INT_MAX;
   
