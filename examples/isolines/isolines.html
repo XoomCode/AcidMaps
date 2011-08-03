@@ -1,0 +1,83 @@
+<html>
+<head>
+   <title>AcidMaps Demo - Isolines</title>
+   <script src="http://www.openlayers.org/dev/OpenLayers.js"></script>
+   <script type="text/javascript">
+   
+   function init(){
+      var controls = [
+        new OpenLayers.Control.Navigation(),
+        new OpenLayers.Control.PanZoomBar(),
+        new OpenLayers.Control.LayerSwitcher(),
+        new OpenLayers.Control.MousePosition()
+      ];
+       
+      var bounds = new OpenLayers.Bounds(
+        590223.4382724703, 4914107.882513998,
+        608462.4604629107, 4920523.89081033
+      );
+      
+      var format = 'image/png';
+      
+      var options = {
+        controls: controls,
+        maxExtent: bounds,
+        maxResolution: 71.24618043140799,
+        projection: "EPSG:26713",
+        units: 'm'
+      };
+
+      var map = new OpenLayers.Map('map', options);
+        
+      var wms = new OpenLayers.Layer.WMS(
+        "WMS", "http://localhost:8080/geoserver/wms",
+        {
+          LAYERS: 'sf:archsites',
+          STYLES: '',
+          format: format,
+          tiled: true,
+          tilesOrigin : map.maxExtent.left + ',' + map.maxExtent.bottom
+        },
+        {
+          buffer: 0,
+          displayOutsideMaxExtent: true,
+          isBaseLayer: true
+        } 
+      );
+      
+      var ams = new OpenLayers.Layer.WMS(
+        "AMS", "http://localhost:8080/geoserver/wms",
+        {
+          LAYERS: 'sf:archsites',
+          STYLES: '',
+          format: format,
+          SERVICE: "AMS",
+          VALUE_COLUMN: "cat",
+          SIMPLIFY_METHOD: 0,
+          SIMPLIFY_SIZE: 25,
+					'INTERVALS[]': "0,5,10,15,20,25",
+					'INTERVALS_COLORS[]': "0x7FCE82CC,0x508252CC,0xEF9700CC,0xFF3F3FCC,0xDF0000CC,0x7F0000CC",
+					RENDERER_TYPE: 2,
+					INTERPOLATION_STRATEGY: 3,
+					RADIUS: 40
+        },
+        {
+          buffer: 0,
+          displayOutsideMaxExtent: true,
+          singleTile: true,
+          isBaseLayer: false
+        } 
+      );
+      
+      map.addLayers([ams, wms]);
+      
+      map.zoomToMaxExtent();
+
+    }
+
+   </script>
+</head>
+<body onload="init();">
+   <div style="width:100%; height:100%;" id="map"></div>
+</body> 
+</html>
